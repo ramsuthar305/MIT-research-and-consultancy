@@ -1,16 +1,17 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# This is a Client repository of MIT Consultancy and Research web portal
+>  [This is Server repository of MIT Consultancy and Research web portal](https://github.com/ramsuthar305/ResearchPortalServer) 
 
-## Available Scripts
+## `Instruction to run the app`
+### 1. `npm install` to install all the dependencies.
+### 2. `npm start`
 
-In the project directory, you can run:
+### `Please follow following instruction`
 
-### `npm start`
-
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+- Run app and go through the code once
+- Use React Bootstrap which is already installed in it
+- Use only functions and hooks only **No class based components.**
+- **Do not directly push your code into `master` branch**, create your own branches for each feature, we'll merge it once the feature is completed.
+- Follow **`Separate`** component structure.
 
 ### `npm test`
 
