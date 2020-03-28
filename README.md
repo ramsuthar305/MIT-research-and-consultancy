@@ -9,7 +9,7 @@
 
 - Run app and go through the code once
 - Use React Bootstrap which is already installed in it
-- Use only functions and hooks only **No class based components.**
+- Use functions and hooks only **No class based components.**
 - **Do not directly push your code into `master` branch**, create your own branches for each feature, we'll merge it once the feature is completed.
 - Follow **`Separate`** component structure.
 
