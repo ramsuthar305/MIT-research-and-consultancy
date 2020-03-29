@@ -11,6 +11,8 @@
 - Use React Bootstrap which is already installed in it
 - Use functions and hooks only **No class based components.**
 - **Do not directly push your code into `master` branch**, create your own branches for each feature, we'll merge it once the feature is completed.
+- Checking status code in the code helps in better debugging.
+- Use ternary Operator is suggested.
 - Follow **`Separate`** component structure.
 
 ### `npm test`
