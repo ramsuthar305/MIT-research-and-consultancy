@@ -1,4 +1,4 @@
-#  MIT Consultancy and Research web portal
+#  MIT Research and Consultancy web portal
 
 
 ## `Instruction to run the app`
