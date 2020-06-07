@@ -1,0 +1,24 @@
+{% extends 'portal/base.html' %}
+{% block main_page %}
+<div class="header-2" style="height: 100vh;">
+    {% include 'portal/header.html' %}
+    <div class="page-header header-filter"
+        style="background-image: url('{{url_for('portal.static', filename='img/campus.jpg')}}');">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 ml-auto mr-auto text-center">
+                    <h1 class="title"> MIT Research and consultancy portal skeleton!</h1>
+                    <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer varius nisi in felis dignissim
+                        egestas. Phasellus a sapien porttitor, fringilla ante nec, sollicitudin massa. Nulla rutrum
+                        libero sed lorem iaculis, vel bibendum metus iaculis. Donec quam orci, aliquam vitae velit ut,
+                        pulvinar commodo urna. Aenean pharetra massa mi, a faucibus ante dictum sed. Class aptent taciti
+                        sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut sed mauris consequat,
+                        aliquam dui a, mattis lacus.</h4>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
