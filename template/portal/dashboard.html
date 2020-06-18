@@ -1,0 +1,75 @@
+{% extends 'portal/base.html' %}
+{% block main_page %}
+<div id="available_job" class="cd-section" style="padding-top: 3%; min-height: 100vh;">
+    <div class="container">
+        <h1 class="title" style="color: white;">Available Jobs</h1>
+        <div class="row">
+
+            {% for job in alljobs %}
+            <div class="col-md-6 col-lg-4">
+                <div class="rotating-card-container">
+                    <div class="card card-rotate">
+                        <div class="front">
+                            <div class="card-body">
+                                <h5 class="card-category card-category-social text-success">
+                                    <i class="fa fa-newspaper-o"></i> {{job['category']}}
+                                </h5>
+                                <h4 class="card-title">
+                                    <a href="{{ url_for('portal.test') }}">{{job['title']}}</a>
+                                </h4>
+                                <p class="card-description">
+                                    {{job['description']}}
+                                </p>
+                            </div>
+                            <div class="card-footer ">
+
+                                <div class="stats ml-auto">
+                                    <i class="material-icons">schedule</i> 5 min read
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="back">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    Skills & Frameworks
+                                </h5>
+                                <p class="card-description">
+                                    {% for skill in job['skills'] %}
+                                    <span class="badge badge-primary">{{skill}}</span>
+                                    {% endfor %}
+                                </p>
+                                {{job['_id']}}
+                                <div class="footer text-center">
+                                    <a href="{{ url_for('portal.test', job_id=job['_id']) }}" class="btn btn-rose btn-round">
+                                        <i class="material-icons">input</i> Apply
+                                    </a>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script src="{{url_for('portal.static', filename='js/three.r95.min.js')}}"></script>
+<script src="{{ url_for('portal.static', filename='js/vanta.rings.min.js')}}"></script>
+<script>
+    VANTA.RINGS({
+        el: "#bdy",
+        mouseControls: true,
+        touchControls: true,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.00,
+        scaleMobile: 1.00,
+        backgroundColor: 0x464646,
+        color: 0xffffff
+    })
+</script>
+
+{% endblock %}
