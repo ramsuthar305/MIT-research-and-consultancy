@@ -33,28 +33,38 @@ def profile():
 @portal.route('/signup', methods=['POST','GET'])
 def signup():
     try:
-        if session['logged_in']==True:
-            return redirect(url_for("portal.dashboard"))
         if request.method == 'POST':
             #x = request.get_json(force=True)
             email= request.form.get('email')
-            name= request.form.get('name')
-            password= request.form.get('password')
+            user_type="Researcher"
             user={
-                "username":email,
-                "name":name,
-                "password":password,
-                "phone":None,
-                "resume":None,
+                "_id":email,
+                "email":email,
+                "first_name":request.form.get('first_name'),
+                "last_name":request.form.get('last_name'),
+                "password":request.form.get('password'),
+                "phone":request.form.get('phone'),
+                "dob":request.form.get('dob'),
+                "department":request.form.get('department'),
+                "address":request.form.get('address'),
+                "batch":"July 2020",
                 "profile_picture":None,
-                "address":None
+                "status":True,
+                "twitter":None,
+                "skype":None,
+                "facebook":None,
+                "github":None,
+                "status":True,
+                "user_type":user_type,
+                "semesters":[]
             }
-            registration_status = user_object.save_user(user)
+            print("this is user: ",user)
+            registration_status = user_object.save_user(user,user_type)
             if registration_status == True:
-                return redirect(url_for("portal.dashboard"))
+                return redirect(url_for("portal.signin"))
             else:
                 flash(registration_status)
-                return render_template('portal/signup.html', TOPIC_DICT = TOPIC_DICT)
+                return render_template('portal/signup.html')
         else:
             return render_template('portal/signup.html')
     except Exception as error:
@@ -65,9 +75,6 @@ def signup():
 @portal.route('/signin', methods = ['GET', 'POST'])
 def signin():
     try:
-        print(session['logged_in'])
-        if session['logged_in']==True:
-            return redirect(url_for("portal.dashboard"))
         if request.method == 'POST':
             #x = request.get_json(force=True)
             email= request.form.get('email')
@@ -75,15 +82,17 @@ def signin():
             
             login_status = user_object.login_user(email,password)
             if login_status==True:
-                return redirect(url_for("portal.dashboard"))
+                flash('Logged in successfully')
+                return redirect(url_for("portal.index"))
             else:
+                print("Here :",login_status)
                 flash(login_status)
-                return render_template('portal/signin.html', TOPIC_DICT = TOPIC_DICT)
+                return redirect(url_for('portal.index'))
         else:
-            return render_template('portal/signin.html')
+            return redirect(url_for('portal.index'))
     except Exception as error:
         print(error)
-        return render_template('portal/signin.html')
+        return redirect(url_for('portal.index'))
 
 
 @portal.route('/logout', methods=['POST','GET'])
