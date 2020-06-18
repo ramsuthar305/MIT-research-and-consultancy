@@ -2,7 +2,7 @@ import hashlib
 from app import *
 from flask import session
 import os 
-from pyresparser import ResumeParser
+#from pyresparser import ResumeParser
 from bson import ObjectId
 
 

@@ -1,0 +1,51 @@
+{% extends 'admin/base.html' %} 
+{% block main_page %} 
+
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6 mx-auto">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title">Set Batch</h4>
+                  <p class="card-category">Set New Batch</p>
+                </div>
+                <div class="card-body">
+             <form class="text-center" action="/add_batch/" method="POST">
+              <label class="form-control">Batch Name</label>
+              <input type="text" name="batch_name" class="form-control border-top-0 border-left-0 border-right-0" placeholder="Batch Name" >
+              <label class="form-control">Start Date</label>
+              <input type="date" name="start_date" class="form-control border-top-0 border-left-0 border-right-0" placeholder="Batch Name" >
+              <label class="form-control">End Date</label>
+              <input type="date" name="end_date" class="form-control border-top-0 border-left-0 border-right-0" placeholder="Batch Name" >
+              <button type="submit" name="add" value="Add" class="btn btn-primary btn-round">Add</button>
+
+
+            </form>
+              <form class="text-center" action="/activate_batch/" method="POST">
+              
+              <label class="form-control">Active Batch : July 2020</label>
+              
+              <select name="batch" class="form-control">
+                        <option value="0">Select Batch</option>
+                        
+                        <option value="">Jan 2020</option>
+                        <option value="">July 2020</option>
+                        <option value="">Jan 2021</option>
+                        <option value="">July 2021</option>
+                        
+                    </select>
+              <button type="submit" name="activate" value="Activate" class="btn btn-primary btn-round">Activate</button>
+
+
+            </form>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      
+
+{% endblock %}

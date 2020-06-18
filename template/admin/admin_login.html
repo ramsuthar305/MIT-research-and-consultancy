@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>MIT R&C</title>
+  {% include 'admin/links.html' %}
+</head>
+<body>
+
+<div class="signup-page container" style="margin-top: 10vh;">
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">×</span></button>
+    {{message}}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+
+  <div class="row">
+        <div class="col-lg-4 col-md-6 col-sm-8 ml-auto mr-auto">
+          <form class="form" method="post" action="{{url_for('admin.login')}}" name="login" ng-app="">
+        
+            <div class="card card-login card-hidden">
+              <div class="card-header card-header-danger text-center">
+                <h4 class="card-title">Login</h4>
+
+                
+              </div>
+              <div class="card-body ">
+                
+                <span class="bmd-form-group">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="material-icons" style="color: green;">perm_identity</i>
+                      </span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Username..." name="username" id="username" ng-model="username" required>
+                  </div>
+                  <div style="color:red; text-align: center;" ng-show="login.username.$dirty && login.username.$invalid">
+            <div ng-show="login.username.$error.required">Username is required.</div>
+          </div>
+                </span>
+                <span class="bmd-form-group">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="material-icons" style="color: green;">lock_outline</i>
+                      </span>
+                    </div>
+                    <input type="password" class="form-control" placeholder="Password..." name="password" id="password" ng-model="password" required>
+                  </div>
+                  <div style="color:red; text-align: center;" ng-show="login.password.$dirty && login.password.$invalid">
+            <div ng-show="login.password.$error.required">Password is required.</div>
+          </div>
+                </span>
+
+              </div>
+              <div class="card-footer justify-content-center">
+                <button type="submit" name="login" class="btn btn-success btn-link btn-lg" ng-disabled="login.username.$invalid || login.password.$invalid"><b>Login</b></button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+
+</div>
+</div>
+
+
+</body>
+</html>

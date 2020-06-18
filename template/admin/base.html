@@ -2,25 +2,7 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <!-- <meta name="description" content="Start your development with a Dashboard for Bootstrap 4."> -->
-    <meta name="author" content=" ">
-    <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16"
-        href="{{ url_for('admin.static',  filename='img/favicon.png') }}">
-    <title>MIT R&C</title>
-    <!-- Bootstrap Core CSS -->
-    <link href="{{ url_for('admin.static',  filename='css/nucleo.css') }}" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="{{ url_for('admin.static',  filename='css/nucleo-icons.css') }}" rel="stylesheet">
-    <link href="{{ url_for('admin.static',  filename='css/font-awesome.css.css') }}" rel="stylesheet">
-    <!-- You can change the theme colors from here -->
-    <link href="{{ url_for('admin.static',  filename='css/argon.css') }}" id="theme" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css"> -->
-    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700">
-    <link type="text/css" href="{{ url_for('admin.static',  filename='vendor/nucleo/css/nucleo.css') }}" rel="stylesheet">
+    {% include 'admin/links.html' %}
     {% block css %}
     {% endblock %}
 
@@ -44,50 +26,37 @@
     </style>
 </head>
 
-<body class="index-page sidebar-collapse" id="bdy">
+<body class="">
 
+  <div class="wrapper ">
+    {% include 'admin/sidebar.html' %}
+    <div class="main-panel">
+      <!-- Navbar -->
+      {% include 'admin/navbar.html' %}
+      <!-- End Navbar -->
 
-    <div class="section-basic">
 
         {% block main_page %}
         {% endblock %}
 
-    </div>
+</div>
+</div>
 
-    <footer class="footer" style="color: white;">
-        © 2020 Made by Ram Suthar
-    </footer>
+<footer class="footer">
+        <div class="container-fluid">
+          
+          <div class="copyright float-right">
+            &copy;
+            <script>
+              document.write(new Date().getFullYear())
+            </script>, made with <i class="material-icons">favorite</i> by
+            <a href="https://www.creative-tim.com" target="_blank">Creative Tim</a> for a better web.
+          </div>
+        </div>
+      </footer>
 
-    <!-- ============================================================== -->
-
-    <!-- ============================================================== -->
-    <!-- End footer -->
-    <!-- ============================================================== -->
-
-    <!-- ============================================================== -->
-    <!-- End Page wrapper  -->
-    <!-- ============================================================== -->
-
-
-    <!-- ============================================================== -->
-    <!-- End Wrapper -->
-    <!-- ============================================================== -->
-    <!-- ============================================================== -->
-    <!-- All Jquery -->
-    <!-- ============================================================== -->
-    <script src="{{ url_for('admin.static', filename='vendor/jquery/dist/jquery.min.js')}}"></script>
-    <script
-        src="{{ url_for('admin.static', filename='vendor/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
-    <script src="{{ url_for('admin.static', filename='vendor/js-cookie/js.cookie.js')}}"></script>
-    <script
-        src="{{ url_for('admin.static', filename='vendor/jquery.scrollbar/jquery.scrollbar.min.js')}}"></script>
-    <script
-        src="{{ url_for('admin.static', filename='vendor/jquery-scroll-lock/dist/jquery-scrollLock.min.js')}}"></script>
-    <!-- Optional JS -->
-    <script src="{{ url_for('admin.static', filename='vendor/chart.js/dist/Chart.min.js')}}"></script>
-    <script src="{{ url_for('admin.static', filename='vendor/chart.js/dist/Chart.extension.js')}}"></script>
-    <!-- Argon JS -->
-    <script src="{{ url_for('admin.static', filename='js/argon.js')}}"></script>
+    
+    {% include 'admin/scripts.html' %}
 </body>
 
 </html>
