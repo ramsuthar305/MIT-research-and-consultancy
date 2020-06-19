@@ -8,6 +8,8 @@ from datetime import datetime
 #custom imports
 from .models import Users, Shortlist
 from .models import Jobs
+from .models import *
+
 shorlist_obj=Shortlist()
 user_object = Users()
 jobs=Jobs()
@@ -137,6 +139,65 @@ def register_supervisors():
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
+        print(error)
+        return render_template('admin/admin_login.html')
+
+@admin.route('/supervisors_registration',methods=['POST','GET'])
+def supervisors_registration():
+    supervisors_object = Supervisors()
+    try:
+        if request.method == 'POST':
+            print("testing registration")
+            user_type = request.form.get('designation')
+            email = request.form.get('email')
+            subdept = request.form.get('subdepartment')
+            print(subdept)
+
+            for i in range(1,9):
+                temp = "subdepartment" + str(i)
+                subdept = request.form.get(temp)
+                if len(subdept)>4:
+                    break
+                else:
+                    subdept = "None"
+
+            twitter = request.form.get('twitter')
+            facebook = request.form.get('facebook')
+            skype = request.form.get('skype')
+            repos = request.form.get('repos')
+
+            twitter = "None" if len(twitter)>0 else "None"
+            facebook = "None" if len(twitter)>0 else "None"
+            skype = "None" if len(twitter)>0 else "None"
+            repos = "None" if len(twitter)>0 else "None"
+
+            user={
+                "_id":email,
+                "email":email,
+                "first_name":request.form.get('first_name'),
+                "last_name":request.form.get('last_name'),
+                "password":"123",
+                "phone":request.form.get('phone'),
+                "dob":request.form.get('dob'),
+                "department":request.form.get('department'),
+                "subdepartment":subdept,
+                "address":request.form.get('address'),
+                "gender":request.form.get('gender'),
+                "nationality":request.form.get('nationality'),
+                "profile_picture":None,
+                "twitter":request.form.get('twitter'),
+                "skype":request.form.get('skype'),
+                "facebook":request.form.get('facebook'),
+                "github":request.form.get('repos'),
+                "status":True,
+                "user_type":user_type
+            }
+            registration_status = supervisors_object.save_supervisor(user,user_type)
+            print(registration_status)
+            return redirect(url_for("admin.register_supervisors"))
+        else:
+            return render_template('admin/admin_login.html')
+    except Exception as e:
         print(error)
         return render_template('admin/admin_login.html')
 

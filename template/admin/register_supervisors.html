@@ -11,9 +11,211 @@
                   <p class="card-category">Add Supervisors and Co-Supervisors</p>
                 </div>
                 <div class="card-body">
-                Register supervisors and Co-Supervisors
+                
+                <form class="text-center" action="{{url_for('admin.supervisors_registration')}}" method="POST">
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">integration_instructions</i>
+                        </span>
+                    </div>
+                        <select class="form-control" name="designation">
+                          <option value="0">Select Designation</option>
+                          <option value="Research Supervisor">Research Supervisor</option>
+                          <option value="Research Co-Supervisor">Research Co-Supervisor</option>
+                        </select>
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">perm_identity</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="First Name" name="first_name">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">perm_identity</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Last Name" name="last_name">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">phone</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Mobile No" name="phone">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">home</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Address" name="address">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">email</i>
+                        </span>
+                    </div>
+                        <input type="email" class="form-control" placeholder="Email Id" name="email">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">cake</i>
+                        </span>
+                    </div>
+                        <input type="date" class="form-control" placeholder="Date of Birth" name="dob">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">person_pin</i>
+                        </span>
+                    </div>
+                        <select class="form-control" name="gender">
+                          <option value="0">Gender</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          <option value="Prefer not to Say">Prefer not to Say</option>
+                        </select>
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">location_on</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Nationality" name="nationality">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-twitter"></i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Twitter Profile Link" name="twitter">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-facebook"></i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Facebook Profile Link" name="facebook">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-skype"></i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Skype Profile Link" name="skype">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-github"></i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Repository Profile Link" name="repos">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-group"></i>
+                        </span>
+                    </div>
+                        <select class="form-control" id="departmentschange" name="department">
+                          <option value="None">Select Department</option>
+                          <option value="Management">Management</option>
+                          <option value="Bioengineering Sciences and Research">Bioengineering Sciences and Research</option>
+                          <option value="Food Technology">Food Technology</option>
+                          <option value="Applied Art">Applied Art</option>
+                          <option value="Design">Design</option>
+                          <option value="Vedic Sciences">Vedic Sciences</option>
+                          <option value="Education">Education</option>
+                          <option value="Engineering">Engineering</option>
+                        </select>
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px; display: none;" id="Management">
+                    
+                        <select class="form-control" name="subdepartment1">
+                          <option value="None">Select Sub Department</option>
+                          <option value="None">None</option>
+                        </select>
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px; display: none;" id="BioengineeringSciencesandResearch">
+                    
+                        <select class="form-control" name="subdepartment2">
+                          <option value="None">Select Sub Department</option>
+                          <option value="None">None</option>
+                        </select>
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px; display: none;" id="FoodTechnology">
+                    
+                        <select class="form-control" name="subdepartment3">
+                          <option value="None">Select Sub Department</option>
+                          <option value="None">None</option>
+                        </select>
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px; display: none;" id="AppliedArt">
+                    
+                        <select class="form-control" name="subdepartment4">
+                          <option value="None">Select Sub Department</option>
+                          <option value="None">None</option>
+                        </select>
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px; display: none;" id="Design">
+                    
+                        <select class="form-control" name="subdepartment5">
+                          <option value="None">Select Sub Department</option>
+                          <option value="None">None</option>
+                        </select>
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px; display: none;" id="VedicSciences">
+                    
+                        <select class="form-control" name="subdepartment6">
+                          <option value="None">Select Sub Department</option>
+                          <option value="None">None</option>
+                        </select>
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px; display: none;" id="Education">
+                    
+                        <select class="form-control" name="subdepartment7">
+                          <option value="None">Select Sub Department</option>
+                          <option value="None">None</option>
+                        </select>
+                  </div>
+                  <div class="input-group Engineering" style="margin-bottom: 20px; display: none;" id="Engineering">
+                    
+                        <select class="form-control" name="subdepartment8">
+                          <option value="None">Select Sub Department</option>
+                          <option value="Mechanical Engineering">Mechanical Engineering</option>
+                          <option value="Civil Engineering">Civil Engineering</option>
+                          <option value="Computer Science Engineering">Computer Science Engineering</option>
+                          <option value="Electronics and Engineering">Electronics and Engineering</option>
+                          <option value="Information Technology">Information Technology</option>
+                          <option value="Aerospace Engineering">Aerospace Engineering</option>
+                        </select>
+                  </div>
 
-            
+                 <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">face</i>
+                        </span>
+                    </div>
+                        <input type="file" name="">
+                  </div>
+                  <button type="submit" class="btn btn-success">Submit</button>
+                </form>
                 </div>
               </div>
             </div>

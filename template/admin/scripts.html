@@ -212,7 +212,7 @@
     });
   </script>
 
-
+<!-- SideBar -->
   <script type="text/javascript">
     function myf() {
             var x=document.getElementsByClassName("active");
@@ -224,4 +224,27 @@
      
     }
     window.onload = myf;
+</script>
+
+
+
+<!-- Supervisor Registration form -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script type="text/javascript">
+  $('#departmentschange').on('change', function() {
+        var selected = this.value;
+        selected = selected.split(" ").join("");
+        selected = "#" + selected;
+        $('#Management').css("display","none");
+        $('#BioengineeringSciencesandResearch').css("display","none");
+        $('#FoodTechnology').css("display","none");
+        $('#AppliedArt').css("display","none");
+        $('#Design').css("display","none");
+        $('#VedicSciences').css("display","none");
+        $('#Education').css("display","none");
+        $('#Engineering').css("display","none");
+        $(selected).css("display","block");
+        $(selected).css("width","2000em");
+        $(selected).css("margin-left","100px");
+    });
 </script>

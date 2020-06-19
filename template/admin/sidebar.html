@@ -4,18 +4,18 @@
 
         Tip 2: you can also add an image using data-image tag
     -->
-      <div class="logo"><a href="http://www.creative-tim.com" class="simple-text logo-normal">
+      <div class="logo"><a href="{{url_for('admin.dashboard')}}" class="simple-text logo-normal">
           MIT R&C
         </a></div>
       <div class="sidebar-wrapper">
         <ul class="nav">
-          <li class="nav-item active" id="Admin DashBoard">
+          <li class="nav-item " id="Admin DashBoard">
             <a class="nav-link" href="{{url_for('admin.dashboard')}}">
               <i class="material-icons">dashboard</i>
               <p>Dashboard</p>
             </a>
           </li>
-          <li class="nav-item" id="Set Batch">
+          <li class="nav-item " id="Set Batch">
             <a class="nav-link" href="{{url_for('admin.setbatch')}}">
               <i class="material-icons">contacts</i>
               <p>Set Batch</p>
@@ -99,7 +99,7 @@
               <p>View Co-Supervisors</p>
             </a>
           </li>
-          <li class="nav-item " id="View Authorities">
+          <li class="nav-item active" id="View Authorities">
             <a class="nav-link" href="{{url_for('admin.view_authorities')}}">
               <i class="material-icons">pageview</i>
               <p>View Authorities</p>

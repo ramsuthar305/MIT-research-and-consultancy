@@ -49,7 +49,6 @@ def signup():
                 "address":request.form.get('address'),
                 "batch":"July 2020",
                 "profile_picture":None,
-                "status":True,
                 "twitter":None,
                 "skype":None,
                 "facebook":None,
