@@ -112,7 +112,57 @@ class SpecialUsers:
 			if error.code == 11000:
 				return "User already exists"
 
+class Batch:
+	def __init__(self):
+		self.mongo =mongo.db
 
+	def add_batch(self,data):
+		try:
+			result=mongo.db.batch.insert_one(data)
+			if result:
+				return result.inserted_id
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def get_batches(self):
+		try:
+			result=mongo.db.batch.find()
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def activate_batch(self,data):
+		try:
+			fetcher=mongo.db.batch.find()
+			for i in fetcher:
+				result=mongo.db.batch.update_one({"_id":i['_id']},{"$set":{"status":"0"}})
+			result1=mongo.db.batch.update_one({"batch_name":data},{"$set":{"status":"1"}})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def get_active_batch(self):
+		try:
+			result=mongo.db.batch.find({"status":"1"})
+			result=result[0]['batch_name']
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
 
 class Jobs:
 	def __init__(self):

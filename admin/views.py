@@ -67,12 +67,54 @@ def dashboard():
 
 @admin.route('/setbatch',methods=['POST','GET'])
 def setbatch():
+    batch_object = Batch()
+    display_list = {}
+    active = ""
     try:
         if session['logged_in']==True:
-            return render_template('admin/setbatch.html')
+            batchlist = batch_object.get_batches()
+            active = batch_object.get_active_batch()
+            if batchlist:
+                display_list = batchlist
+            return render_template('admin/setbatch.html', display_list=display_list, active=active)
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
+        print(error)
+        return render_template('admin/admin_login.html')
+
+@admin.route('/addbatch',methods=['POST','GET'])
+def addbatch():
+    try:
+        batch_object = Batch()
+        if request.method=="POST":
+            data = {
+            "batch_name":request.form.get("batch_name"),
+            "start_date":request.form.get("start_date"),
+            "end_date":request.form.get("end_date"),
+            "status":"0"
+            }
+            registration_status = batch_object.add_batch(data)
+            flash('Batch Added Successfully')
+            return redirect(url_for("admin.setbatch"))
+        else:
+            return render_template('admin/admin_login.html')
+    except Exception as e:
+        print(error)
+        return render_template('admin/admin_login.html')
+
+@admin.route('/activatebatch',methods=['POST','GET'])
+def activatebatch():
+    try:
+        batch_object = Batch()
+        if request.method=="POST":
+            data = request.form.get("batch_name")
+            registration_status = batch_object.activate_batch(data)
+            flash('Batch Activated Successfully')
+            return redirect(url_for("admin.setbatch"))
+        else:
+            return render_template('admin/admin_login.html')
+    except Exception as e:
         print(error)
         return render_template('admin/admin_login.html')
 

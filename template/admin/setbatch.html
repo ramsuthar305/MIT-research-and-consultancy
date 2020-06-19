@@ -11,7 +11,20 @@
                   <p class="card-category">Set New Batch</p>
                 </div>
                 <div class="card-body">
-             <form class="text-center" action="/add_batch/" method="POST">
+
+
+                  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">×</span></button>
+    {{message}}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+             <form class="text-center" action="{{url_for('admin.addbatch')}}" method="POST">
               <label class="form-control">Batch Name</label>
               <input type="text" name="batch_name" class="form-control border-top-0 border-left-0 border-right-0" placeholder="Batch Name" >
               <label class="form-control">Start Date</label>
@@ -20,19 +33,16 @@
               <input type="date" name="end_date" class="form-control border-top-0 border-left-0 border-right-0" placeholder="Batch Name" >
               <button type="submit" name="add" value="Add" class="btn btn-primary btn-round">Add</button>
 
-
             </form>
-              <form class="text-center" action="/activate_batch/" method="POST">
+              <form class="text-center" action="{{url_for('admin.activatebatch')}}" method="POST" style="margin-top: 50px;">
               
-              <label class="form-control">Active Batch : July 2020</label>
+              <label class="form-control">Active Batch : {{ active }}</label>
               
-              <select name="batch" class="form-control">
+              <select name="batch_name" class="form-control">
                         <option value="0">Select Batch</option>
-                        
-                        <option value="">Jan 2020</option>
-                        <option value="">July 2020</option>
-                        <option value="">Jan 2021</option>
-                        <option value="">July 2021</option>
+                        {% for i in display_list %}
+                        <option value="{{ i['batch_name'] }}">{{ i['batch_name'] }}</option>
+                        {% endfor %}
                         
                     </select>
               <button type="submit" name="activate" value="Activate" class="btn btn-primary btn-round">Activate</button>
