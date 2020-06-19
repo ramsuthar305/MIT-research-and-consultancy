@@ -9,9 +9,11 @@ mongo = PyMongo(app)
 
 from admin.views import admin
 from portal.views import portal
+from forum.views import forum
 
 app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(portal, url_prefix='')
+app.register_blueprint(forum, url_prefix='/forum')
 
 
 if __name__ == '__main__':
