@@ -84,6 +84,34 @@ class Supervisors:
 			if error.code == 11000:
 				return "User already exists"
 
+class SpecialUsers:
+	def __init__(self):
+		self.mongo = mongo.db
+
+	def save_specialuser(self,user,user_type):
+		try:
+			if user_type=="Special User":
+				result = mongo.db.specialuser.insert_one(user)
+			else:
+				result = mongo.db.USERTYPE.insert_one(user)
+			if result:
+				result=mongo.db.authentication.insert_one({
+					"uid":user["_id"],
+					"email":user["email"],
+					"password":user["password"],
+					"user_type":user["user_type"],
+					"status":user["status"]
+				})
+				return True
+
+			else:
+				print("\nSomething went wrong: ",result)
+				return False
+		except Exception as error:
+			print(error)
+			if error.code == 11000:
+				return "User already exists"
+
 
 
 class Jobs:

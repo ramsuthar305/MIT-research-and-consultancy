@@ -201,14 +201,63 @@ def supervisors_registration():
         print(error)
         return render_template('admin/admin_login.html')
 
-@admin.route('/register_authorities',methods=['POST','GET'])
-def register_authorities():
+@admin.route('/register_specialusers',methods=['POST','GET'])
+def register_specialusers():
     try:
         if session['logged_in']==True:
-            return render_template('admin/register_authorities.html')
+            return render_template('admin/register_specialusers.html')
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
+        print(error)
+        return render_template('admin/admin_login.html')
+
+@admin.route('/specialusers_registration',methods=['POST','GET'])
+def specialusers_registration():
+    specialusers_object = SpecialUsers()
+    try:
+        if request.method == 'POST':
+            print("testing spregistration")
+            user_type = "Special User"
+            email = request.form.get('email')
+            
+            twitter = request.form.get('twitter')
+            facebook = request.form.get('facebook')
+            skype = request.form.get('skype')
+            repos = request.form.get('repos')
+
+            twitter = "None" if len(twitter)>0 else "None"
+            facebook = "None" if len(twitter)>0 else "None"
+            skype = "None" if len(twitter)>0 else "None"
+            repos = "None" if len(twitter)>0 else "None"
+
+            user={
+                "_id":email,
+                "email":email,
+                "title":request.form.get('title'),
+                "first_name":request.form.get('first_name'),
+                "last_name":request.form.get('last_name'),
+                "password":"123",
+                "phone":request.form.get('phone'),
+                "dob":request.form.get('dob'),
+                "address":request.form.get('address'),
+                "gender":request.form.get('gender'),
+                "nationality":request.form.get('nationality'),
+                "profile_picture":None,
+                "twitter":request.form.get('twitter'),
+                "skype":request.form.get('skype'),
+                "facebook":request.form.get('facebook'),
+                "github":request.form.get('repos'),
+                "info":request.form.get('info'),
+                "status":True,
+                "user_type":user_type
+            }
+            registration_status = specialusers_object.save_specialuser(user,user_type)
+            print(registration_status)
+            return redirect(url_for("admin.register_specialusers"))
+        else:
+            return render_template('admin/admin_login.html')
+    except Exception as e:
         print(error)
         return render_template('admin/admin_login.html')
 

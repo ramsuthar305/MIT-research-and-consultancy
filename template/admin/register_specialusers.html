@@ -1,0 +1,154 @@
+{% extends 'admin/base.html' %} 
+{% block main_page %} 
+
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6 mx-auto">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title" id="page_name">Register Special Users</h4>
+                  <p class="card-category">Register Developers, Testers, Moderators and Others</p>
+                </div>
+                <div class="card-body">
+                
+                <form class="text-center" action="{{url_for('admin.specialusers_registration')}}" method="POST">
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">military_tech</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" name="title" placeholder="Title of Honour (Dr/Prof/Mr/Mrs)">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">perm_identity</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="First Name" name="first_name">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">perm_identity</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Last Name" name="last_name">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">phone</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Mobile No" name="phone">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">home</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Address" name="address">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">email</i>
+                        </span>
+                    </div>
+                        <input type="email" class="form-control" placeholder="Email Id" name="email">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">cake</i>
+                        </span>
+                    </div>
+                        <input type="date" class="form-control" placeholder="Date of Birth" name="dob">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">person_pin</i>
+                        </span>
+                    </div>
+                        <select class="form-control" name="gender">
+                          <option value="0">Gender</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          <option value="Prefer not to Say">Prefer not to Say</option>
+                        </select>
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">location_on</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Nationality" name="nationality">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-twitter"></i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Twitter Profile Link" name="twitter">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-facebook"></i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Facebook Profile Link" name="facebook">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-skype"></i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Skype Profile Link" name="skype">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-github"></i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Repository Profile Link" name="repos">
+                  </div>
+
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">info</i>
+                        </span>
+                    </div>
+                        <textarea class="form-control" placeholder="More Information about the User" name="info"></textarea>
+                  </div>
+
+                 <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">face</i>
+                        </span>
+                    </div>
+                        <input type="file" name="">
+                  </div>
+                  <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      
+
+{% endblock %}
