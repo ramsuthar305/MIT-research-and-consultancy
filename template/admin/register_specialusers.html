@@ -1,6 +1,17 @@
 {% extends 'admin/base.html' %} 
 {% block main_page %} 
 
+
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6 mx-auto">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title" id="page_name">Register Special Users</h4>
+                  <p class="card-category">Register Developers, Testers, Moderators and Others</p>
+                </div>
+                <div class="card-body">
 {% with messages = get_flashed_messages() %}
   {% if messages %}
   {% for message in messages %}
@@ -12,17 +23,6 @@
   {% endfor %}
   {% endif %}
   {% endwith %}
-      <div class="content">
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-md-6 mx-auto">
-              <div class="card">
-                <div class="card-header card-header-primary">
-                  <h4 class="card-title" id="page_name">Register Special Users</h4>
-                  <p class="card-category">Register Developers, Testers, Moderators and Others</p>
-                </div>
-                <div class="card-body">
-
                 
                 <form class="text-center" action="{{url_for('admin.specialusers_registration')}}" method="POST">
                   <div class="input-group" style="margin-bottom: 20px;">

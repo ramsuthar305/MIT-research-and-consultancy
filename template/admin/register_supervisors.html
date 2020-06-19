@@ -1,6 +1,7 @@
 {% extends 'admin/base.html' %} 
 {% block main_page %} 
 
+
       <div class="content">
         <div class="container-fluid">
           <div class="row">
@@ -11,7 +12,17 @@
                   <p class="card-category">Add Supervisors and Co-Supervisors</p>
                 </div>
                 <div class="card-body">
-                
+                {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">×</span></button>
+    {{message}}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
                 <form class="text-center" action="{{url_for('admin.supervisors_registration')}}" method="POST">
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">

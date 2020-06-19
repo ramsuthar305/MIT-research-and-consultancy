@@ -249,6 +249,7 @@ def specialusers_registration():
                 "user_type":user_type
             }
             registration_status = specialusers_object.save_specialuser(user,user_type)
+            flash('Registered Successfully')
             return redirect(url_for("admin.register_specialusers"))
         else:
             return render_template('admin/admin_login.html')
