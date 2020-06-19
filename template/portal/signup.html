@@ -4,7 +4,7 @@
   {% with messages = get_flashed_messages() %}
   {% if messages %}
   {% for message in messages %}
-  <div class="alert alert-warning alert-dismissible" role="alert">
+  <div class="alert alert-success alert-dismissible" role="alert">
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
         aria-hidden="true">×</span></button>
     {{message}}
@@ -16,91 +16,181 @@
     <div class="col-md-10 ml-auto mr-auto">
       <div class="card card-signup">
         <h2 class="card-title text-center text-primary">Register</h2>
-        <form class="form" method="POST" action="{{url_for('portal.signup')}}">
+        <h4 class="card-title text-center text-danger">Batch : {{ active }}</h4>
+        <form class="form" method="POST" action="{{url_for('portal.registration')}}">
           <div class="card-body">
             <div class="row">
               <div class="col-md-5 ml-auto">
-                <div class="form-group">
-                  <div class="input-group">
+                <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
-                      <span class="input-group-text">
-                        <i class="material-icons">face</i>
-                      </span>
+                        <span class="input-group-text">
+                          <i class="material-icons">perm_identity</i>
+                        </span>
                     </div>
-                    <input type="text" class="form-control" name="first_name" required placeholder="First Name...">
+                        <input type="text" class="form-control" placeholder="First Name" name="first_name">
                   </div>
-                </div>
-                <div class="form-group">
-                  <div class="input-group">
+                  <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
-                      <span class="input-group-text">
-                        <i class="material-icons">face</i>
-                      </span>
+                        <span class="input-group-text">
+                          <i class="material-icons">perm_identity</i>
+                        </span>
                     </div>
-                    <input type="text" class="form-control" name="last_name" required placeholder="Last Name...">
+                        <input type="text" class="form-control" placeholder="Last Name" name="last_name">
                   </div>
-                </div>
-                <div class="form-group">
-                  <div class="input-group">
+                  <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
-                      <span class="input-group-text">
-                        <i class="material-icons">mail</i>
-                      </span>
+                        <span class="input-group-text">
+                          <i class="material-icons">phone</i>
+                        </span>
                     </div>
-                    <input type="text" class="form-control" name="email" required placeholder="Email address">
+                        <input type="text" class="form-control" placeholder="Mobile No" name="phone">
                   </div>
-                </div>
-
-                <div class="form-group">
-                  <div class="input-group">
+                  <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
-                      <span class="input-group-text">
-                        <i class="material-icons">lock_outline</i>
-                      </span>
+                        <span class="input-group-text">
+                          <i class="material-icons">home</i>
+                        </span>
                     </div>
-                    <input type="password" required placeholder="Password..." name="password" class="form-control" />
+                        <input type="text" class="form-control" placeholder="Address" name="address">
                   </div>
-                </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">email</i>
+                        </span>
+                    </div>
+                        <input type="email" class="form-control" placeholder="Email Id" name="email">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">cake</i>
+                        </span>
+                    </div>
+                        <input type="date" class="form-control" placeholder="Date of Birth" name="dob">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">person_pin</i>
+                        </span>
+                    </div>
+                        <select class="form-control" name="gender">
+                          <option value="0">Gender</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          <option value="Prefer not to Say">Prefer not to Say</option>
+                        </select>
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">location_on</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Nationality" name="nationality">
+                  </div>
 
               </div>
               <div class="col-md-5 mr-auto">
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-twitter"></i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Twitter Profile Link" name="twitter">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-facebook"></i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Facebook Profile Link" name="facebook">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-skype"></i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Skype Profile Link" name="skype">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-github"></i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control" placeholder="Repository Profile Link" name="repos">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-group"></i>
+                        </span>
+                    </div>
+                        <select class="form-control" id="departmentschange" name="department">
+                          <option value="None">Select Department</option>
+                          <option value="Management">Management</option>
+                          <option value="Bioengineering Sciences and Research">Bioengineering Sciences and Research</option>
+                          <option value="Food Technology">Food Technology</option>
+                          <option value="Applied Art">Applied Art</option>
+                          <option value="Design">Design</option>
+                          <option value="Vedic Sciences">Vedic Sciences</option>
+                          <option value="Education">Education</option>
+                          <option value="Engineering">Engineering</option>
+                        </select>
+                  </div>
+
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-group"></i>
+                        </span>
+                    </div>
+                        <select class="form-control" id="departmentschange" name="supervisor">
+                          <option value="None">Select Supervisor</option>
+                          {% for i in supers %}
+                          <option value="{{ i.first_name }} {{ i.last_name }}">{{ i.first_name }} {{ i.last_name }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+
+                    <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-group"></i>
+                        </span>
+                    </div>
+                        <select class="form-control" id="departmentschange" name="cosupervisor">
+                          <option value="None">Select Co-Supervisor</option>
+                          {% for i in cosupers %}
+                          <option value="{{ i.first_name }} {{ i.last_name }}">{{ i.first_name }} {{ i.last_name }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+
+                <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">face</i>
+                        </span>
+                    </div>
+                        <input type="file" name="">
+                  </div>
+
+                </div>
+              </div>
 
 
-                <div class="form-group">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">
-                        <i class="material-icons">calendar_today</i>
-                      </span>
-                    </div>
-                    <input type="text" class="form-control" name="dob" required placeholder="Date of Birth">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">
-                        <i class="material-icons">category</i>
-                      </span>
-                    </div>
-                    <input type="text" class="form-control" name="department" required placeholder="Department">
-                  </div>
-                </div>
-                <div class="form-group">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">
-                        <i class="material-icons">lock_outline</i>
-                      </span>
-                    </div>
-                    <input type="text" required placeholder="address" name="address" class="form-control" />
-                  </div>
-                </div>
                 <div class="text-center m-auto">
                   <div class="text-center m-auto col-md-6">
-                    <button type="submit" class="btn btn-primary btn-round btn-block m-auto text-white">Sign up</button>
+                    <button type="submit" class="btn btn-primary btn-round btn-block m-auto text-white" style="width: 100px;">Sign up</button>
                   </div>
                 </div>
+              
                 <div class="mt-3">
                   <p class="description text-center">Account already exists? </p>
                 </div>
@@ -109,9 +199,9 @@
                   <a href="{{url_for('portal.signin')}}" class="btn btn-primary btn-link">Sign in</a>
                 </div>
 
-              </div>
+              
             </div>
-          </div>
+          
         </form>
       </div>
     </div>

@@ -55,7 +55,7 @@ class Users:
 		try:
 			login_result = self.mongo.authentication.find_one(
 				{"$and": [{"$or": [{"uid": username}, {"phone": username}]},
-						  {"password": password},{"status":True}]})
+						  {"password": password},{"status":"0"}]})
 			if login_result is not None:
 				if login_result["user_type"]=="Researcher":
 					user_info=self.mongo.researcher.find_one({"_id":login_result["uid"]})
@@ -130,4 +130,51 @@ class Users:
 	# 		print(error)
 	# 		return True
 
-	
+class Extract_Data:
+	def __init__(self):
+		self.mongo =mongo.db
+
+	def get_active_batch(self):
+		try:
+			result=mongo.db.batch.find({"status":"1"})
+			result=result[0]['batch_name']
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def get_supervisors(self):
+		try:
+			result=mongo.db.supervisor.find()
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def get_cosupervisors(self):
+		try:
+			result=mongo.db.cosupervisor.find()
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def get_specialuser(self):
+		try:
+			result=mongo.db.specialuser.find()
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"

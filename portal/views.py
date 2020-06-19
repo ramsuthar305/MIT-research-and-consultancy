@@ -5,7 +5,8 @@ import hashlib
 import json
 from datetime import datetime
 #custom imports
-from .models import Users
+from .models import *
+
 user_object = Users()
 portal = Blueprint("portal", __name__, template_folder='../template', static_folder='../static',
                    static_url_path='../static')
@@ -29,9 +30,21 @@ def profile():
     user=user_object.get_user_profile()
     return render_template('portal/profile.html',user=user)
 
-
-@portal.route('/signup', methods=['POST','GET'])
+@portal.route('/signup')
 def signup():
+    active = ""
+    exdata = Extract_Data()
+    active=exdata.get_active_batch()
+    print(active)
+    supers = exdata.get_supervisors()
+    cosupers = exdata.get_cosupervisors()
+    
+    return render_template('portal/signup.html',active=active,supers=supers,cosupers=cosupers)
+
+@portal.route('/registration', methods=['POST','GET'])
+def registration():
+    exdata = Extract_Data()
+    active=exdata.get_active_batch()
     try:
         if request.method == 'POST':
             #x = request.get_json(force=True)
@@ -39,36 +52,41 @@ def signup():
             user_type="Researcher"
             user={
                 "_id":email,
+                "batch":active,
                 "email":email,
                 "first_name":request.form.get('first_name'),
                 "last_name":request.form.get('last_name'),
-                "password":request.form.get('password'),
+                "password":"123",
                 "phone":request.form.get('phone'),
                 "dob":request.form.get('dob'),
                 "department":request.form.get('department'),
                 "address":request.form.get('address'),
-                "batch":"July 2020",
+                "gender":request.form.get('gender'),
+                "nationality":request.form.get('nationality'),
                 "profile_picture":None,
-                "twitter":None,
-                "skype":None,
-                "facebook":None,
-                "github":None,
-                "status":True,
+                "twitter":request.form.get('twitter'),
+                "skype":request.form.get('skype'),
+                "facebook":request.form.get('facebook'),
+                "github":request.form.get('repos'),
+                "supervisor":request.form.get('supervisor'),
+                "cosupervisor":request.form.get('cosupervisor'),
+                "status":"0",
                 "user_type":user_type,
                 "semesters":[]
             }
             print("this is user: ",user)
             registration_status = user_object.save_user(user,user_type)
             if registration_status == True:
-                return redirect(url_for("portal.signin"))
+                flash("Registration Successful. You will receive an email after your account is activated")
+                return redirect(url_for("portal.signup"))
             else:
                 flash(registration_status)
-                return render_template('portal/signup.html')
+                return redirect('portal.signup')
         else:
-            return render_template('portal/signup.html')
+            return redirect('portal.signup')
     except Exception as error:
         print(error)
-        return render_template('portal/signup.html')
+        return render_template('portal.signup')
 
 
 @portal.route('/signin', methods = ['GET', 'POST'])
