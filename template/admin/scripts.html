@@ -211,3 +211,17 @@
       });
     });
   </script>
+
+
+  <script type="text/javascript">
+    function myf() {
+            var x=document.getElementsByClassName("active");
+           
+            document.getElementById(x[0].id).className=""
+            var a=document.getElementById("page_name").innerHTML;
+         
+            document.getElementById(a).classList.add('active');
+     
+    }
+    window.onload = myf;
+</script>

@@ -78,7 +78,7 @@ def setbatch():
 def setpages():
     try:
         if session['logged_in']==True:
-            return render_template('admin/pages.html')
+            return render_template('admin/setpages.html')
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
