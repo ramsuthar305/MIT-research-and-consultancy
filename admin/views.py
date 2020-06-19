@@ -147,11 +147,8 @@ def supervisors_registration():
     supervisors_object = Supervisors()
     try:
         if request.method == 'POST':
-            print("testing registration")
             user_type = request.form.get('designation')
             email = request.form.get('email')
-            subdept = request.form.get('subdepartment')
-            print(subdept)
 
             for i in range(1,9):
                 temp = "subdepartment" + str(i)
@@ -193,7 +190,7 @@ def supervisors_registration():
                 "user_type":user_type
             }
             registration_status = supervisors_object.save_supervisor(user,user_type)
-            print(registration_status)
+            flash('Registered Successfully')
             return redirect(url_for("admin.register_supervisors"))
         else:
             return render_template('admin/admin_login.html')
@@ -217,7 +214,6 @@ def specialusers_registration():
     specialusers_object = SpecialUsers()
     try:
         if request.method == 'POST':
-            print("testing spregistration")
             user_type = "Special User"
             email = request.form.get('email')
             
@@ -253,7 +249,6 @@ def specialusers_registration():
                 "user_type":user_type
             }
             registration_status = specialusers_object.save_specialuser(user,user_type)
-            print(registration_status)
             return redirect(url_for("admin.register_specialusers"))
         else:
             return render_template('admin/admin_login.html')

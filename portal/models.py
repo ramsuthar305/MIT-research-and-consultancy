@@ -65,6 +65,30 @@ class Users:
 					session["user_type"] = user_info['user_type']
 					session['id'] = str(user_info["_id"])
 					return True
+				elif login_result["user_type"]=="Research Supervisor":
+					user_info=self.mongo.supervisor.find_one({"_id":login_result["uid"]})
+					session["email"] = user_info["email"]
+					session["name"] = user_info["first_name"]+user_info["last_name"]
+					session["logged_in"] = True
+					session["user_type"] = user_info['user_type']
+					session['id'] = str(user_info["_id"])
+					return True
+				elif login_result["user_type"]=="Research Co-Supervisor":
+					user_info=self.mongo.cosupervisor.find_one({"_id":login_result["uid"]})
+					session["email"] = user_info["email"]
+					session["name"] = user_info["first_name"]+user_info["last_name"]
+					session["logged_in"] = True
+					session["user_type"] = user_info['user_type']
+					session['id'] = str(user_info["_id"])
+					return True
+				elif login_result["user_type"]=="Special User":
+					user_info=self.mongo.specialuser.find_one({"_id":login_result["uid"]})
+					session["email"] = user_info["email"]
+					session["name"] = user_info["title"]+user_info["first_name"]+user_info["last_name"]
+					session["logged_in"] = True
+					session["user_type"] = user_info['user_type']
+					session['id'] = str(user_info["_id"])
+					return True
 			else:
 				return "User does not exist"
 		except Exception as error:
