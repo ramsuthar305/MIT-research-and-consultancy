@@ -27,8 +27,9 @@ def index():
 
 @portal.route('/profile')
 def profile():
-    user=user_object.get_user_profile()
-    return render_template('portal/profile.html',user=user)
+    exdata = Extract_Data()
+    user = exdata.get_researcher()
+    return render_template('portal/userprofile.html',user=user)
 
 @portal.route('/signup')
 def signup():
@@ -49,7 +50,7 @@ def registration():
         if request.method == 'POST':
             #x = request.get_json(force=True)
             email= request.form.get('email')
-            user_type="Researcher"
+            user_type="Research Scholar"
             user={
                 "_id":email,
                 "batch":active,
@@ -124,4 +125,16 @@ def logout():
     except Exception as error:
         print(error)
         return redirect(url_for('portal.signin'))
+
+
+@portal.route('/supervisors_panel', methods=['POST','GET'])
+def supervisors_panel():
+    try:
+        if session['logged_in']==True:
+            return render_template('portal/supervisors_panel.html')
+        else:
+            return redirect(url_for("portal.index"))
+    except Exception as error:
+        print(error)
+        return render_template('portal/index.html')
 
