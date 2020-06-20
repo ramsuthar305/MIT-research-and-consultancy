@@ -1,0 +1,97 @@
+{% extends 'forum/base.html' %}
+{% block main_page %}
+<div class="">
+
+    {% include 'portal/header.html' %}
+    <div class="container" style="padding-top: 12vh;">
+        <div class="d-flex justify-content-between">
+            <h3 class="title text-dark pb-3">All Questions</h3>
+            
+            <form class="mt-4 pt-1" style="width: 40%;">
+                <input type="search" class="form-control ds-input" id="search-input" placeholder="Search..."
+                    aria-label="Search for..." autocomplete="off" data-docs-version="4.5" spellcheck="false"
+                    role="combobox" aria-autocomplete="list" aria-expanded="false"
+                    aria-owns="algolia-autocomplete-listbox-0" style="position: relative; vertical-align: top;"
+                    dir="auto">
+            </form>
+        </div>
+        <hr>
+        <div class="row pt-4 ">
+            <div class="col-md-3 text-dark border-right">
+                <button class="btn btn-outline-primary btn-block">Ask a question</button>
+                <div class="mt-4 pt-4">
+
+                    <h4 class="title text-dark text-center">Departments</h4>
+                    <hr>
+                    <ul class="nav nav-pills nav-pills-rose flex-column">
+
+                        <li class="nav-item"><a class="nav-link" href="#tab1" data-toggle="tab">Engineering</a></li>
+                        <li class="nav-item"><a class="nav-link active show" href="#tab2"
+                                data-toggle="tab">Bio-Engineering</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Design</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Food Technology</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Applied arts</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Management</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">vedic</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Education</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-9 text-dark pr-4">
+                {% for i in range(10) %}
+                <div class="row border-bottom py-3">
+                    <div class="col-md-2">
+                        <div class="text-center m-auto">
+                            <h4 class="my-0 font-weight-bold">0</h4>
+                            <span style="font-size: 14px;">Votes</span>
+                        </div>
+                        <div class="text-center m-auto">
+
+                            <button class="btn btn-outline-success py-0 px-1">
+                                <h4 class="my-0 font-weight-bold">12</h4>
+                                <span style="font-size: 14px; text-transform: capitalize;">Answers</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <a href="" style="font-weight: 400; font-size: 16px;">
+                            Element type is invalid: expected a string( for built-in components) or a class/function
+                            (for composite components) but got: number
+                        </a>
+                        <p class="pt-3"
+                            style="-webkit-line-clamp: 2;display: -webkit-box;overflow: hidden;-webkit-box-orient: vertical;">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut odio temporibus voluptas error
+                            distinctio hic quae corrupti vero doloribus optio! Inventore ex quaerat modi blanditiis
+                            soluta maiores illum, ab velit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut
+                            odio temporibus voluptas error distinctio hic quae corrupti vero doloribus optio! Inventore
+                            ex quaerat modi blanditiis soluta maiores illum, ab velit.</p>
+                        <div style="float: right;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Shah_Rukh_Khan_graces_the_launch_of_the_new_Santro.jpg/220px-Shah_Rukh_Khan_graces_the_launch_of_the_new_Santro.jpg"
+                                class="rounded-circle ml-2" style="height: 25px; width: 25px;" alt="">
+                            <a href=""> @chetan bhagat</a>
+                            <small class="pl-4 ml-4">6 hours ago</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block jquery %}
+<script>
+    $(document).ready(function () {
+        console.log("ready!");
+        $("#header").addClass("text-primary");
+        $("#header").addClass("py-0");
+        $("#headerTitle").addClass("text-primary");
+        $("#header").removeClass("navbar-transparent");
+    });
+</script>
+{% endblock %}

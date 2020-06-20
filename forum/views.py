@@ -202,7 +202,7 @@ def delete_comment():
     print("this is result: ", result)
     return dumps(result)
 
-# @forum.route('/')
-# def index():
-#     print('called')
-#     return render_template('forum/home.html')
+@forum.route('/')
+def index():
+    print('called')
+    return render_template('forum/home.html')
