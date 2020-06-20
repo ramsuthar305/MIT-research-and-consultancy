@@ -19,7 +19,7 @@ class Users:
 
 	def save_user(self,user,user_type):
 		try:
-			if user_type=="Researcher":
+			if user_type=="Research Scholar":
 				result = mongo.db.researcher.insert_one(user)
 			else:
 				result = mongo.db.USERTYPE.insert_one(user)
@@ -54,10 +54,11 @@ class Users:
 	def login_user(self, username, password):
 		try:
 			login_result = self.mongo.authentication.find_one(
-				{"$and": [{"$or": [{"uid": username}, {"phone": username}]},
+				{"$and": [{"$or": [{"uid": username}, {"email": username}]},
 						  {"password": password},{"status":"0"}]})
+			print(login_result)
 			if login_result is not None:
-				if login_result["user_type"]=="Researcher":
+				if login_result["user_type"]=="Research Scholar":
 					user_info=self.mongo.researcher.find_one({"_id":login_result["uid"]})
 					session["email"] = user_info["email"]
 					session["name"] = user_info["first_name"]+user_info["last_name"]
@@ -138,6 +139,29 @@ class Extract_Data:
 		try:
 			result=mongo.db.batch.find({"status":"1"})
 			result=result[0]['batch_name']
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def get_researcher(self):
+		try:
+			
+			if session["user_type"]=="Research Scholar":
+				result=mongo.db.researcher.find({"_id":session["id"]})
+			elif session["user_type"]=="Research Supervisor":
+				result=mongo.db.supervisor.find({"_id":session["id"]})
+			elif session["user_type"]=="Research Co-Supervisor":
+				result=mongo.db.cosupervisor.find({"_id":session["id"]})
+			elif session["user_type"]=="Special User":
+				result=mongo.db.specialuser.find({"_id":session["id"]})
+
+			result=result[0]
+
+			
 			if result:
 				return result
 			else:
