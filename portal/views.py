@@ -129,6 +129,8 @@ def logout():
 
 @portal.route('/supervisors_panel', methods=['POST','GET'])
 def supervisors_panel():
+    exdata = Extract_Data()
+    user = exdata.get_researcher()
     try:
         if session['logged_in']==True:
             return render_template('portal/supervisors_panel.html')
