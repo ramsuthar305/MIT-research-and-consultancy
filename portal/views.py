@@ -25,6 +25,14 @@ def index():
     return render_template('portal/home.html')
 
 
+@portal.route('/publication')
+def publication():
+    
+    return render_template('portal/publication.html')
+
+    
+
+
 @portal.route('/profile')
 def profile():
     user=user_object.get_user_profile()
