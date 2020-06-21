@@ -129,7 +129,7 @@ class Batch:
 
 	def get_batches(self):
 		try:
-			result=mongo.db.batch.find()
+			result=mongo.db.batch.find({"expire":"0"})
 			if result:
 				return result
 			else:
@@ -144,6 +144,17 @@ class Batch:
 			for i in fetcher:
 				result=mongo.db.batch.update_one({"_id":i['_id']},{"$set":{"status":"0"}})
 			result1=mongo.db.batch.update_one({"batch_name":data},{"$set":{"status":"1"}})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def expire_batch(self,data):
+		try:
+			result1=mongo.db.batch.update_one({"batch_name":data},{"$set":{"expire":"1"}})
 			if result:
 				return result
 			else:

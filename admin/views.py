@@ -76,7 +76,8 @@ def setbatch():
             active = batch_object.get_active_batch()
             if batchlist:
                 display_list = batchlist
-            return render_template('admin/setbatch.html', display_list=display_list, active=active)
+                display_list1 = batchlist
+            return render_template('admin/setbatch.html', display_list=display_list, display_list1=display_list1, active=active)
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
@@ -92,7 +93,8 @@ def addbatch():
             "batch_name":request.form.get("batch_name"),
             "start_date":request.form.get("start_date"),
             "end_date":request.form.get("end_date"),
-            "status":"0"
+            "status":"0",
+            "expire":"0"
             }
             registration_status = batch_object.add_batch(data)
             flash('Batch Added Successfully')
@@ -112,6 +114,37 @@ def activatebatch():
             registration_status = batch_object.activate_batch(data)
             flash('Batch Activated Successfully')
             return redirect(url_for("admin.setbatch"))
+        else:
+            return render_template('admin/admin_login.html')
+    except Exception as e:
+        print(error)
+        return render_template('admin/admin_login.html')
+
+@admin.route('/expirebatch',methods=['POST','GET'])
+def expirebatch():
+    batch_object = Batch()
+    display_list = {}
+    try:
+        if session['logged_in']==True:
+            batchlist = batch_object.get_batches()
+            if batchlist:
+                display_list1 = batchlist
+            return render_template('admin/expirebatch.html', display_list1=display_list1)
+        else:
+            return redirect(url_for("admin.login"))
+    except Exception as error:
+        print(error)
+        return render_template('admin/admin_login.html')
+
+@admin.route('/expire_batch',methods=['POST','GET'])
+def expire_batch():
+    try:
+        batch_object = Batch()
+        if request.method=="POST":
+            data = request.form.get("batch_name")
+            registration_status = batch_object.expire_batch(data)
+            flash('Batch Expired Successfully')
+            return redirect(url_for("admin.expirebatch"))
         else:
             return render_template('admin/admin_login.html')
     except Exception as e:

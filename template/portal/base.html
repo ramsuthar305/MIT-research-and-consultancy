@@ -51,10 +51,10 @@
     </style>
 </head>
 
-<body class="index-page sidebar-collapse" id="bdy">
+<body class="index-page sidebar-collapse" id="bdy" style="overflow-x: hidden;">
  
 
-    <div class="section-basic">
+    <div class="section-basic" >
       
         {% block main_page %}
         {% endblock %}
@@ -146,6 +146,7 @@
             })
         }
     </script>
+    
     {% block javascript %}
     {% endblock %}
 </body>
