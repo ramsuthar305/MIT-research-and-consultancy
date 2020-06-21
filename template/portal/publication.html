@@ -1,60 +1,61 @@
 {% extends 'portal/base.html' %}
 {% block main_page %}
+<div class="container-fluid" style="margin-top: 60px;">
+{% include 'portal/header.html' %}
+</div>
+
+
 
 
 <div class="blog-posts sidebar-collapse">
 <div class="main main-raised">
     <div class="container">
       <div class="section section-white">
-        <div class="container">
+        <div class="container-fluid">
           <!--                 nav pills -->
           <div id="navigation-pills">
-            <div class="title">
-              <h3>Navigation Pills</h3>
-            </div>
+          
             
-              <div class="col-lg-12 col-md-8">
-               
-                <ul class="nav nav-pills nav-pills-rose">
-                  <li class="nav-item"><a class="nav-link active" href="#pill1" data-toggle="tab">Profile</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#pill2" data-toggle="tab">Settings</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#pill3" data-toggle="tab">Options</a></li>
-                  <li class="nav-item"><a class="nav-link " href="#pill1" data-toggle="tab">Profile</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#pill2" data-toggle="tab">Settings</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#pill3" data-toggle="tab">Options</a></li>
-                  <li class="nav-item"><a class="nav-link " href="#pill1" data-toggle="tab">Profile</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#pill2" data-toggle="tab">Settings</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#pill3" data-toggle="tab">Options</a></li>
+            <div class="row ">
+              <div class="col-md-4 ">
+                <ul class="nav nav-pills nav-pills-rose flex-column pull-left">
+                  <li class="nav-item"><a class="nav-link active" href="#tab1" data-toggle="tab">Profile</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#tab2" data-toggle="tab">Settings</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Options</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#tab2" data-toggle="tab">Settings</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Options</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#tab2" data-toggle="tab">Settings</a></li>
+                  <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Options</a></li>
                 </ul>
-                
               </div>
 
+              <form class="form-inline d-flex justify-content-center md-form form-sm active-purple active-purple-2 mt-5 ml-auto">
+         
+                <input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
+                  aria-label="Search">
+                  <i class="fa fa-search" aria-hidden="true"></i>
+              </form>
+              
+            </div>
             
             
             
           </div>
           <!--                 end nav pills -->
         </div>
-      </div>
+      
+        
      
 
-      <div class="section">
-        <div class="container tim-container">
+      
+        <div class="container tim-container m-auto">
           
-          <div class="space-50"></div>
+          
           <div id="contentAreas" class="cd-section">
-            <h2>Content Areas</h2>
-            <!--                 tables -->
+          
             <div id="tables">
-              <div class="title">
-                <h3>Tables</h3>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <h4>Simple Table</h4>
-                </div>
-                
-              </div>
+              
+            
               <div class="row">
                 <div class="col-md-12">
                   <h4>Shopping Cart Table</h4>
@@ -78,12 +79,12 @@
                         <tr>
                           <td>
                             <div class="img-container">
-                              <img src="./assets/img/product1.jpg" alt="...">
+                              <img src="./static/img/examples/card-profile1.jpg" alt="...">
                             </div>
                           </td>
                           <td class="td-name">
-                            <a href="#jacket">Spring Jacket</a>
-                            <br><small>by Dolce&amp;Gabbana</small>
+                            <a href="#jacket">Book Title</a>
+                            <br><small>Author Name</small>
                           </td>
                           <td>
                             Red
@@ -113,31 +114,31 @@
                         <tr>
                           <td>
                             <div class="img-container">
-                              <img src="./assets/img/product2.jpg" alt="...">
+                              <img src="./static/img/examples/card-profile1.jpg" alt="...">
                             </div>
                           </td>
                           <td class="td-name">
-                            <a href="#pants">Short Pants</a>
-                            <br><small>by Gucci</small>
+                            <a href="#jacket">Book Title</a>
+                            <br><small>Author Name</small>
                           </td>
                           <td>
-                            Purple
+                            Red
                           </td>
                           <td class="text-center">
                             M
                           </td>
                           <td class="td-number text-center">
-                            <small>&#x20AC;</small>499
+                            <small>&#x20AC;</small>549
                           </td>
                           <td class="td-number">
-                            2
+                            1
                             <div class="btn-group">
                               <button class="btn btn-round btn-info btn-sm"> <i class="material-icons">remove</i> </button>
                               <button class="btn btn-round btn-info btn-sm"> <i class="material-icons">add</i> </button>
                             </div>
                           </td>
                           <td class="td-number text-center">
-                            <small>&#x20AC;</small>998
+                            <small>&#x20AC;</small>549
                           </td>
                           <td class="td-actions">
                             <button type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-link">
@@ -148,21 +149,21 @@
                         <tr>
                           <td>
                             <div class="img-container">
-                              <img src="./assets/img/product3.jpg" alt="...">
+                              <img src="./static/img/examples/card-profile1.jpg" alt="...">
                             </div>
                           </td>
                           <td class="td-name">
-                            <a href="#nothing">Pencil Skirt</a>
-                            <br><small>by Valentino</small>
+                            <a href="#jacket">Book Title</a>
+                            <br><small>Author Name</small>
                           </td>
                           <td>
-                            White
+                            Red
                           </td>
                           <td class="text-center">
-                            XL
+                            M
                           </td>
                           <td class="td-number text-center">
-                            <small>&#x20AC;</small>799
+                            <small>&#x20AC;</small>549
                           </td>
                           <td class="td-number">
                             1
@@ -172,23 +173,13 @@
                             </div>
                           </td>
                           <td class="td-number text-center">
-                            <small>&#x20AC;</small>799</td>
+                            <small>&#x20AC;</small>549
+                          </td>
                           <td class="td-actions">
                             <button type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-link">
                               <i class="material-icons">close</i>
                             </button>
                           </td>
-                        </tr>
-                        <tr>
-                          <td colspan="3">
-                          </td>
-                          <td class="td-total">
-                            Total
-                          </td>
-                          <td class="td-price text-center">
-                            <small>&#x20AC;</small>2,346
-                          </td>
-                          <td colspan="3" class="text-right"> <button type="button" class="btn btn-info btn-round">Complete Purchase <i class="material-icons">keyboard_arrow_right</i></button></td>
                         </tr>
                       </tbody>
                     </table>
@@ -199,11 +190,11 @@
             <!--                 end tables -->
             
         </div>
-      </div>
+      
       
     </div>
 
-
+  </div>
 
 </div>
 

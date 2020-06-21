@@ -21,6 +21,13 @@
     <link rel="stylesheet" type="text/css"
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="author" content="colorlib.com">
+    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
+    <link href="{{ url_for('portal.static',  filename='css/main.css') }}" rel="stylesheet" />
     {% block css %}
     {% endblock %}
 
@@ -123,6 +130,7 @@
     <script src="{{ url_for('portal.static', filename='js/vanta.rings.min.js')}}"></script>
     <script src="{{url_for('portal.static', filename='js/p5.min.js')}}"></script>
     <script src="{{ url_for('portal.static', filename='js/vanta.topology.min.js')}}"></script>
+    <script src="{{ url_for('portal.static', filename='js/extention/choices.js')}}"></script>
     <script>
         var currentLocation = window.location;
 
