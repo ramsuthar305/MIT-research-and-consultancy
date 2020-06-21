@@ -1,203 +1,155 @@
-{% extends 'portal/base.html' %}
+
+{% extends 'forum/base.html' %}
+{% block css %}
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+{% endblock %}
 {% block main_page %}
-<div class="container-fluid" style="margin-top: 60px;">
-{% include 'portal/header.html' %}
-</div>
+<div class="">
 
+    {% include 'portal/header.html' %}
+    <div class="container" style="padding-top: 12vh;">
+        <div class="d-flex justify-content-between">
+            <h3 class="title text-dark pb-3">E-Resources</h3>
 
+            <form class="mt-4 pt-1" style="width: 40%;">
+                <input type="search" class="form-control ds-input" id="search-input" placeholder="Search..."
+                    aria-label="Search for..." autocomplete="off" data-docs-version="4.5" spellcheck="false"
+                    role="combobox" aria-autocomplete="list" aria-expanded="false"
+                    aria-owns="algolia-autocomplete-listbox-0" style="position: relative; vertical-align: top;"
+                    dir="auto">
+            </form>
+        </div>
+        <hr>
+        <div class="row pt-4 ">
+            <div class="col-md-3 text-dark border-right">
+                {% if session['logged_in'] %}
+                <button class="btn btn-outline-primary btn-block" id="askQuestion">Ask a question</button>
+                {% endif %}
+                <div class="mt-4 pt-4">
 
+                    <h4 class="title text-dark text-center">Resource Type</h4>
+                    <hr>
+                    <ul class="nav nav-pills nav-pills-rose flex-column">
 
-<div class="blog-posts sidebar-collapse">
-<div class="main main-raised">
-    <div class="container">
-      <div class="section section-white">
-        <div class="container-fluid">
-          <!--                 nav pills -->
-          <div id="navigation-pills">
-          
-            
-            <div class="row ">
-              <div class="col-md-4 ">
-                <ul class="nav nav-pills nav-pills-rose flex-column pull-left">
-                  <li class="nav-item"><a class="nav-link active" href="#tab1" data-toggle="tab">Profile</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#tab2" data-toggle="tab">Settings</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Options</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#tab2" data-toggle="tab">Settings</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Options</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#tab2" data-toggle="tab">Settings</a></li>
-                  <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Options</a></li>
-                </ul>
-              </div>
+                        <li class="nav-item"><a class="nav-link" href="#tab1" data-toggle="tab">Book</a></li>
+                        <li class="nav-item"><a class="nav-link active show" href="#tab2"
+                                data-toggle="tab">Paper</a>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Journal</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Video</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Link</a></li>
+                        
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-9 text-dark pr-4" id="allPosts">
+                {% if session['logged_in'] %}
+                <div class="border  p-1" style="display: none;" id="answerContainer">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Title</label>
+                        <input type="text" class="form-control" id="threadTitle" placeholder="Enter thread title">
+                    </div>
+                    <div id="toolbar-container">
 
-              <form class="form-inline d-flex justify-content-center md-form form-sm active-purple active-purple-2 mt-5 ml-auto">
-         
-                <input class="form-control form-control-sm ml-3 w-75" type="text" placeholder="Search"
-                  aria-label="Search">
-                  <i class="fa fa-search" aria-hidden="true"></i>
-              </form>
-              
+                        <span class="ql-formats">
+                            <select class="ql-size"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline"></button>
+                            <button class="ql-strike"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <input type="hidden" id="myHtml" />
+
+                            <select class="ql-color"></select>
+                            <select class="ql-background"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-script" value="sub"></button>
+                            <button class="ql-script" value="super"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-header" value="1"></button>
+                            <button class="ql-header" value="2"></button>
+                            <button class="ql-blockquote"></button>
+                            <button class="ql-code-block"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-list" value="ordered"></button>
+                            <button class="ql-list" value="bullet"></button>
+                            <button class="ql-indent" value="-1"></button>
+                            <button class="ql-indent" value="+1"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-direction" value="rtl"></button>
+                            <select class="ql-align"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-link"></button>
+                            <button class="ql-image"></button>
+                            <button class="ql-video"></button>
+                            <button class="ql-formula"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-clean"></button>
+                        </span>
+                    </div>
+
+                    <div id="editor">
+                        <p class="text-muted">Enter description</p>
+                        <br>
+                    </div>
+                    <div class="row d-flex justify-content-between">
+                        <div class="input-group col-md-4 col-sm-5">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="material-icons">school</i>
+                                </span>
+                            </div>
+                            <select class="form-control" id="departmentschange" name="department">
+                                <option value="None">Select Department</option>
+                                <option value="Management">Management</option>
+                                <option value="Bioengineering Sciences and Research">Bioengineering Sciences and
+                                    Research
+                                </option>
+                                <option value="Food Technology">Food Technology</option>
+                                <option value="Applied Art">Applied Art</option>
+                                <option value="Design">Design</option>
+                                <option value="Vedic Sciences">Vedic Sciences</option>
+                                <option value="Education">Education</option>
+                                <option value="Engineering">Engineering</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-5">
+
+                            <button class="btn btn-link btn-block text-primary m-0" id="convert" type="submit">Post
+                                thread</button>
+                        </div>
+                    </div>
+
+                </div>
+                {% endif %}
+                {% include 'portal/eContent.html' %}
             </div>
             
-            
-            
-          </div>
-          <!--                 end nav pills -->
+
         </div>
-      
         
-     
-
-      
-        <div class="container tim-container m-auto">
-          
-          
-          <div id="contentAreas" class="cd-section">
-          
-            <div id="tables">
-              
-            
-              <div class="row">
-                <div class="col-md-12">
-                  <h4>Shopping Cart Table</h4>
-                </div>
-                <div class="col-lg-12 col-md-12 ml-auto mr-auto">
-                  <div class="table-responsive">
-                    <table class="table table-shopping">
-                      <thead>
-                        <tr>
-                          <th class="text-center"></th>
-                          <th>Product</th>
-                          <th class="th-description">Color</th>
-                          <th class="th-description text-right">Size</th>
-                          <th class="text-center">Price</th>
-                          <th class="text-right">Qty</th>
-                          <th class="text-right">Amount</th>
-                          <th></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>
-                            <div class="img-container">
-                              <img src="./static/img/examples/card-profile1.jpg" alt="...">
-                            </div>
-                          </td>
-                          <td class="td-name">
-                            <a href="#jacket">Book Title</a>
-                            <br><small>Author Name</small>
-                          </td>
-                          <td>
-                            Red
-                          </td>
-                          <td class="text-center">
-                            M
-                          </td>
-                          <td class="td-number text-center">
-                            <small>&#x20AC;</small>549
-                          </td>
-                          <td class="td-number">
-                            1
-                            <div class="btn-group">
-                              <button class="btn btn-round btn-info btn-sm"> <i class="material-icons">remove</i> </button>
-                              <button class="btn btn-round btn-info btn-sm"> <i class="material-icons">add</i> </button>
-                            </div>
-                          </td>
-                          <td class="td-number text-center">
-                            <small>&#x20AC;</small>549
-                          </td>
-                          <td class="td-actions">
-                            <button type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-link">
-                              <i class="material-icons">close</i>
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <div class="img-container">
-                              <img src="./static/img/examples/card-profile1.jpg" alt="...">
-                            </div>
-                          </td>
-                          <td class="td-name">
-                            <a href="#jacket">Book Title</a>
-                            <br><small>Author Name</small>
-                          </td>
-                          <td>
-                            Red
-                          </td>
-                          <td class="text-center">
-                            M
-                          </td>
-                          <td class="td-number text-center">
-                            <small>&#x20AC;</small>549
-                          </td>
-                          <td class="td-number">
-                            1
-                            <div class="btn-group">
-                              <button class="btn btn-round btn-info btn-sm"> <i class="material-icons">remove</i> </button>
-                              <button class="btn btn-round btn-info btn-sm"> <i class="material-icons">add</i> </button>
-                            </div>
-                          </td>
-                          <td class="td-number text-center">
-                            <small>&#x20AC;</small>549
-                          </td>
-                          <td class="td-actions">
-                            <button type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-link">
-                              <i class="material-icons">close</i>
-                            </button>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <div class="img-container">
-                              <img src="./static/img/examples/card-profile1.jpg" alt="...">
-                            </div>
-                          </td>
-                          <td class="td-name">
-                            <a href="#jacket">Book Title</a>
-                            <br><small>Author Name</small>
-                          </td>
-                          <td>
-                            Red
-                          </td>
-                          <td class="text-center">
-                            M
-                          </td>
-                          <td class="td-number text-center">
-                            <small>&#x20AC;</small>549
-                          </td>
-                          <td class="td-number">
-                            1
-                            <div class="btn-group">
-                              <button class="btn btn-round btn-info btn-sm"> <i class="material-icons">remove</i> </button>
-                              <button class="btn btn-round btn-info btn-sm"> <i class="material-icons">add</i> </button>
-                            </div>
-                          </td>
-                          <td class="td-number text-center">
-                            <small>&#x20AC;</small>549
-                          </td>
-                          <td class="td-actions">
-                            <button type="button" rel="tooltip" data-placement="left" title="Remove item" class="btn btn-link">
-                              <i class="material-icons">close</i>
-                            </button>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!--                 end tables -->
-            
-        </div>
-      
-      
     </div>
 
-  </div>
-
 </div>
 
+{% endblock %}
 
+{% block jquery %}
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.4.3/jquery.timeago.js"
+    type="text/javascript"></script>
+<!-- Initialize Quill editor -->
 
 {% endblock %}
