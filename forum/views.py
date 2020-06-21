@@ -25,9 +25,13 @@ def page_not_found(error):
 def new_post():
     if request.method == "POST":
         print("inside the post")
-        title = request.form.get("title")
-        category = request.form.get("category")
-        description = request.form.get("description")
+        data_received=request.get_data()
+        data_received=data_received.decode("utf-8")
+        data_received=json.loads(data_received)
+        print(type(data_received))
+        title = data_received["title"].capitalize()
+        category = data_received["category"]
+        description = data_received["description"]
         created_on = datetime.now()
         uid = "ramsuthar305@gmail.com"
         data = {}
@@ -41,8 +45,15 @@ def new_post():
         data['downvotes'] = []
         data['reports'] = []
         result = forum_obj.new_post(data)
-        print("this is result: ", result)
-        return dumps(result)
+        return_data={}
+        if result!=False:
+            return_data['status']=True
+            return_data['data']=result
+        else:
+            return_data['status']=False
+            return_data['data']=None
+        print("this is result: ", return_data)
+        return dumps(return_data)
 
 
 @forum.route('/new_answer', methods=['GET', 'POST'])
@@ -205,4 +216,4 @@ def delete_comment():
 @forum.route('/')
 def index():
     print('called')
-    return render_template('forum/home.html')
+    return render_template('forum/home.html',posts=forum_obj.get_all_posts())

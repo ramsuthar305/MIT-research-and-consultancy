@@ -10,6 +10,18 @@ class Forum_model:
     def __init__(self):
         self.mongo = mongo.db
 
+    def get_all_posts(self):
+        try:
+            posts = list(self.mongo.forum.find({"category":session['department']}))
+            print(posts)
+            if posts != None:
+                return posts
+            else:
+                return False
+        except Exception as error:
+            print('In exception :', error)
+            return []
+
     def new_post(self, data):
         try:
             post = self.mongo.forum.insert_one(data)
@@ -17,12 +29,13 @@ class Forum_model:
                 {"_id": ObjectId(post.inserted_id)})
             print(post)
             if post != None:
+                post['created_on']=str(post['created_on'])
                 return post
             else:
                 return False
         except Exception as error:
             print('In exception :', error)
-            return error
+            return False
 
     def new_answer(self, answer, post_id):
         try:

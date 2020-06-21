@@ -20,6 +20,8 @@
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link href="{{ url_for('forum.static',  filename='demo/demo.css') }}" rel="stylesheet" />
     <link href="{{ url_for('forum.static',  filename='demo/vertical-nav.css') }}" rel="stylesheet" />
+    {% block css %}
+    {% endblock %}
 </head>
 
 <body class="index-page sidebar-collapse">
