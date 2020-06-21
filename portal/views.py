@@ -40,6 +40,7 @@ def profile():
     user = exdata.get_researcher()
     sub = Submissions()
     quests=sub.get_all_questions()
+
     return render_template('portal/userprofile.html',user=user,quests=quests)
 
 @portal.route('/signup')
@@ -174,7 +175,10 @@ def submission_request():
             f.save(path)
             temp = request.form.get('title')
             temp = temp.replace(" ","")
+
+            qid = temp+session["id"]+request.form.get('batch')
             data = {
+            "qid":qid,
             "title":request.form.get('title'),
             "tjoin":temp,
             "department":request.form.get('department'),
@@ -197,3 +201,35 @@ def submission_request():
     except Exception as error:
         print(error)
         return redirect(url_for('portal.signin'))
+
+@portal.route('/submission_answers', methods=['POST','GET'])
+def submission_answers():
+    sub = Submissions()
+    if request.method == 'POST':
+        f = request.files['file']
+        filename = f.filename
+        path = os.path.join(app.config['UPLOAD_FOLDER']+"submissions",filename)
+        main_path = path.split("static/")[1]
+        main_path = main_path.split("\\")[0]
+        main_path = main_path + "/" + filename
+        print(main_path)
+        f.save(path)
+        check = request.form.get('linker')
+        print(check)
+        q = sub.get_question_by_id(check)
+        sol = q['solution']
+        answer = {
+        "name":session["name"],
+        "email":session["email"],
+        "batch":session["batch"],
+        "department":session["department"],
+        "question_id":check,
+        "pdf_link":main_path,
+        "pdf_name":filename,
+        "status":"0"
+        }
+        sol.append(answer)
+        print(sol)
+        status = sub.update_subs(check,sol)
+        flash("Assignment Submitted Successfully")
+        return redirect(url_for('portal.profile'))

@@ -15,7 +15,19 @@
               <img src="{{url_for('portal.static', filename='img/faces/marc.jpg')}}" style="border-radius: 50%; margin-top: 20px;" height="300px" width="300px">
               <h3 style="color: black;"><b>{{ user['first_name'] }} {{ user['last_name'] }}</b></h3>
               <h4 style="color: black;">{{ user['user_type'] }}</h4>
+              {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">×</span></button>
+    {{message}}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
           </div>
+
         </div>
       </div>
       
@@ -84,13 +96,13 @@
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#works" role="tab" data-toggle="tab">
+                  <a class="nav-link" href="#submission" role="tab" data-toggle="tab">
                     <i class="material-icons">rate_review</i>
                     Submissions
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#favorite" role="tab" data-toggle="tab">
+                  <a class="nav-link" href="#resource" role="tab" data-toggle="tab">
                     <i class="material-icons">bookmarks</i>
                     Resource
                   </a>
@@ -182,7 +194,7 @@
               
             </div>
           </div>
-          <div class="tab-pane text-center gallery" id="works">
+          <div class="tab-pane text-center gallery" id="submission">
             <div class="row">
 
           
@@ -193,7 +205,7 @@
 {% if i['batch']==user['batch'] and i['department']==user['department'] %}
 
                   <div class="col-md-6">
-
+                    <form method="POST" action="{{url_for('portal.submission_answers')}}" enctype="multipart/form-data">
       <div class="card">
           <div class="card-header card-header-text card-header-danger">
             <div class="card-text">
@@ -201,6 +213,7 @@
             </div>
           </div>
           <div class="card-body">
+            <input type="hidden" name="linker" value="{{ i['qid'] }}">
               <div class="row">
                 Description : {{ i['description'] }}
               </div>
@@ -210,23 +223,38 @@
               <div class="row">
                 Author : {{ i['author'] }}
               </div>
-              <div class="row">
-                Upload pdf
-                <input type="file" name="file"> 
-              </div>
+              
               <div class="row" style="color: green; font-size: 15px;">
                 <b>Uploaded Date : {{ i['date_uploaded'] }}</b>
               </div>
               <div class="row" style="color: red; font-size: 15px;">
                 <b>Last Date : {{ i['deadline'] }}</b>
               </div>
-              <button class="btn btn-success btn-round">Turn In</button>
+              
+                Upload pdf
+
+                
+                <div class="row">
+                <input type="file" name="file" class="form-control" required>
+                
+                </div>
+                
+               
+              <button type="submit" class="btn btn-success btn-round">Turn In</button>
+              
+              
           </div>
       </div>
+      </form>
 
               </div>
               {% endif %}
               {% endfor %}
+
+
+
+
+            
 
 
             </div>
@@ -237,7 +265,7 @@
 
             </div>
           </div>
-          <div class="tab-pane text-center gallery" id="favorite">
+          <div class="tab-pane text-center gallery" id="resource">
             <div class="row">
               <div class="col-md-12 ml-auto">
                 <img src="../assets/img/examples/mariya-georgieva.jpg" class="rounded">
@@ -274,6 +302,13 @@
     
     </div>
   </div>
+
+
+
+{% endblock %}
+
+
+{% block javascript %}
 
 
 
