@@ -11,43 +11,50 @@
                   <p class="card-category">Approve Resources and Upload</p>
                 </div>
                 <div class="card-body ">
+                  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">×</span></button>
+    {{message}}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
                
-                <form id="contact-form" method="post">
+                <form id="contact-form" action="{{url_for('admin.add_resource')}}" method="POST" enctype="multipart/form-data">
                   
                   <div class="card-body card-contact">
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group label-floating is-empty">
                           <label class="bmd-label-floating">Title</label>
-                          <input type="text" name="name" class="form-control">
+                          <input type="text" name="title" class="form-control">
                           <span class="material-input"></span>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group label-floating is-empty">
                           <label class="bmd-label-floating">Autor</label>
-                          <input type="text" name="name" class="form-control">
+                          <input type="text" name="author" class="form-control">
                           <span class="material-input"></span>
                         </div>
                       </div>
                     </div>
                     <div class="form-group label-floating is-empty">
-                      <div class="dropdown">
-                        <button class="dropdown-toggle btn btn-primary btn-round btn-block" type="button" id="multiDropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                          Choose Resource type
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="multiDropdownMenu">
-                          <a class="dropdown-item" href="#pablo">Book</a>
-                          <a class="dropdown-item" href="#pablo">Journal</a>
-                          <a class="dropdown-item" href="#pablo">Paper</a>
-
-                        </div>
-                      </div>
+                      
+                      <select name="resource_type" class="form-control">
+                        <option value="None">Select Resource Type</option>
+                        <option value="Book">Book</option>
+                        <option value="Paper">Paper</option>
+                        <option value="Journal">Journal</option>
+                      </select>
                     </div>
                     </div>
                     <div class="card-footer justify-content-between">
                       <div class="col-md-8 mr-auto">
-                        <input type="file" class="btn btn-primary"></input>
+                        <input type="file" name="file" class="btn btn-primary"></input>
                         </div>
                        <button type="submit" class="btn btn-primary pull-right">Upload</button>
                     </div>

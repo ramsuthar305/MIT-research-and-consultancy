@@ -245,3 +245,22 @@ class Shortlist:
 			all_profiles.append(user)
 		print(all_profiles)
 		return all_profiles
+
+
+
+class Resource:
+	def __init__(self):
+		self.mongo =mongo.db
+
+	def add_resource(self,data):
+		try:
+			result=mongo.db.resource.insert_one(data)
+			if result:
+				return results
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	
