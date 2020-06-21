@@ -5,6 +5,7 @@ import hashlib
 import json
 from datetime import datetime
 #custom imports
+from app import *
 from .models import *
 
 user_object = Users()
@@ -130,13 +131,50 @@ def logout():
 @portal.route('/supervisors_panel', methods=['POST','GET'])
 def supervisors_panel():
     exdata = Extract_Data()
-    user = exdata.get_researcher()
+    batches=exdata.get_batches()
+    sub = Submissions()
+    quests = sub.get_questions_by_author(session['id'])
+    
     try:
         if session['logged_in']==True:
-            return render_template('portal/supervisors_panel.html')
+            return render_template('portal/supervisors_panel.html',batches=batches,quests=quests)
         else:
             return redirect(url_for("portal.index"))
     except Exception as error:
         print(error)
         return render_template('portal/index.html')
 
+
+@portal.route('/submission_request', methods=['POST','GET'])
+def submission_request():
+    sub = Submissions()
+    try:
+        if request.method == 'POST':
+            
+            f = request.files['file']
+            filename = f.filename
+            path = os.path.join(app.config['UPLOAD_FOLDER']+"submissions",filename)
+            main_path = path.split("static/")[1]
+            print(main_path)
+            f.save(path)
+            data = {
+            "title":request.form.get('title'),
+            "department":request.form.get('department'),
+            "batch":request.form.get('batch'),
+            "deadline":request.form.get('deadline'),
+            "description":request.form.get('description'),
+            "pdf":main_path,
+            "pdfname":filename,
+            "author":session["id"],
+            "solution":[]
+            }
+            print(data)
+            status = sub.add_submission(data)
+            #sub.upload_file(file_data,f,"pdf",request.form.get('title'))
+            flash("Assignment Posted Successfully")
+            return redirect(url_for('portal.supervisors_panel'))
+        else:
+            return redirect(url_for('portal.supervisors_panel'))
+    except Exception as error:
+        print(error)
+        return redirect(url_for('portal.signin'))

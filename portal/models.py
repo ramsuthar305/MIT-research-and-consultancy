@@ -34,7 +34,7 @@ class Users:
 				if result:
 					print(result)
 					session["email"] = user["email"]
-					session["name"] = user["first_name"]+user["last_name"]
+					session["name"] = user["first_name"]+" "+user["last_name"]
 					session["logged_in"] = True
 					session["user_type"] = user["user_type"]
 					session['id'] = str(user["email"])
@@ -147,6 +147,17 @@ class Extract_Data:
 			print(error)
 			return "something went wrong"
 
+	def get_batches(self):
+		try:
+			result=mongo.db.batch.find({"expire":"0"})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
 	def get_researcher(self):
 		try:
 			
@@ -202,3 +213,61 @@ class Extract_Data:
 		except Exception as error:
 			print(error)
 			return "something went wrong"
+
+
+class Submissions:
+	def __init__(self):
+		self.mongo =mongo.db
+
+	def add_submission(self,data):
+		try:
+			result=mongo.db.submissions.insert_one(data)
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def get_questions_by_author(self,data):
+		try:
+			result=mongo.db.submissions.find({"author":data})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def upload_file(self, file_data, file, file_type,title):
+		try:
+ 			print('called')
+	 		if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + file_data["directory"])):
+	 			os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + file_data["directory"]))
+	 		file_path = os.path.join(app.config['UPLOAD_FOLDER'] + file_data["directory"])
+	 		#file.save(file_path + file_data["filename"])
+	 		file.save(file_data["filename"])
+	 		file_result = os.path.exists(file_path + file_data["filename"])
+	 		print(file_result)
+			
+	 		if file_result:
+	 			file_data["file_path"] = file_path.split("static/")[1]
+				
+	 			if file_type=="pic":
+	 				if os.path.exists(file_data["file_path"]):
+	 					os.remove(file_data["file_path"])
+	 				result = self.mongo.submissions.update_one({"$and":[{"title": title},{"author":session['id']}]}, {"$set": {{"pdf":file_data["file_path"] + file_data["filename"]},{"pdfname":file_data["filename"]}}})
+			
+	 			if file_type=="pdf":
+	 				if os.path.exists(file_data["file_path"]):
+	 					os.remove(file_data["file_path"])
+	 				print(file_data['file_path'])
+	 				
+	 				result = self.mongo.submissions.update_one({"$and":[{"title": title},{"author":session['id']}]}, {"$set": {{"pdf":file_data["file_path"] + file_data["filename"]}}})
+	 		return True
+		except Exception as error:
+	 		print(error)
+	 		return True
+

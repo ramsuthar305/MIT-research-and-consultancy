@@ -1,0 +1,53 @@
+{% extends 'admin/base.html' %} 
+{% block main_page %} 
+
+      <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-md-6 mx-auto">
+              <div class="card">
+                <div class="card-header card-header-primary">
+                  <h4 class="card-title" id="page_name">Expire Batch</h4>
+                  <p class="card-category">Remove Batch</p>
+                </div>
+                <div class="card-body">
+
+
+                  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">×</span></button>
+    {{message}}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+             
+             
+            <form class="text-center" action="{{url_for('admin.expire_batch')}}" method="POST" style="margin-top: 50px;">
+              
+              <label class="form-control">Expire Batch</label>
+              
+              <select name="batch_name" class="form-control">
+                        <option value="0">Select Batch</option>
+                        {% for j in display_list1 %}
+                        <option value="{{ j['batch_name'] }}">{{ j['batch_name'] }}</option>
+                        {% endfor %}
+                        
+                    </select>
+              <button type="submit" name="expire" value="Expire" class="btn btn-danger btn-round">Expire</button>
+
+
+            </form>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+      
+
+{% endblock %}
