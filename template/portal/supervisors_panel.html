@@ -138,11 +138,7 @@
             <div class="nav-tabs-wrapper">
               <ul class="nav nav-pills" data-tabs="tabs">
 
-                <li class="nav-item">
-                  <a class="nav-link active show" href="#{{ fbatch['bjoin'] }}" data-toggle="tab">
-                    {{ fbatch['batch_name'] }}
-                  </a>
-                </li>
+                
                 {% for i in restbatches %}
                 <li class="nav-item">
                   <a class="nav-link" href="#{{ i['bjoin'] }}" data-toggle="tab">
@@ -157,129 +153,68 @@
 
         <div class="col-md-12 ml-auto mr-auto text-center">
           <div class="tab-content text-center">
-            <div class="tab-pane active show" id="{{ fbatch['bjoin'] }}">
-              
-              <div class="row">
-                <div class="col-md-4">
-                  <ul class="nav nav-pills nav-pills-danger flex-column">
-                    <li class="nav-item"><a class="nav-link active" href="#tab1" data-toggle="tab">Question1</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#tab2" data-toggle="tab">Question2</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Question3</a></li>
-                  </ul>
-                </div>
-                <div class="col-md-8" style="color: black;">
-                  <div class="tab-content">
-                    <div class="tab-pane active" id="tab1">
-                      Question1
-                      <br><br>
-                     
-                      <table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>pdf</th>
-            <th>Accept</th>
-            <th>Reject</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr style="color: black;">
-            <td>Andrew Mike</td>
-            <td>&euro; 99,225</td>
-            <td class="td-actions">
-                <button type="button" rel="tooltip" class="btn btn-success btn-round">
-                    <i class="material-icons">verified</i>
-                </button>
-            </td>
-            <td class="td-actions">
-              <button type="button" rel="tooltip" class="btn btn-danger btn-round">
-                    <i class="material-icons">close</i>
-                </button>
-            </td>
-        </tr>
-        
-        
-    </tbody>
-</table>
-                    </div>
-                    <div class="tab-pane" id="tab2">
-                      Question2
-                      <br><br>
-                      <table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>pdf</th>
-            <th>Accept</th>
-            <th>Reject</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr style="color: black;">
-            <td>Andrew Mike</td>
-            <td>&euro; 99,225</td>
-            <td class="td-actions">
-                <button type="button" rel="tooltip" class="btn btn-success btn-round">
-                    <i class="material-icons">verified</i>
-                </button>
-            </td>
-            <td class="td-actions">
-              <button type="button" rel="tooltip" class="btn btn-danger btn-round">
-                    <i class="material-icons">close</i>
-                </button>
-            </td>
-        </tr>
-        
-        
-    </tbody>
-</table>
-                    </div>
-                    <div class="tab-pane" id="tab3">
-                      Question3
-                      <br><br>
-                      <table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>pdf</th>
-            <th>Accept</th>
-            <th>Reject</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr style="color: black;">
-            <td>Andrew Mike</td>
-            <td>&euro; 99,225</td>
-            <td class="td-actions">
-                <button type="button" rel="tooltip" class="btn btn-success btn-round">
-                    <i class="material-icons">verified</i>
-                </button>
-            </td>
-            <td class="td-actions">
-              <button type="button" rel="tooltip" class="btn btn-danger btn-round">
-                    <i class="material-icons">close</i>
-                </button>
-            </td>
-        </tr>
-        
-        
-    </tbody>
-</table>
-
-
-                    </div>
-                    <button class="btn btn-danger btn-round">Delete</button>
-                  </div>
-                </div>
-              </div>
-              
-            </div>
+            
             {% for i in restbatches %}
             <div class="tab-pane" id="{{ i['bjoin'] }}">
               <p class="description">
                 Hello {{ i['batch_name'] }}
               </p>
-              
+              <div class="row">
+                <div class="col-md-4">
+                  <ul class="nav nav-pills nav-pills-danger flex-column">
+                    {% for j in restsub %}
+                    {% if j['batch']==i['batch_name'] %}
+                    <li class="nav-item"><a class="nav-link" href="#{{ j['tjoin'] }}" data-toggle="tab">{{ j['title'] }}</a></li>
+                    {% endif %}
+                    {% endfor %}
+                    
+                  </ul>
+                </div>
+                <div class="col-md-8" style="color: black;">
+                  <div class="tab-content">
+                    {% for j in restsub %}
+                    {% if j['batch']==i['batch_name'] %}
+                    <div class="tab-pane" id="{{ j['tjoin'] }}">
+                      {{ j['title'] }}
+                      <br><br>
+                     
+                      <table class="table" style="overflow-x:auto;">
+                    
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>pdf</th>
+            <th>Accept</th>
+            <th>Reject</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr style="color: black;">
+            <td>Andrew Mike</td>
+            <td>&euro; 99,225</td>
+            <td class="td-actions">
+                <button type="button" rel="tooltip" class="btn btn-success btn-round">
+                    <i class="material-icons">verified</i>
+                </button>
+            </td>
+            <td class="td-actions">
+              <button type="button" rel="tooltip" class="btn btn-danger btn-round">
+                    <i class="material-icons">close</i>
+                </button>
+            </td>
+        </tr>
+        
+        
+    </tbody>
+</table>
+                    </div>
+                    
+                    {% endif %}
+                    {% endfor %}
+                  </div>
+
+                </div>
+              </div>
             </div>
             {% endfor %}
           </div>
