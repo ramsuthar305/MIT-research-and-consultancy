@@ -138,13 +138,15 @@ def supervisors_panel():
     batches=exdata.get_batches()
     sub = Submissions()
     quests = sub.get_questions_by_author(session['id'])
-    fbatch = batches[0]
     restbatches = []
-    for i in range(1,batches.count()):
+    for i in range(0,batches.count()):
         restbatches.append(batches[i])
+    restsub = []
+    for i in range(0,quests.count()):
+        restsub.append(quests[i])
     try:
         if session['logged_in']==True:
-            return render_template('portal/supervisors_panel.html',fbatch=fbatch,restbatches=restbatches,quests=quests)
+            return render_template('portal/supervisors_panel.html',restbatches=restbatches,quests=quests,batches=batches, restsub=restsub)
         else:
             return redirect(url_for("portal.index"))
     except Exception as error:
@@ -166,10 +168,14 @@ def submission_request():
             main_path = path.split("static/")[1]
             print(main_path)
             f.save(path)
+            temp = request.form.get('title')
+            temp = temp.replace(" ","")
             data = {
             "title":request.form.get('title'),
+            "tjoin":temp,
             "department":request.form.get('department'),
             "batch":request.form.get('batch'),
+            "date_uploaded":str(date.today()),
             "deadline":request.form.get('deadline'),
             "description":request.form.get('description'),
             "pdf":main_path,
