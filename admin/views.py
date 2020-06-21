@@ -70,6 +70,15 @@ def setbatch():
     batch_object = Batch()
     display_list = {}
     active = ""
+    year = datetime.now().year
+    L = []
+    for i in reversed(range(1,5)):
+        temp = year-i
+        L.append(temp)
+    L.append(year)
+    for i in range(1,5):
+        temp = year+i
+        L.append(temp)
     try:
         if session['logged_in']==True:
             batchlist = batch_object.get_batches()
@@ -77,7 +86,7 @@ def setbatch():
             if batchlist:
                 display_list = batchlist
                 display_list1 = batchlist
-            return render_template('admin/setbatch.html', display_list=display_list, display_list1=display_list1, active=active)
+            return render_template('admin/setbatch.html', display_list=display_list,active=active, year=L)
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
@@ -88,9 +97,17 @@ def setbatch():
 def addbatch():
     try:
         batch_object = Batch()
+
         if request.method=="POST":
+            bmonth = request.form.get("bmonth")
+            byear = request.form.get("byear")
+            batch_name = bmonth+" "+str(byear)
+            bjoin = bmonth+str(byear)
             data = {
-            "batch_name":request.form.get("batch_name"),
+            "batch_name":batch_name,
+            "bmonth":bmonth,
+            "byear":byear,
+            "bjoin":bjoin,
             "start_date":request.form.get("start_date"),
             "end_date":request.form.get("end_date"),
             "status":"0",

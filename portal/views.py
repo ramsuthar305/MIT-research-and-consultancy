@@ -138,10 +138,13 @@ def supervisors_panel():
     batches=exdata.get_batches()
     sub = Submissions()
     quests = sub.get_questions_by_author(session['id'])
-    
+    fbatch = batches[0]
+    restbatches = []
+    for i in range(1,batches.count()):
+        restbatches.append(batches[i])
     try:
         if session['logged_in']==True:
-            return render_template('portal/supervisors_panel.html',batches=batches,quests=quests)
+            return render_template('portal/supervisors_panel.html',fbatch=fbatch,restbatches=restbatches,quests=quests)
         else:
             return redirect(url_for("portal.index"))
     except Exception as error:
@@ -151,6 +154,8 @@ def supervisors_panel():
 
 @portal.route('/submission_request', methods=['POST','GET'])
 def submission_request():
+    exdata = Extract_Data()
+    batches=exdata.get_batches()
     sub = Submissions()
     try:
         if request.method == 'POST':
