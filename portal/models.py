@@ -246,6 +246,17 @@ class Submissions:
 			print(error)
 			return "something went wrong"
 
+	def get_all_questions(self):
+		try:
+			result=mongo.db.submissions.find()
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
 	def upload_file(self, file_data, file, file_type,title):
 		try:
  			print('called')

@@ -184,15 +184,57 @@
           </div>
           <div class="tab-pane text-center gallery" id="works">
             <div class="row">
-              <div class="col-md-12 ml-auto">
-                <img src="../assets/img/examples/olu-eletu.jpg" class="rounded">
-                <img src="../assets/img/examples/clem-onojeghuo.jpg" class="rounded">
-                <img src="../assets/img/examples/cynthia-del-rio.jpg" class="rounded">
+
+          
+              <div class="col-md-12">
+                <div class="row">
+                  
+{% for i in quests %}
+{% if i['batch']==user['batch'] and i['department']==user['department'] %}
+
+                  <div class="col-md-6">
+
+      <div class="card">
+          <div class="card-header card-header-text card-header-danger">
+            <div class="card-text">
+              <h4 class="card-title">{{ i['title'] }}</h4>
+            </div>
+          </div>
+          <div class="card-body">
+              <div class="row">
+                Description : {{ i['description'] }}
               </div>
-              <div class="col-md-12 mr-auto">
-                <img src="../assets/img/examples/mariya-georgieva.jpg" class="rounded">
-                <img src="../assets/img/examples/clem-onojegaw.jpg" class="rounded">
+              <div class="row">
+                File : <a href="{{ url_for('portal.static',  filename=i['pdf'] ) }}" target="_blank">{{ i['pdfname'] }}</a>
               </div>
+              <div class="row">
+                Author : {{ i['author'] }}
+              </div>
+              <div class="row">
+                Upload pdf
+                <input type="file" name="file"> 
+              </div>
+              <div class="row" style="color: green; font-size: 15px;">
+                <b>Uploaded Date : {{ i['date_uploaded'] }}</b>
+              </div>
+              <div class="row" style="color: red; font-size: 15px;">
+                <b>Last Date : {{ i['deadline'] }}</b>
+              </div>
+              <button class="btn btn-success btn-round">Turn In</button>
+          </div>
+      </div>
+
+              </div>
+              {% endif %}
+              {% endfor %}
+
+
+            </div>
+            </div>
+            
+
+
+
             </div>
           </div>
           <div class="tab-pane text-center gallery" id="favorite">

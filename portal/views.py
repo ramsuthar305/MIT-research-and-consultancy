@@ -3,7 +3,7 @@ from functools import wraps
 from flask import session
 import hashlib
 import json
-from datetime import datetime
+from datetime import datetime, date
 #custom imports
 from app import *
 from .models import *
@@ -38,7 +38,9 @@ def publication():
 def profile():
     exdata = Extract_Data()
     user = exdata.get_researcher()
-    return render_template('portal/userprofile.html',user=user)
+    sub = Submissions()
+    quests=sub.get_all_questions()
+    return render_template('portal/userprofile.html',user=user,quests=quests)
 
 @portal.route('/signup')
 def signup():
@@ -166,6 +168,8 @@ def submission_request():
             filename = f.filename
             path = os.path.join(app.config['UPLOAD_FOLDER']+"submissions",filename)
             main_path = path.split("static/")[1]
+            main_path = main_path.split("\\")[0]
+            main_path = main_path + "/" + filename
             print(main_path)
             f.save(path)
             temp = request.form.get('title')
