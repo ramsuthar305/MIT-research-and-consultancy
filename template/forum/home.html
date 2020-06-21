@@ -1,4 +1,7 @@
 {% extends 'forum/base.html' %}
+{% block css %}
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+{% endblock %}
 {% block main_page %}
 <div class="">
 
@@ -6,7 +9,7 @@
     <div class="container" style="padding-top: 12vh;">
         <div class="d-flex justify-content-between">
             <h3 class="title text-dark pb-3">All Questions</h3>
-            
+
             <form class="mt-4 pt-1" style="width: 40%;">
                 <input type="search" class="form-control ds-input" id="search-input" placeholder="Search..."
                     aria-label="Search for..." autocomplete="off" data-docs-version="4.5" spellcheck="false"
@@ -18,7 +21,9 @@
         <hr>
         <div class="row pt-4 ">
             <div class="col-md-3 text-dark border-right">
-                <button class="btn btn-outline-primary btn-block">Ask a question</button>
+                {% if session['logged_in'] %}
+                <button class="btn btn-outline-primary btn-block" id="askQuestion">Ask a question</button>
+                {% endif %}
                 <div class="mt-4 pt-4">
 
                     <h4 class="title text-dark text-center">Departments</h4>
@@ -38,39 +43,126 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-md-9 text-dark pr-4">
-                {% for i in range(10) %}
+            <div class="col-md-9 text-dark pr-4" id="allPosts">
+                {% if session['logged_in'] %}
+                <div class="border  p-1" style="display: none;" id="answerContainer">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Title</label>
+                        <input type="text" class="form-control" id="threadTitle" placeholder="Enter thread title">
+                    </div>
+                    <div id="toolbar-container">
+
+                        <span class="ql-formats">
+                            <select class="ql-size"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-bold"></button>
+                            <button class="ql-italic"></button>
+                            <button class="ql-underline"></button>
+                            <button class="ql-strike"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <input type="hidden" id="myHtml" />
+
+                            <select class="ql-color"></select>
+                            <select class="ql-background"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-script" value="sub"></button>
+                            <button class="ql-script" value="super"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-header" value="1"></button>
+                            <button class="ql-header" value="2"></button>
+                            <button class="ql-blockquote"></button>
+                            <button class="ql-code-block"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-list" value="ordered"></button>
+                            <button class="ql-list" value="bullet"></button>
+                            <button class="ql-indent" value="-1"></button>
+                            <button class="ql-indent" value="+1"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-direction" value="rtl"></button>
+                            <select class="ql-align"></select>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-link"></button>
+                            <button class="ql-image"></button>
+                            <button class="ql-video"></button>
+                            <button class="ql-formula"></button>
+                        </span>
+                        <span class="ql-formats">
+                            <button class="ql-clean"></button>
+                        </span>
+                    </div>
+
+                    <div id="editor">
+                        <p class="text-muted">Enter description</p>
+                        <br>
+                    </div>
+                    <div class="row d-flex justify-content-between">
+                        <div class="input-group col-md-4 col-sm-5">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <i class="material-icons">school</i>
+                                </span>
+                            </div>
+                            <select class="form-control" id="departmentschange" name="department">
+                                <option value="None">Select Department</option>
+                                <option value="Management">Management</option>
+                                <option value="Bioengineering Sciences and Research">Bioengineering Sciences and
+                                    Research
+                                </option>
+                                <option value="Food Technology">Food Technology</option>
+                                <option value="Applied Art">Applied Art</option>
+                                <option value="Design">Design</option>
+                                <option value="Vedic Sciences">Vedic Sciences</option>
+                                <option value="Education">Education</option>
+                                <option value="Engineering">Engineering</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 col-sm-5">
+
+                            <button class="btn btn-link btn-block text-primary m-0" id="convert" type="submit">Post
+                                thread</button>
+                        </div>
+                    </div>
+
+                </div>
+                {% endif %}
+                {% for post in posts %}
                 <div class="row border-bottom py-3">
                     <div class="col-md-2">
                         <div class="text-center m-auto">
-                            <h4 class="my-0 font-weight-bold">0</h4>
+                            <h4 class="my-0 font-weight-bold">{{post['upvotes']|length}}</h4>
                             <span style="font-size: 14px;">Votes</span>
                         </div>
                         <div class="text-center m-auto">
 
                             <button class="btn btn-outline-success py-0 px-1">
-                                <h4 class="my-0 font-weight-bold">12</h4>
+                                <h4 class="my-0 font-weight-bold">{{post['answers']|length}}</h4>
                                 <span style="font-size: 14px; text-transform: capitalize;">Answers</span>
                             </button>
                         </div>
                     </div>
                     <div class="col-md-10">
                         <a href="" style="font-weight: 400; font-size: 16px;">
-                            Element type is invalid: expected a string( for built-in components) or a class/function
-                            (for composite components) but got: number
+                            {{post['title']}}
                         </a>
-                        <p class="pt-3"
-                            style="-webkit-line-clamp: 2;display: -webkit-box;overflow: hidden;-webkit-box-orient: vertical;">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut odio temporibus voluptas error
-                            distinctio hic quae corrupti vero doloribus optio! Inventore ex quaerat modi blanditiis
-                            soluta maiores illum, ab velit.Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut
-                            odio temporibus voluptas error distinctio hic quae corrupti vero doloribus optio! Inventore
-                            ex quaerat modi blanditiis soluta maiores illum, ab velit.</p>
+                        <div class="= pt-3 "
+                            style="-webkit-line-clamp: 2;display: -webkit-box;overflow: hidden;-webkit-box-orient: vertical; max-height: 10vh;">
+                            {% autoescape false %}
+                            {{post['description']}}
+                            {% endautoescape %}
+                        </div>
                         <div style="float: right;">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Shah_Rukh_Khan_graces_the_launch_of_the_new_Santro.jpg/220px-Shah_Rukh_Khan_graces_the_launch_of_the_new_Santro.jpg"
                                 class="rounded-circle ml-2" style="height: 25px; width: 25px;" alt="">
-                            <a href=""> @chetan bhagat</a>
-                            <small class="pl-4 ml-4">6 hours ago</small>
+                            <a href=""> @{{ post['uid'] }}</a>
+                            <small class="pl-4 ml-4"><abbr class="timeago" title="{{ post['created_on'] }}"
+                                    style="text-decoration: none;"></abbr></small>
                         </div>
                     </div>
                 </div>
@@ -85,6 +177,96 @@
 {% endblock %}
 
 {% block jquery %}
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.4.3/jquery.timeago.js"
+    type="text/javascript"></script>
+<!-- Initialize Quill editor -->
+<script>
+    var quill = new Quill('#editor', {
+        modules: {
+            syntax: true,
+            toolbar: '#toolbar-container'
+        },
+
+        theme: 'snow'
+    });
+    const form = document.forms.mainform;
+    $('#convert').click(function () {
+        editor = document.getElementById('editor');
+
+        category = $('#departmentschange').val();
+        title = $('#threadTitle').val();
+        if (category == "None") {
+            alert("Please choose the department");
+            return false
+        }
+        if (title.length < 10) {
+            alert("title must me atleast 10 characters long.")
+            return false
+        }
+        description = editor.firstChild.innerHTML
+        console.log(title + category + description);
+        $.ajax({
+            url: '{{url_for("forum.new_post")}}',
+            data: JSON.stringify({ title: title, category: category, description: description }),
+            type: 'POST',
+            success: function (response) {
+                response = JSON.parse(response)
+                alert(response.data.created_on.toString())
+                if (response.status == true) {
+                    alert("response: " + response.data);
+                    var $post = $(`<div class="row border-bottom py-3">
+                    <div class="col-md-2">
+                        <div class="text-center m-auto">
+                            <h4 class="my-0 font-weight-bold">${response.data.upvotes.length}</h4>
+                            <span style="font-size: 14px;">Votes</span>
+                        </div>
+                        <div class="text-center m-auto">
+
+                            <button class="btn btn-outline-success py-0 px-1">
+                                <h4 class="my-0 font-weight-bold">${response.data.answers.length}</h4>
+                                <span style="font-size: 14px; text-transform: capitalize;">Answers</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <a href="" style="font-weight: 400; font-size: 16px;">
+                            ${response.data.title}
+                        </a>
+                        <div class="= pt-3 "
+                            style="-webkit-line-clamp: 2;display: -webkit-box;overflow: hidden;-webkit-box-orient: vertical; max-height: 10vh;">
+                            {% autoescape false %}
+                            ${response.data.description}
+                            {% endautoescape %}
+                        </div>
+                        <div style="float: right;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Shah_Rukh_Khan_graces_the_launch_of_the_new_Santro.jpg/220px-Shah_Rukh_Khan_graces_the_launch_of_the_new_Santro.jpg"
+                                class="rounded-circle ml-2" style="height: 25px; width: 25px;" alt="">
+                            <a href=""> @${response.data.uid}</a>
+                            <small class="pl-4 ml-4"><abbr class="timeago_new" title="${response.data.created_on.toString()}" style="text-decoration: none;"></abbr></small>
+                        </div>
+                    </div>
+                </div>`)
+                    $("#allPosts").append($post);
+                    $("abbr.timeago_new").timeago();
+                } else {
+                    alert("response: " + response.status);
+                }
+                $("#answerContainer").toggle();
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    });
+
+
+    
+</script>
+
 <script>
     $(document).ready(function () {
         console.log("ready!");
@@ -92,6 +274,27 @@
         $("#header").addClass("py-0");
         $("#headerTitle").addClass("text-primary");
         $("#header").removeClass("navbar-transparent");
+        $("#askQuestion").click(function () {
+            $("#answerContainer").toggle();
+        });
+
+
+        var container = document.getElementsByClassName('editor');
+        for (i = 0; i < container.length; i++) {
+            var configs = {
+                readOnly: true,
+                theme: 'snow'
+            };
+            var editor = new Quill(container[i], configs);
+
+        }
+
+
+    });
+    jQuery(document).ready(function () {
+        
+            $("abbr.timeago").timeago();
+        
     });
 </script>
 {% endblock %}

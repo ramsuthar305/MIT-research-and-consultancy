@@ -21,7 +21,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#pablo" class="nav-link">
+                    <a href="{{url_for('forum.index')}}" class="nav-link">
                         Forum
                     </a>
                 </li>
@@ -30,12 +30,27 @@
                         E-resources
                     </a>
                 </li>
+                {% if session['logged_in'] %}
+                <li class="nav-item">
+                    <a href="{{url_for('portal.profile')}}"  style="cursor: pointer;">
+                        <i class="material-icons">account_circle</i>
+                        {{session['name']}}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{url_for('portal.logout')}}"  style="cursor: pointer;">
+                        <i class="material-icons">exit</i>
+                        Logout
+                    </a>
+                </li>
+                {% else %}
                 <li class="nav-item">
                     <a data-toggle="modal" data-target="#loginModal" style="cursor: pointer;">
                         <i class="material-icons">account_circle</i>
                         Login
                     </a>
                 </li>
+                {% endif %}
             </ul>
 
         </div>
@@ -65,7 +80,8 @@
                                             <i class="material-icons">mail</i>
                                         </span>
                                     </div>
-                                    <input type="text" class="form-control" name="email" placeholder="Email..." required/>
+                                    <input type="text" class="form-control" name="email" placeholder="Email..."
+                                        required />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -76,7 +92,7 @@
                                         </span>
                                     </div>
                                     <input type="password" name="password" placeholder="Password..."
-                                        class="form-control" required/>
+                                        class="form-control" required />
                                 </div>
                             </div>
                         </div>

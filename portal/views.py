@@ -117,11 +117,7 @@ def signin():
 @portal.route('/logout', methods=['POST','GET'])
 def logout():
     try:
-        session['logged_in']=False
-        session["username"] = None
-        session["name"] = None
-        session["user_type"] = None
-        session['id'] = None
+        session.clear()
         return redirect(url_for('portal.signin'))
     except Exception as error:
         print(error)
