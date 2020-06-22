@@ -189,13 +189,15 @@
         </tr>
     </thead>
     <form method="POST" action="{{url_for('portal.evalsubmission')}}" enctype="multipart/form-data">
+      <input type="hidden" name="qid" value="{{ j['qid'] }}"> 
     <tbody>
       {% if j['qid'] in qidlist %}
       {% for k in j['solution'] %}
         <tr style="color: black;">
             <td>{{ k['name'] }}</td>
             <td><a href="{{ url_for('portal.static',  filename=k['pdf_link'] ) }}" target="_blank">{{ k['pdf_name'] }}</a></td>
-            <input type="hidden" name="qid" value="{{ j['qid'] }}">
+            
+            
             <input type="hidden" name="email" value="{{ k['email'] }}">
             {% if k['status']=="0" %}
             <td class="td-actions">
@@ -233,8 +235,9 @@
         {% endfor %}
         {% endif %}
         
-        
+        <button class="btn btn-success btn-round" type="submit" name="submit_button" value="delete">Delete Assignment</button>
     </tbody>
+
   </form>
 </table>
                     </div>
@@ -272,7 +275,6 @@
     <thead>
         <tr>
             <th>Name</th>
-            <th>Email</th>
             <th>Title</th>
             <th>Description</th>
             <th>pdf</th>
@@ -281,23 +283,65 @@
         </tr>
     </thead>
     <tbody>
+      <form method="POST" action="{{url_for('portal.evalresource')}}" enctype="multipart/form-data">
+      {% for i in verify_resource %}
+      {% if i['status']=='0' %}
+      <input type="hidden" name="rid" value="{{ i['rid'] }}">
         <tr style="color: black;">
-            <td>1</td>
-            <td>Andrew Mike</td>
-            <td>Develop</td>
-            <td>2013</td>
-            <td>&euro; 99,225</td>
+            <td>{{ i['author'] }}</td>
+            <td>{{ i['title'] }}</td>
+            <td>{{ i['description'] }}</td>
+            <td><a href="{{ url_for('portal.static',  filename=i['pdf_link'] ) }}" target="_blank">{{ i['pdf_name'] }}</a></td>
             <td class="td-actions">
-                <button type="button" rel="tooltip" class="btn btn-success btn-round">
+                <button type="submit" name="submitbtn" value="verify" rel="tooltip" class="btn btn-success btn-round">
                     <i class="material-icons">verified</i>
                 </button>
             </td>
             <td class="td-actions">
-              <button type="button" rel="tooltip" class="btn btn-danger btn-round">
+              <button type="submit" name="submitbtn" value="reject" rel="tooltip" class="btn btn-danger btn-round">
                     <i class="material-icons">close</i>
                 </button>
             </td>
         </tr>
+        {% endif   %}
+        {% endfor %}
+      }
+        
+        </form>
+    </tbody>
+</table>
+
+
+
+</div>
+
+
+<h2 style="color: black; margin-bottom: 40px; margin-top: 100px;">Verified Resources</h2>
+              <div class="col-md-8 ml-auto mr-auto">
+              <table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>pdf</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+     
+      {% for i in verified_resource %}
+      {% if i['status']=='1' %}
+        <tr style="color: black;">
+            <td>{{ i['author'] }}</td>
+            <td>{{ i['title'] }}</td>
+            <td>{{ i['description'] }}</td>
+            <td><a href="{{ url_for('portal.static',  filename=i['pdf_link'] ) }}" target="_blank">{{ i['pdf_name'] }}</a></td>
+            
+        </tr>
+        {% endif %}
+        {% endfor %}
+      }
         
         
     </tbody>

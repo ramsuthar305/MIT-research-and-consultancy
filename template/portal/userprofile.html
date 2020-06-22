@@ -228,7 +228,7 @@
             {% endif %}
             {% endfor %}
             {% else %}
-            <div class="card-header card-header-text card-header-danger">
+            <div class="card-header card-header-text card-header-primary">
             {% endif %}
             <div class="card-text">
               <h4 class="card-title">{{ i['title'] }}</h4>
@@ -324,14 +324,168 @@
           <div class="tab-pane text-center gallery" id="resource">
             <div class="row">
               <div class="col-md-12 ml-auto">
-                <img src="../assets/img/examples/mariya-georgieva.jpg" class="rounded">
-                <img src="../assets/img/examples/studio-3.jpg" class="rounded">
-              </div>
-              <div class="col-md-12 mr-auto">
-                <img src="../assets/img/examples/clem-onojeghuo.jpg" class="rounded">
-                <img src="../assets/img/examples/olu-eletu.jpg" class="rounded">
-                <img src="../assets/img/examples/studio-1.jpg" class="rounded">
-              </div>
+                <h3 style="color: black;">Add Resource</h3>
+                <div class="row">
+                  <div class="col-md-6 ml-auto mr-auto">
+                <form action="{{url_for('portal.student_resource')}}" method="POST" enctype = "multipart/form-data">
+                  <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" name="title" class="form-control" id="title" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea name="description" class="form-control" id="description" required></textarea> 
+                  </div>
+                  
+               
+                 <div class="form-group form-file-upload form-file-multiple">
+    <input type="file" name="file" multiple="" class="inputFileHidden">
+    <div class="input-group">
+        <input type="text" class="form-control inputFileVisible" placeholder="Single pdf File/Report" required>
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-fab btn-round btn-primary">
+                <i class="material-icons">attach_file</i>
+            </button>
+        </span>
+    </div>
+  </div>
+
+<div class="form-group">
+    <label for="exampleFormControlSelect1">Select Supervisor/Co-Supervisor</label>
+    <select class="form-control"  id="exampleFormControlSelect1" name="supervisor">
+      <option value="{{ user['supervisor'] }}">{{ user['supervisor'] }}</option>
+      <option value="{{ user['cosupervisor'] }}">{{ user['cosupervisor'] }}</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Send for Verification</label>
+    <button class="btn btn-success btn-round">Submit</button>
+  </div>
+  
+
+   </form>
+
+                </div>
+                </div>
+
+
+
+                <h3 style="color: black;">My Resources</h3>
+
+    <div class="card card-nav-tabs">
+  <div class="card-header card-header-success">
+    Verified
+  </div>
+  <div class="card-body">
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>pdf</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+     
+      {% for i in resource %}
+      {% if i['status']=='1' %}
+        <tr style="color: black;">
+            <td>{{ i['author'] }}</td>
+            <td>{{ i['title'] }}</td>
+            <td>{{ i['description'] }}</td>
+            <td><a href="{{ url_for('portal.static',  filename=i['pdf_link'] ) }}" target="_blank">{{ i['pdf_name'] }}</a></td>
+            
+        </tr>
+        {% endif %}
+        {% endfor %}
+      
+        
+        
+    </tbody>
+</table>
+  </div>
+</div>
+
+  </div>
+
+  <div class="card card-nav-tabs">
+  <div class="card-header card-header-warning">
+    Pending
+  </div>
+  <div class="card-body">
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>pdf</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+     
+      {% for i in resource1 %}
+      {% if i['status']=='0' %}
+        <tr style="color: black;">
+            <td>{{ i['author'] }}</td>
+            <td>{{ i['title'] }}</td>
+            <td>{{ i['description'] }}</td>
+            <td><a href="{{ url_for('portal.static',  filename=i['pdf_link'] ) }}" target="_blank">{{ i['pdf_name'] }}</a></td>
+            
+        </tr>
+        {% endif %}
+        {% endfor %}
+      
+        
+        
+    </tbody>
+</table>
+</div>
+
+  </div>
+
+  <div class="card card-nav-tabs">
+  <div class="card-header card-header-danger">
+    Rejected
+  </div>
+  <div class="card-body">
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>pdf</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+     
+      {% for i in resource2 %}
+      {% if i['status']=='2' %}
+        <tr style="color: black;">
+            <td>{{ i['author'] }}</td>
+            <td>{{ i['title'] }}</td>
+            <td>{{ i['description'] }}</td>
+            <td><a href="{{ url_for('portal.static',  filename=i['pdf_link'] ) }}" target="_blank">{{ i['pdf_name'] }}</a></td>
+            
+        </tr>
+        {% endif %}
+        {% endfor %}
+      
+        
+        
+    </tbody>
+</table>
+  </div>
+</div>
+
+  </div>
+              
             </div>
           </div>
         </div>

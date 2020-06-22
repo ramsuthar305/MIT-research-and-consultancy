@@ -318,6 +318,17 @@ class Submissions:
 			print(error)
 			return "something went wrong"
 
+	def delete_question(self,check):
+		try:
+			result=mongo.db.submissions.remove({"qid":check})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
 	def upload_file(self, file_data, file, file_type,title):
 		try:
  			print('called')
@@ -347,4 +358,53 @@ class Submissions:
 		except Exception as error:
 	 		print(error)
 	 		return True
+
+class Student_Resources:
+	def __init__(self):
+		self.mongo =mongo.db
+
+	def add_student_resource(self,data):
+		try:
+			result=mongo.db.studentresource.insert_one(data)
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def fetch_resources_by_guide(self):
+		try:
+			result=mongo.db.studentresource.find({"supervisor":session['name']})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def fetch_resource(self):
+		try:
+			result=mongo.db.studentresource.find()
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def update_resource_by_id(self,rid,temp):
+		try:
+			result=mongo.db.studentresource.update_one({"rid":rid},{"$set":{"status":temp}})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
 
