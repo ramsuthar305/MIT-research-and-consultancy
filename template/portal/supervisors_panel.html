@@ -174,11 +174,11 @@
                   <div class="tab-content">
                     {% for j in restsub %}
                     {% if j['batch']==i['batch_name'] %}
-                    <div class="tab-pane" id="{{ j['tjoin'] }}">
+                    <div class="tab-pane" id="{{ j['tjoin'] }}" style="overflow-x: auto;">
                       {{ j['title'] }}
                       <br><br>
                      
-    <table class="table" style="overflow-x:auto;">
+    <table class="table">
                     
     <thead>
         <tr>
@@ -270,7 +270,7 @@
 
             <div class="tab-pane" id="resources">
               <h2 style="color: black; margin-bottom: 40px;">Verify Resources</h2>
-              <div class="col-md-8 ml-auto mr-auto">
+              <div class="col-md-8 ml-auto mr-auto" style="overflow-x: auto;">
               <table class="table">
     <thead>
         <tr>

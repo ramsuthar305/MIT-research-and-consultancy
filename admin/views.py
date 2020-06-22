@@ -4,6 +4,7 @@ import hashlib
 import json
 from flask import session
 from datetime import datetime
+import os
 
 #custom imports
 from .models import Users, Shortlist
@@ -181,9 +182,34 @@ def setpages():
 
 @admin.route('/approve',methods=['POST','GET'])
 def approve():
+    b = Batch()
+    pending = b.fetch_pending()
     try:
         if session['logged_in']==True:
-            return render_template('admin/approve.html')
+            return render_template('admin/approve.html',pending=pending)
+        else:
+            return redirect(url_for("admin.login"))
+    except Exception as error:
+        print(error)
+        return render_template('admin/admin_login.html')
+
+@admin.route('/authorize',methods=['POST','GET'])
+def authorize():
+    b = Batch()
+    pending = b.fetch_pending()
+    try:
+        if session['logged_in']==True:
+            if request.method=="POST":
+                userid = request.form.get('userid')
+                if request.form['submitf']=="accept":
+                    status = b.authorization(userid,"1")
+                    flash("Account Activated Successfully")
+
+                if request.form['submitf']=="reject":
+                    status = b.authorization(userid,"2")
+                    flash("Account Deleted Successfully")
+
+                return redirect(url_for('admin.approve'))
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
@@ -241,6 +267,20 @@ def supervisors_registration():
         if request.method == 'POST':
             user_type = request.form.get('designation')
             email = request.form.get('email')
+            f = request.files['file']
+            filename = f.filename
+            if user_type == "Research Supervisor":
+                bpath = "supervisors"
+            if user_type == "Research Co-Supervisor":
+                bpath = "cosupervisors"
+            if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + "registrations/" + bpath)):
+                os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + "registrations/" + bpath))
+            path = os.path.join(app.config['UPLOAD_FOLDER']+"registrations/" + bpath,filename)
+            main_path = path.split("static/")[1]
+            main_path = main_path.split("\\")[0]
+            main_path = main_path + "/" + filename
+            print(main_path)
+            f.save(path)
 
             for i in range(1,9):
                 temp = "subdepartment" + str(i)
@@ -278,7 +318,9 @@ def supervisors_registration():
                 "skype":request.form.get('skype'),
                 "facebook":request.form.get('facebook'),
                 "github":request.form.get('repos'),
-                "status":"0",
+                "profile_pic":filename,
+                "profile_pic_link":main_path,
+                "status":"1",
                 "user_type":user_type
             }
             registration_status = supervisors_object.save_supervisor(user,user_type)
@@ -308,6 +350,17 @@ def specialusers_registration():
         if request.method == 'POST':
             user_type = "Special User"
             email = request.form.get('email')
+            f = request.files['file']
+            filename = f.filename
+            bpath = "specialusers"
+            if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + "registrations/" + bpath)):
+                os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + "registrations/" + bpath))
+            path = os.path.join(app.config['UPLOAD_FOLDER']+"registrations/" + bpath,filename)
+            main_path = path.split("static/")[1]
+            main_path = main_path.split("\\")[0]
+            main_path = main_path + "/" + filename
+            print(main_path)
+            f.save(path)
             
             twitter = request.form.get('twitter')
             facebook = request.form.get('facebook')
@@ -337,7 +390,7 @@ def specialusers_registration():
                 "facebook":request.form.get('facebook'),
                 "github":request.form.get('repos'),
                 "info":request.form.get('info'),
-                "status":"0",
+                "status":"1",
                 "user_type":user_type
             }
             registration_status = specialusers_object.save_specialuser(user,user_type)

@@ -65,10 +65,23 @@ def signup():
 def registration():
     exdata = Extract_Data()
     active=exdata.get_active_batch()
+    bpath = "temp"
     try:
         if request.method == 'POST':
-            #x = request.get_json(force=True)
             email= request.form.get('email')
+            f = request.files['file']
+            filename = f.filename
+            bpath = str(email)
+            if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + active+ "/" + bpath)):
+                os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + active+ "/" + bpath))
+            path = os.path.join(app.config['UPLOAD_FOLDER']+active+ "/" + bpath,filename)
+            main_path = path.split("static/")[1]
+            main_path = main_path.split("\\")[0]
+            main_path = main_path + "/" + filename
+            print(main_path)
+            f.save(path)
+            #x = request.get_json(force=True)
+            
             user_type="Research Scholar"
             user={
                 "_id":email,
@@ -90,23 +103,21 @@ def registration():
                 "github":request.form.get('repos'),
                 "supervisor":request.form.get('supervisor'),
                 "cosupervisor":request.form.get('cosupervisor'),
+                "profile_pic":filename,
+                "profile_pic_link":main_path,
+                "created_on":str(datetime.now()).split('.')[0],
                 "status":"0",
                 "user_type":user_type,
                 "semesters":[]
             }
-            print("this is user: ",user)
-            registration_status = user_object.save_user(user,user_type)
-            if registration_status == True:
-                flash("Registration Successful. You will receive an email after your account is activated")
-                return redirect(url_for("portal.signup"))
-            else:
-                flash(registration_status)
-                return redirect('portal.signup')
+            registration_status = user_object.temp_user(user)
+            flash("Registration Successful. You will receive an email after your account is activated")
+            return redirect(url_for("portal.signup"))
         else:
-            return redirect('portal.signup')
+            return redirect(url_for('portal.signup'))
     except Exception as error:
         print(error)
-        return render_template('portal.signup')
+        return render_template(url_for('portal.signup'))
 
 
 @portal.route('/signin', methods = ['GET', 'POST'])
@@ -183,6 +194,8 @@ def submission_request():
             
             f = request.files['file']
             filename = f.filename
+            if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + "submissions")):
+                os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + "submissions"))
             path = os.path.join(app.config['UPLOAD_FOLDER']+"submissions",filename)
             main_path = path.split("static/")[1]
             main_path = main_path.split("\\")[0]
