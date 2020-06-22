@@ -271,6 +271,19 @@ class Submissions:
 			print(error)
 			return "something went wrong"
 
+	def get_questions_answered_by_user(self):
+		try:
+			result=mongo.db.submissions.find({"solution.email":session['email']})
+			print(result)
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+
 	def update_subs(self,check,sol):
 		try:
 			result=mongo.db.submissions.update_one({"qid":check},{"$set":{"solution":sol}})

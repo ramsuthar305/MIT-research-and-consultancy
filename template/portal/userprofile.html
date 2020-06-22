@@ -207,7 +207,18 @@
                   <div class="col-md-6">
                     <form method="POST" action="{{url_for('portal.submission_answers')}}" enctype="multipart/form-data">
       <div class="card">
-          <div class="card-header card-header-text card-header-danger">
+        {% if i['qid'] in qidlist %}
+        {% for j in i['solution'] %}
+               {% if j['email']==session['email'] and j['status']=="1"  %}
+          <div class="card-header card-header-text card-header-success">
+            {% endif %}
+            {% if j['email']==session['email'] and j['status']=="0"  %}
+          <div class="card-header card-header-text card-header-warning">
+            {% endif %}
+            {% endfor %}
+            {% else %}
+            <div class="card-header card-header-text card-header-danger">
+            {% endif %}
             <div class="card-text">
               <h4 class="card-title">{{ i['title'] }}</h4>
             </div>
@@ -225,22 +236,51 @@
               </div>
               
               <div class="row" style="color: green; font-size: 15px;">
-                <b>Uploaded Date : {{ i['date_uploaded'] }}</b>
+                <b>Posted Date : {{ i['date_uploaded'] }}</b>
               </div>
               <div class="row" style="color: red; font-size: 15px;">
                 <b>Last Date : {{ i['deadline'] }}</b>
               </div>
               
-                Upload pdf
+              {% if i['qid'] in qidlist %}
+               {% for j in i['solution'] %}
+               {% if j['email']==session['email'] %}
+
+
+                
+                <div class="row">
+                Attached File : <a href="{{ url_for('portal.static',  filename=j['pdf_link'] ) }}" target="_blank">{{ j['pdf_name'] }}</a>
+                
+                </div>
+                
+
+                {% endif %}
+              {% endfor %}
+              {% else %}
+               Uploade pdf
 
                 
                 <div class="row">
                 <input type="file" name="file" class="form-control" required>
                 
                 </div>
-                
-               
+              {% endif %}
+
+
+               {% if i['qid'] in qidlist %}
+               {% for j in i['solution'] %}
+               {% if j['email']==session['email'] and j['status']=="1" %}
+              <b style="color: green;">Approved</b>
+              {% endif %}
+              {% if j['email']==session['email'] and j['status']=="0" %}
+              <hr>
+              <b style="color: red;">Submitted for evaluation</b>
+              {% endif %}
+              {% endfor %}
+              {% else %}
               <button type="submit" class="btn btn-success btn-round">Turn In</button>
+              {% endif %}
+              
               
               
           </div>

@@ -40,8 +40,16 @@ def profile():
     user = exdata.get_researcher()
     sub = Submissions()
     quests=sub.get_all_questions()
+    answers=sub.get_questions_answered_by_user()
+    new = answers[0]
+    print(new['qid'])
+    print(new['solution'][0]['email'])
+    qidlist=[]
+    for i in answers:
+    	qidlist.append(i['qid'])
+    print(qidlist)
 
-    return render_template('portal/userprofile.html',user=user,quests=quests)
+    return render_template('portal/userprofile.html',user=user,quests=quests,answers=answers,qidlist=qidlist)
 
 @portal.route('/signup')
 def signup():
