@@ -279,7 +279,7 @@ def supervisors_registration():
                 "skype":request.form.get('skype'),
                 "facebook":request.form.get('facebook'),
                 "github":request.form.get('repos'),
-                "status":True,
+                "status":"0",
                 "user_type":user_type
             }
             registration_status = supervisors_object.save_supervisor(user,user_type)
@@ -338,7 +338,7 @@ def specialusers_registration():
                 "facebook":request.form.get('facebook'),
                 "github":request.form.get('repos'),
                 "info":request.form.get('info'),
-                "status":True,
+                "status":"0",
                 "user_type":user_type
             }
             registration_status = specialusers_object.save_specialuser(user,user_type)

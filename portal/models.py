@@ -39,6 +39,7 @@ class Users:
 					session["user_type"] = user["user_type"]
 					session['id'] = str(user["email"])
 					session['department'] = str(user["department"])
+					session['batch'] = str(user["batch"])
 					return True
 				else:
 					print("\nSomething went wrong: ",result)
@@ -62,16 +63,17 @@ class Users:
 				if login_result["user_type"]=="Research Scholar":
 					user_info=self.mongo.researcher.find_one({"_id":login_result["uid"]})
 					session["email"] = user_info["email"]
-					session["name"] = user_info["first_name"]+user_info["last_name"]
+					session["name"] = user_info["first_name"]+" "+user_info["last_name"]
 					session["logged_in"] = True
 					session["user_type"] = user_info['user_type']
 					session['id'] = str(user_info["_id"])
 					session['department'] = str(user_info["department"])
+					session['batch'] = str(user_info["batch"])
 					return True
 				elif login_result["user_type"]=="Research Supervisor":
 					user_info=self.mongo.supervisor.find_one({"_id":login_result["uid"]})
 					session["email"] = user_info["email"]
-					session["name"] = user_info["first_name"]+user_info["last_name"]
+					session["name"] = user_info["first_name"]+" "+user_info["last_name"]
 					session["logged_in"] = True
 					session["user_type"] = user_info['user_type']
 					session['id'] = str(user_info["_id"])
@@ -80,7 +82,7 @@ class Users:
 				elif login_result["user_type"]=="Research Co-Supervisor":
 					user_info=self.mongo.cosupervisor.find_one({"_id":login_result["uid"]})
 					session["email"] = user_info["email"]
-					session["name"] = user_info["first_name"]+user_info["last_name"]
+					session["name"] = user_info["first_name"]+" "+user_info["last_name"]
 					session["logged_in"] = True
 					session["user_type"] = user_info['user_type']
 					session['id'] = str(user_info["_id"])
@@ -89,7 +91,7 @@ class Users:
 				elif login_result["user_type"]=="Special User":
 					user_info=self.mongo.specialuser.find_one({"_id":login_result["uid"]})
 					session["email"] = user_info["email"]
-					session["name"] = user_info["title"]+user_info["first_name"]+user_info["last_name"]
+					session["name"] = user_info["title"]+" "+user_info["first_name"]+" "+user_info["last_name"]
 					session["logged_in"] = True
 					session["user_type"] = user_info['user_type']
 					session['id'] = str(user_info["_id"])
@@ -271,6 +273,87 @@ class Submissions:
 			print(error)
 			return "something went wrong"
 
+	def get_all_questions(self):
+		try:
+			result=mongo.db.submissions.find()
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def get_question_by_id(self,check):
+		try:
+			result=mongo.db.submissions.find({"qid":check})
+			result=result[0]
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def get_questions_answered_by_user(self):
+		try:
+			result=mongo.db.submissions.find({"solution.email":session['email']})
+			print(result)
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def get_questions_answered(self):
+		try:
+			result=mongo.db.submissions.find({"answers":{"$gt":"0"}})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+
+	def update_subs(self,check,sol,up):
+		try:
+			result=mongo.db.submissions.update_one({"qid":check},{"$set":{"solution":sol}})
+			result1=mongo.db.submissions.update_one({"qid":check},{"$set":{"answers":up}})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def update_eval(self,check,sol):
+		try:
+			result=mongo.db.submissions.update_one({"qid":check},{"$set":{"solution":sol}})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def delete_question(self,check):
+		try:
+			result=mongo.db.submissions.remove({"qid":check})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
 	def upload_file(self, file_data, file, file_type,title):
 		try:
  			print('called')
@@ -300,4 +383,53 @@ class Submissions:
 		except Exception as error:
 	 		print(error)
 	 		return True
+
+class Student_Resources:
+	def __init__(self):
+		self.mongo =mongo.db
+
+	def add_student_resource(self,data):
+		try:
+			result=mongo.db.studentresource.insert_one(data)
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def fetch_resources_by_guide(self):
+		try:
+			result=mongo.db.studentresource.find({"supervisor":session['name']})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def fetch_resource(self):
+		try:
+			result=mongo.db.studentresource.find()
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def update_resource_by_id(self,rid,temp):
+		try:
+			result=mongo.db.studentresource.update_one({"rid":rid},{"$set":{"status":temp}})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
 
