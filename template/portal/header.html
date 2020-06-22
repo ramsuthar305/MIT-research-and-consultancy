@@ -30,6 +30,11 @@
                         E-resources
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{url_for('portal.research_supervisors')}}" class="nav-link">
+                        Research Supervisors
+                    </a>
+                </li>
                 {% if session['logged_in'] %}
                 <li class="nav-item">
                     <a href="{{url_for('portal.profile')}}"  style="cursor: pointer;">

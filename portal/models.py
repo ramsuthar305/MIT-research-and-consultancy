@@ -220,6 +220,31 @@ class Extract_Data:
 			return "something went wrong"
 
 
+	def get_resource(self):
+		try:
+			result=mongo.db.resource.find()
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "Something went wrong"
+
+
+	def search(self,search_text):
+		try:
+			result=mongo.db.resource.find({"$text": {"$search": search_text}})
+
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "Something went wrong"
+
+
 class Submissions:
 	def __init__(self):
 		self.mongo =mongo.db

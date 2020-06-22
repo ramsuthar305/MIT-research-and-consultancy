@@ -14,6 +14,7 @@
           </tr>
         </thead>
         <tbody>
+          {% for i in resource %}
           <tr>
             <td>
               <div class="img-container">
@@ -21,9 +22,9 @@
               </div>
             </td>
             <td class="td-name">
-              <a href="#jacket">Book Title</a>
+              <a href="#jacket">{{i.title }}</a>
               <br />
-              <small>by Devendra Fadnavis</small>
+              <small>by {{ i.author }}</small>
             </td>
 
             <td class="td-actions">
@@ -32,42 +33,7 @@
               </a>
             </td>
           </tr>
-          <tr>
-            <td>
-              <div class="img-container">
-                <img src="./static/img/examples/card-profile1.jpg" alt="...">
-              </div>
-            </td>
-            <td class="td-name">
-              <a href="#jacket">Book Title</a>
-              <br />
-              <small>by Devendra Fadnavis</small>
-            </td>
-
-            <td class="td-actions">
-              <a href="https://www.creative-tim.com/product/material-kit-pro?ref=presentation" target="_blank" class="btn  btn-rose   btn-round btn-block">
-                <i class="material-icons"></i> Download
-              </a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="img-container">
-                <img src="./static/img/examples/card-profile1.jpg" alt="...">
-              </div>
-            </td>
-            <td class="td-name">
-              <a href="#jacket">Book Title</a>
-              <br />
-              <small>by Devendra Fadnavis</small>
-            </td>
-
-            <td class="td-actions">
-              <a href="https://www.creative-tim.com/product/material-kit-pro?ref=presentation" target="_blank" class="btn  btn-rose   btn-round btn-block">
-                <i class="material-icons"></i> Download
-              </a>
-            </td>
-          </tr>
+          {% endfor %}
           <!-- <tr>
           <td colspan="6"></td>
           <td colspan="2" class="text-right">

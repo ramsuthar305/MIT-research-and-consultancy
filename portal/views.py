@@ -26,11 +26,61 @@ def index():
     return render_template('portal/home.html')
 
 
+@portal.route('/research_supervisors')
+def research_supervisors():
+    print('called')
+    return render_template('portal/research_supervisors.html')
+
+
 @portal.route('/publication')
 def publication():
+    exdata = Extract_Data()
+    resource = exdata.get_resource()
     
-    return render_template('portal/publication.html')
+    
+    return render_template('portal/publication.html',resource=resource)
 
+'''
+@portal.route('/search')
+def search():
+    exdata = Extract_Data()
+    try:
+        if request.method == 'GET':
+            search_text = request.form.get('search_text') 
+            print("**********************************************************")
+            print(search_text)
+            resource = exdata.search(search_text)
+            return render_template('portal/publication.html',resource=resource)
+
+        else:
+            return redirect(url_for('portal.publication.html'))
+    except Exception as error:
+        print(error)
+        return render_template('portal.publication')
+
+            
+
+'''
+
+@portal.route('/search', methods = ['GET', 'POST'])
+def search():
+    try:
+        if request.method == 'POST':
+            print("************************************************************")
+            #x = request.get_json(force=True)
+            search_text= request.form.get('search')
+            print(search_text)
+            resource = mongo.db.resource.find({"$text": {"$search": search_text}})
+            return render_template('portal/publication.html',resource=resource) 
+            
+            
+        else:
+            return redirect(url_for('portal.publication'))
+    except Exception as error:
+        print(error)
+        return redirect(url_for('portal.publication'))
+    
+    
     
 
 
@@ -152,6 +202,11 @@ def supervisors_panel():
     except Exception as error:
         print(error)
         return render_template('portal/index.html')
+
+
+
+
+
 
 
 @portal.route('/submission_request', methods=['POST','GET'])

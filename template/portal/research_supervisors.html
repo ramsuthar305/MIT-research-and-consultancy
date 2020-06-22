@@ -10,16 +10,8 @@
 
     <div class="container" style="padding-top: 12vh;">
         <div class="d-flex justify-content-between">
-            <h3 class="title text-dark pb-3">E-Resources</h3>
-            <form method="POST" action="{{url_for('portal.search')}}" class="mt-4 pt-1" style="width: 40%;">  
-                
-                <input type="search" name="search"class="form-control ds-input" id="search" placeholder="Search..."
-                    aria-label="Search for..." autocomplete="off" data-docs-version="4.5" spellcheck="false"
-                    role="combobox" aria-autocomplete="list" aria-expanded="false"
-                    aria-owns="algolia-autocomplete-listbox-0" style="position: relative; vertical-align: top;"
-                    dir="auto">  
-                 
-             </form> 
+            <h3 class="title text-dark pb-3">Research Supervisors</h3>
+             
 
             
         </div>
@@ -33,13 +25,16 @@
                     <hr>
                     <ul class="nav nav-pills nav-pills-rose flex-column">
 
-                        <li class="nav-item"><a class="nav-link" href="#tab1" data-toggle="tab">Book</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab1" data-toggle="tab">Engineering</a></li>
                         <li class="nav-item"><a class="nav-link active show" href="#tab2"
-                                data-toggle="tab">Paper</a>
+                                data-toggle="tab">Bio-Engineering</a>
                         </li>
-                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Journal</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Video</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Link</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Design</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Food Technology</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Applied arts</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Management</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">vedic</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab3" data-toggle="tab">Education</a></li>
                         
                         
                     </ul>
@@ -47,7 +42,8 @@
             </div>
             <div class="col-md-9 text-dark pr-4" id="allPosts">
 
-                {% include 'portal/eContent.html' %}
+                
+                {% include 'portal/supervisor_cards.html' %}
             </div>
             
 
@@ -67,31 +63,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.4.3/jquery.timeago.js"
     type="text/javascript"></script>
 <!-- Initialize Quill editor -->
-<!--
-<script >  
-    function getcube(){
 
-        var MongoClient = require('mongodb').MongoClient;
-        var url = "mongodb+srv://cluster0.4ol8l.mongodb.net";
-        MongoClient.connect(url, function(err, db) {
-        if (err) throw err;
-        var dbo = db.db("mitsor");
-        var query = {"$text": {"$search": search_text}};
-        dbo.collection("resource").find(query).toArray(function(err, resource) {
-        if (err) throw err;
-        console.log(resource)
-        return resource;
+<script type="text/javascript">  
+    function getcube(){
         
-  });
-});
+        var number=document.getElementById("number").value;  
+        
+        resource=db.resource.find({"$text": {"$search": number}})
+        return resource
         
         
         
-} 
+
+    } 
 
 </script>
--->
-<!--
 
 <script type="text/javascript">
     function search(){
@@ -106,7 +92,6 @@
         return resource;
     }
 </script>
-*/-->
 <script>
     $(document).ready(function () {
         console.log("ready!");
