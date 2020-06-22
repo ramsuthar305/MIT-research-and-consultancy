@@ -131,21 +131,7 @@
     <script src="{{url_for('portal.static', filename='js/p5.min.js')}}"></script>
     <script src="{{ url_for('portal.static', filename='js/vanta.topology.min.js')}}"></script>
     <script src="{{ url_for('portal.static', filename='js/extention/choices.js')}}"></script>
-    <script>
-        var currentLocation = window.location;
-
-        if (currentLocation.pathname == "/profile") {
-            VANTA.TOPOLOGY({
-                el: "#bdy",
-                mouseControls: true,
-                touchControls: true,
-                minHeight: 600.00,
-                minWidth: 600.00,
-                scale: 1.00,
-                scaleMobile: 1.00
-            })
-        }
-    </script>
+    
     
     {% block javascript %}
     {% endblock %}

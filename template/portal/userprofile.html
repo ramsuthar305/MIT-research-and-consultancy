@@ -95,6 +95,7 @@
                     About
                   </a>
                 </li>
+                {% if session['user_type']=="Research Scholar" %}
                 <li class="nav-item">
                   <a class="nav-link" href="#submission" role="tab" data-toggle="tab">
                     <i class="material-icons">rate_review</i>
@@ -107,6 +108,7 @@
                     Resource
                   </a>
                 </li>
+                {% endif %}
                 <li class="nav-item">
                   <a class="nav-link" href="#collab" role="tab" data-toggle="tab">
                     <i class="material-icons">group_work</i>
@@ -122,7 +124,7 @@
           <div class="tab-pane active text-center gallery" id="about">
             <div class="row">
               <div class="col-md-8 ml-auto mr-auto">
-
+                {% if session['user_type']=="Research Scholar" %}
             <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
@@ -131,6 +133,7 @@
                     </div>
                         <input type="text" class="form-control text-center" value="{{ user['batch'] }}" disabled>
                   </div>
+                  {% endif %}
                 <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
@@ -184,7 +187,7 @@
                     </div>
                         <input type="text" class="form-control text-center" value="{{ user['department'] }}" disabled>
                   </div>
-
+                  {% if session['user_type']=="Research Scholar" %}
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
@@ -202,6 +205,17 @@
                     </div>
                         <input type="text" class="form-control text-center" value="{{ user['cosupervisor'] }}" disabled>
                   </div>
+                  {% endif %}
+                  {% if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-group"></i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control text-center" value="{{ user['subdepartment'] }}" disabled>
+                  </div>
+                  {% endif %}
 
                 
               </div>
@@ -246,7 +260,7 @@
                 Description : {{ i['description'] }}
               </div>
               <div class="row">
-                File : <a href="{{ url_for('portal.static',  filename=i['pdf'] ) }}" target="_blank">{{ i['pdfname'] }}</a>
+                File : <a href="{{ url_for('portal.static',  filename=i['pdf'] ) }}" target="_blank"><b>{{ i['pdfname'] }}</b></a>
               </div>
               <div class="row">
                 Author : {{ i['author'] }}
@@ -266,7 +280,7 @@
 
                 
                 <div class="row">
-                Attached File : <a href="{{ url_for('portal.static',  filename=j['pdf_link'] ) }}" target="_blank">{{ j['pdf_name'] }}</a>
+                Attached File : <a href="{{ url_for('portal.static',  filename=j['pdf_link'] ) }}" target="_blank"><b>{{ j['pdf_name'] }}</b></a>
                 
                 </div>
                 
@@ -274,7 +288,7 @@
                 {% endif %}
               {% endfor %}
               {% else %}
-               Uploade pdf
+               Upload pdf
 
                 
                 <div class="row">
