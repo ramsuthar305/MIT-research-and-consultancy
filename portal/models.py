@@ -274,7 +274,6 @@ class Submissions:
 	def get_questions_answered_by_user(self):
 		try:
 			result=mongo.db.submissions.find({"solution.email":session['email']})
-			print(result)
 			if result:
 				return result
 			else:

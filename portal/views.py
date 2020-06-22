@@ -159,7 +159,6 @@ def supervisors_panel():
     qidlist=[]
     for i in qanswered:
     	qidlist.append(i['qid'])
-    print(qidlist)
 
     verify_resource = st.fetch_resources_by_guide()
     verified_resource = st.fetch_resources_by_guide()
@@ -269,7 +268,6 @@ def evalsubmission():
 		email = request.form.get('email')
 		qid = request.form.get('qid')
 		grades = request.form.get('grades')
-		print(grades)
 		if grades:
 			pass
 		else:
@@ -341,7 +339,6 @@ def evalresource():
 		rid = request.form.get('rid')
 		if request.form['submitbtn']=="verify":
 			print("accept")
-			print(rid)
 			data = st.update_resource_by_id(rid,"1")
 		if request.form['submitbtn']=="reject":
 			print("reject")
