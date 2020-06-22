@@ -17,6 +17,13 @@ class Users:
 		else:
 			return False
 
+	def temp_user(self,user):
+		try:
+			result=mongo.db.tempuser.insert_one(user)
+			return result
+		except Exception as error:
+			print(error)
+
 	def save_user(self,user,user_type):
 		try:
 			if user_type=="Research Scholar":
@@ -57,7 +64,7 @@ class Users:
 		try:
 			login_result = self.mongo.authentication.find_one(
 				{"$and": [{"$or": [{"uid": username}, {"email": username}]},
-						  {"password": password},{"status":"0"}]})
+						  {"password": password},{"status":"1"}]})
 			print(login_result)
 			if login_result is not None:
 				if login_result["user_type"]=="Research Scholar":

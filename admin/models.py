@@ -175,6 +175,35 @@ class Batch:
 			print(error)
 			return "something went wrong"
 
+	def fetch_pending(self):
+		try:
+			result = mongo.db.tempuser.find()
+			return result
+		except Exception as error:
+			print(error)
+
+	def authorization(self,userid,op):
+		try:
+			if op=="1":
+				result = mongo.db.tempuser.find({"_id":userid})
+				user = result[0]
+				main = mongo.db.researcher.insert_one(user)
+				active = mongo.db.researcher.update_one({'_id':userid},{"$set":{"status":"1"}})
+				result=mongo.db.authentication.insert_one({
+					"uid":user["_id"],
+					"email":user["email"],
+					"password":user["password"],
+					"user_type":user["user_type"],
+					"status":user["status"]
+				})
+				active = mongo.db.authentication.update_one({'uid':userid},{"$set":{"status":"1"}})
+				rem = mongo.db.tempuser.remove({"_id":userid})
+			if op=="2":
+				result = mongo.db.tempuser.remove({"_id":userid})
+			return result
+		except Exception as error:
+			print(error)
+
 class Jobs:
 	def __init__(self):
 		self.mongo =mongo.db
