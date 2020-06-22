@@ -157,7 +157,7 @@
             {% for i in restbatches %}
             <div class="tab-pane" id="{{ i['bjoin'] }}">
               <p class="description">
-                Hello {{ i['batch_name'] }}
+                {{ i['batch_name'] }}
               </p>
               <div class="row">
                 <div class="col-md-4">
@@ -178,7 +178,7 @@
                       {{ j['title'] }}
                       <br><br>
                      
-                      <table class="table" style="overflow-x:auto;">
+    <table class="table" style="overflow-x:auto;">
                     
     <thead>
         <tr>
@@ -188,24 +188,54 @@
             <th>Reject</th>
         </tr>
     </thead>
+    <form method="POST" action="{{url_for('portal.evalsubmission')}}" enctype="multipart/form-data">
     <tbody>
+      {% if j['qid'] in qidlist %}
+      {% for k in j['solution'] %}
         <tr style="color: black;">
-            <td>Andrew Mike</td>
-            <td>&euro; 99,225</td>
+            <td>{{ k['name'] }}</td>
+            <td><a href="{{ url_for('portal.static',  filename=k['pdf_link'] ) }}" target="_blank">{{ k['pdf_name'] }}</a></td>
+            <input type="hidden" name="qid" value="{{ j['qid'] }}">
+            <input type="hidden" name="email" value="{{ k['email'] }}">
+            {% if k['status']=="0" %}
             <td class="td-actions">
-                <button type="button" rel="tooltip" class="btn btn-success btn-round">
-                    <i class="material-icons">verified</i>
+                <button type="submit" name="submit_button" value="accept" rel="tooltip" class="btn btn-success btn-round">
+                    <i class="material-icons">thumb_up_alt</i>
                 </button>
             </td>
             <td class="td-actions">
-              <button type="button" rel="tooltip" class="btn btn-danger btn-round">
+              <button type="submit" name="submit_button" value="reject" rel="tooltip" class="btn btn-danger btn-round">
                     <i class="material-icons">close</i>
                 </button>
             </td>
+            {% endif %}
+            {% if k['status']=="1" %}
+            <td class="td-actions">
+                <b style="color: green;">Accepted</b>
+            </td>
+            <td class="td-actions">
+              <button type="submit" name="submit_button" value="reject" rel="tooltip" class="btn btn-danger btn-round">
+                    <i class="material-icons">close</i>
+                </button>
+            </td>
+            {% endif %}
+            {% if k['status']=="2" %}
+            <td class="td-actions">
+                <button type="submit" name="submit_button" value="accept" rel="tooltip" class="btn btn-success btn-round">
+                    <i class="material-icons">thumb_up_alt</i>
+                </button>
+            </td>
+            <td class="td-actions">
+                <b style="color: red;">Rejected</b>
+            </td>
+            {% endif %}
         </tr>
+        {% endfor %}
+        {% endif %}
         
         
     </tbody>
+  </form>
 </table>
                     </div>
                     

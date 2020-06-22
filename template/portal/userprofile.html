@@ -116,7 +116,15 @@
           <div class="tab-pane active text-center gallery" id="about">
             <div class="row">
               <div class="col-md-8 ml-auto mr-auto">
-            
+
+            <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">category</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control text-center" value="{{ user['batch'] }}" disabled>
+                  </div>
                 <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
@@ -215,6 +223,9 @@
             {% if j['email']==session['email'] and j['status']=="0"  %}
           <div class="card-header card-header-text card-header-warning">
             {% endif %}
+            {% if j['email']==session['email'] and j['status']=="2"  %}
+          <div class="card-header card-header-text card-header-danger">
+            {% endif %}
             {% endfor %}
             {% else %}
             <div class="card-header card-header-text card-header-danger">
@@ -270,11 +281,16 @@
                {% if i['qid'] in qidlist %}
                {% for j in i['solution'] %}
                {% if j['email']==session['email'] and j['status']=="1" %}
+               <hr>
               <b style="color: green;">Approved</b>
               {% endif %}
               {% if j['email']==session['email'] and j['status']=="0" %}
               <hr>
-              <b style="color: red;">Submitted for evaluation</b>
+              <b style="color: blue;">Submitted for evaluation</b>
+              {% endif %}
+              {% if j['email']==session['email'] and j['status']=="2" %}
+              <hr>
+              <b style="color: red;">Rejected</b>
               {% endif %}
               {% endfor %}
               {% else %}

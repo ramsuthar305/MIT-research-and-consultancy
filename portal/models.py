@@ -283,8 +283,31 @@ class Submissions:
 			print(error)
 			return "something went wrong"
 
+	def get_questions_answered(self):
+		try:
+			result=mongo.db.submissions.find({"answers":{"$gt":"0"}})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
 
-	def update_subs(self,check,sol):
+
+	def update_subs(self,check,sol,up):
+		try:
+			result=mongo.db.submissions.update_one({"qid":check},{"$set":{"solution":sol}})
+			result1=mongo.db.submissions.update_one({"qid":check},{"$set":{"answers":up}})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def update_eval(self,check,sol):
 		try:
 			result=mongo.db.submissions.update_one({"qid":check},{"$set":{"solution":sol}})
 			if result:

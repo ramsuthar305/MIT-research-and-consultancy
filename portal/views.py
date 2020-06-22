@@ -41,14 +41,9 @@ def profile():
     sub = Submissions()
     quests=sub.get_all_questions()
     answers=sub.get_questions_answered_by_user()
-    new = answers[0]
-    print(new['qid'])
-    print(new['solution'][0]['email'])
     qidlist=[]
     for i in answers:
     	qidlist.append(i['qid'])
-    print(qidlist)
-
     return render_template('portal/userprofile.html',user=user,quests=quests,answers=answers,qidlist=qidlist)
 
 @portal.route('/signup')
@@ -155,9 +150,15 @@ def supervisors_panel():
     restsub = []
     for i in range(0,quests.count()):
         restsub.append(quests[i])
+    qanswered = sub.get_questions_answered()
+    qidlist=[]
+    for i in qanswered:
+    	qidlist.append(i['qid'])
+    print(qidlist)
+
     try:
         if session['logged_in']==True:
-            return render_template('portal/supervisors_panel.html',restbatches=restbatches,quests=quests,batches=batches, restsub=restsub)
+            return render_template('portal/supervisors_panel.html',restbatches=restbatches,quests=quests,batches=batches, restsub=restsub,qidlist=qidlist)
         else:
             return redirect(url_for("portal.index"))
     except Exception as error:
@@ -197,6 +198,7 @@ def submission_request():
             "pdf":main_path,
             "pdfname":filename,
             "author":session["id"],
+            "answers":"0",
             "solution":[]
             }
             print(data)
@@ -236,8 +238,43 @@ def submission_answers():
         "pdf_name":filename,
         "status":"0"
         }
+        up = q['answers']
+        up = str(int(up)+1)
         sol.append(answer)
         print(sol)
-        status = sub.update_subs(check,sol)
+        status = sub.update_subs(check,sol,up)
         flash("Assignment Submitted Successfully")
         return redirect(url_for('portal.profile'))
+    return redirect(url_for('portal.profile'))
+
+@portal.route('/evalsubmission', methods=['POST','GET'])
+def evalsubmission():
+	sub = Submissions()
+	quests = sub.get_questions_by_author(session['id'])
+	store = []
+	change = {}
+	if request.method=="POST":
+		email = request.form.get('email')
+		qid = request.form.get('qid')
+		for i in quests:
+			if i['qid']==qid:
+				store = i['solution']
+				break
+		print(store)
+
+		if request.form['submit_button']=="accept":
+			for i in store:
+				if i['email']==email:
+					i['status']='1'
+					break
+			print(store)
+			result = sub.update_eval(qid,store)
+
+		if request.form['submit_button']=="reject":
+			for i in store:
+				if i['email']==email:
+					i['status']='2'
+					break
+			print(store)
+			result = sub.update_eval(qid,store)
+	return redirect(url_for('portal.supervisors_panel'))
