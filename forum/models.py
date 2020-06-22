@@ -20,13 +20,22 @@ class Forum_model:
             print('In exception :', error)
             return []
 
+    def get_search_data(self, text):
+        try:
+
+            posts = list(self.mongo.forum.find({"$text": {"$search": text}}))
+            return posts
+        except Exception as error:
+            print('In exception :', error)
+            return []
+
     def get_all_posts(self):
         try:
             departments = self.mongo.departments.find_one()
             departments = departments['departments']
             posts = []
             for department in departments:
-                posts.append(self.get_category_data(0, 5, department))
+                posts.append(self.get_category_data(0, 10, department))
             print(posts)
             if posts != None:
                 return posts
@@ -236,7 +245,7 @@ class Forum_model:
 
     def get_departments(self):
         try:
-            departments= self.mongo.departments.find_one()
+            departments = self.mongo.departments.find_one()
             return departments['departments']
         except Exception as error:
             print('In exception :', error)

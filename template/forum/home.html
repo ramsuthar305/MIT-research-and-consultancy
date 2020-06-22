@@ -11,15 +11,18 @@
             <h3 class="title text-dark pb-3">All Questions</h3>
 
             <form class="mt-4 pt-1" style="width: 40%;">
-                <input type="search" class="form-control ds-input" id="search-input" placeholder="Search..."
+                <input type="search" class="form-control ds-input" id="forumSearch" placeholder="Search..."
                     aria-label="Search for..." autocomplete="off" data-docs-version="4.5" spellcheck="false"
                     role="combobox" aria-autocomplete="list" aria-expanded="false"
                     aria-owns="algolia-autocomplete-listbox-0" style="position: relative; vertical-align: top;"
-                    dir="auto">
+                    dir="auto" onkeyup="fetchSearchData()">
             </form>
         </div>
         <hr>
-        <div class="row pt-4 ">
+        <div id="searchContainer" style="display: none;">
+
+        </div>
+        <div class="row pt-4 " id="normalData">
             <div class="col-md-3 text-dark border-right">
                 {% if session['logged_in'] %}
                 <button class="btn btn-outline-primary btn-block" id="askQuestion">Ask a question</button>
@@ -218,7 +221,7 @@
                 syntax: true,
                 toolbar: '#toolbar-container'
             },
-            placeholder:'Enter description',
+            placeholder: 'Enter description',
 
             theme: 'snow'
         });
@@ -284,7 +287,7 @@
                     } else {
                         alert("response: " + response.status);
                     }
-                    editor.firstChild.innerHTML='';
+                    editor.firstChild.innerHTML = '';
                     title = $('#threadTitle').val('');
                     $("#answerContainer").toggle();
                 },
@@ -296,10 +299,93 @@
 
         function getDate(date) {
             newDate = JSON.parse(date)
-            newDate=new Date(newDate['$date'])
+            newDate = new Date(newDate['$date'])
+            console.log(newDate)
             return newDate
         }
-        
+
+        const getData = () => {
+            console.log('fetching data..')
+            var text = $("#forumSearch").val()
+            if (text.length ==0) {
+                $('#searchContainer').hide()
+                $('#normalData').show()
+            } else {
+                $.ajax({
+                    url: '{{url_for("forum.fetch_search_data")}}',
+                    data: JSON.stringify({ text: text }),
+                    type: 'POST',
+                    success: function (response) {
+                        $('#normalData').hide();
+                        $('#searchContainer').html('');
+                        response = JSON.parse(response)
+                        console.log(JSON.stringify(response))
+
+                        for (var i = 0; i < response.length; i++) {
+                            var $post = $(`<div class="row border-bottom py-3">
+                    <div class="col-md-2">
+                        <div class="text-center m-auto text-dark">
+                            <h4 class="my-0 font-weight-bold text-dark">${response[i].upvotes.length}</h4>
+                            <span class="text-dark" style="font-size: 14px;">Votes</span>
+                        </div>
+                        <div class="text-center m-auto">
+
+                            <button class="btn btn-outline-success py-0 px-1">
+                                <h4 class="my-0 font-weight-bold">${response[i].answers.length}</h4>
+                                <span style="font-size: 14px; text-transform: capitalize;">Answers</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <a href="" style="font-weight: 400; font-size: 16px;">
+                            ${response[i].title}
+                        </a>
+                        <div class="= pt-3 text-dark"
+                            style="-webkit-line-clamp: 2;display: -webkit-box;overflow: hidden;-webkit-box-orient: vertical; max-height: 10vh;">
+                            {% autoescape false %}
+                            ${response[i].description}
+                            {% endautoescape %}
+                        </div>
+                        <div style="float: right;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Shah_Rukh_Khan_graces_the_launch_of_the_new_Santro.jpg/220px-Shah_Rukh_Khan_graces_the_launch_of_the_new_Santro.jpg"
+                                class="rounded-circle ml-2" style="height: 25px; width: 25px;" alt="">
+                            <a href=""> @${response[i].uid}</a>
+                            <small class="pl-4 ml-4 text-dark">${getDate(JSON.stringify(response[i].created_on))}</small>
+                        </div>
+                    </div>
+                </div>`);
+                            $('#searchContainer').append($post);
+                            $('#searchContainer').show();
+
+
+                        }
+                            
+                            $heading=$(`<div><h3 class="title text-muted">showing total ${response.length} results..</h3></div>`)
+                            $('#searchContainer').prepend($heading);
+
+
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                });
+            }
+        }
+
+        const debounceFunction = function (func, delay) {
+            let timer;
+            return function () {
+                let context = this,
+                    args = arguments;
+                clearTimeout(timer);
+                timer = setTimeout(() => {
+                    func.apply(context, arguments)
+                }, delay)
+            }
+        }
+
+        const fetchSearchData = debounceFunction(getData, 350)
+
         function readContent(id, type) {
             if (type == 'prev') {
                 pageIndex = id.indexOf('Prev');

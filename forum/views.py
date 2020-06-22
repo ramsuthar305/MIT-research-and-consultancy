@@ -220,15 +220,29 @@ def read_data():
     data_received = request.get_data()
     data_received = data_received.decode("utf-8")
     data_received = json.loads(data_received)
-    print('\n\n',data_received)
+    print('\n\n', data_received)
     return_data = {}
     next_page_index = int(data_received['index'])
     category = data_received['department']
-    department_data=forum_obj.get_category_data(next_page_index*5, 5, category)
+    department_data = forum_obj.get_category_data(
+        next_page_index*10, 10, category)
     return_data['status'] = True
     return_data['data'] = department_data['data']
     print(return_data)
     return dumps(return_data)
+
+
+@forum.route('/fetch_search_data', methods=['GET', 'POST'])
+def fetch_search_data():
+    try:
+        data_received = request.get_data()
+        data_received = data_received.decode("utf-8")
+        data_received = json.loads(data_received)
+        posts=forum_obj.get_search_data(data_received['text'])
+        return dumps(posts)
+    except Exception as error:
+        print(' In the views exception: ',error)
+        return []
 
 
 @forum.route('/')
