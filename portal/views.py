@@ -39,17 +39,16 @@ def profile():
     exdata = Extract_Data()
     user = exdata.get_researcher()
     sub = Submissions()
+    st = Student_Resources()
     quests=sub.get_all_questions()
     answers=sub.get_questions_answered_by_user()
-    new = answers[0]
-    print(new['qid'])
-    print(new['solution'][0]['email'])
     qidlist=[]
     for i in answers:
     	qidlist.append(i['qid'])
-    print(qidlist)
-
-    return render_template('portal/userprofile.html',user=user,quests=quests,answers=answers,qidlist=qidlist)
+    resource = st.fetch_resource()
+    resource1 = st.fetch_resource()
+    resource2 = st.fetch_resource()
+    return render_template('portal/userprofile.html',user=user,quests=quests,answers=answers,qidlist=qidlist,resource=resource,resource1=resource1,resource2=resource2)
 
 @portal.route('/signup')
 def signup():
@@ -148,6 +147,7 @@ def supervisors_panel():
     exdata = Extract_Data()
     batches=exdata.get_batches()
     sub = Submissions()
+    st = Student_Resources()
     quests = sub.get_questions_by_author(session['id'])
     restbatches = []
     for i in range(0,batches.count()):
@@ -155,9 +155,17 @@ def supervisors_panel():
     restsub = []
     for i in range(0,quests.count()):
         restsub.append(quests[i])
+    qanswered = sub.get_questions_answered()
+    qidlist=[]
+    for i in qanswered:
+    	qidlist.append(i['qid'])
+
+    verify_resource = st.fetch_resources_by_guide()
+    verified_resource = st.fetch_resources_by_guide()
+
     try:
         if session['logged_in']==True:
-            return render_template('portal/supervisors_panel.html',restbatches=restbatches,quests=quests,batches=batches, restsub=restsub)
+            return render_template('portal/supervisors_panel.html',restbatches=restbatches,quests=quests,batches=batches, restsub=restsub,qidlist=qidlist,verify_resource=verify_resource,verified_resource=verified_resource)
         else:
             return redirect(url_for("portal.index"))
     except Exception as error:
@@ -197,6 +205,7 @@ def submission_request():
             "pdf":main_path,
             "pdfname":filename,
             "author":session["id"],
+            "answers":"0",
             "solution":[]
             }
             print(data)
@@ -212,32 +221,127 @@ def submission_request():
 
 @portal.route('/submission_answers', methods=['POST','GET'])
 def submission_answers():
-    sub = Submissions()
-    if request.method == 'POST':
-        f = request.files['file']
-        filename = f.filename
-        path = os.path.join(app.config['UPLOAD_FOLDER']+"submissions",filename)
-        main_path = path.split("static/")[1]
-        main_path = main_path.split("\\")[0]
-        main_path = main_path + "/" + filename
-        print(main_path)
-        f.save(path)
-        check = request.form.get('linker')
-        print(check)
-        q = sub.get_question_by_id(check)
-        sol = q['solution']
-        answer = {
-        "name":session["name"],
-        "email":session["email"],
-        "batch":session["batch"],
-        "department":session["department"],
-        "question_id":check,
-        "pdf_link":main_path,
-        "pdf_name":filename,
-        "status":"0"
-        }
-        sol.append(answer)
-        print(sol)
-        status = sub.update_subs(check,sol)
-        flash("Assignment Submitted Successfully")
-        return redirect(url_for('portal.profile'))
+	sub = Submissions()
+	if request.method == 'POST':
+		f = request.files['file']
+		filename = f.filename
+		if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + "submissions")):
+			os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + "submissions"))
+		path = os.path.join(app.config['UPLOAD_FOLDER']+"submissions",filename)
+		main_path = path.split("static/")[1]
+		main_path = main_path.split("\\")[0]
+		main_path = main_path + "/" + filename
+		print(main_path)
+		f.save(path)
+		check = request.form.get('linker')
+		print(check)
+		q = sub.get_question_by_id(check)
+		sol = q['solution']
+		answer = {
+		"name":session["name"],
+		"email":session["email"],
+		"batch":session["batch"],
+		"department":session["department"],
+		"question_id":check,
+		"pdf_link":main_path,
+		"pdf_name":filename,
+		"grades":"None",
+		"status":"0"
+		}
+		up = q['answers']
+		up = str(int(up)+1)
+		sol.append(answer)
+		print(sol)
+		status = sub.update_subs(check,sol,up)
+		flash("Assignment Submitted Successfully")
+		return redirect(url_for('portal.profile'))
+	return redirect(url_for('portal.profile'))
+
+@portal.route('/evalsubmission', methods=['POST','GET'])
+def evalsubmission():
+	sub = Submissions()
+	quests = sub.get_questions_by_author(session['id'])
+	store = []
+	change = {}
+	grades=""
+	if request.method=="POST":
+		email = request.form.get('email')
+		qid = request.form.get('qid')
+		grades = request.form.get('grades')
+		if grades:
+			pass
+		else:
+			grades = "None"
+		for i in quests:
+			if i['qid']==qid:
+				store = i['solution']
+				break
+		print(store)
+
+		if request.form['submit_button']=="accept":
+			for i in store:
+				if i['email']==email:
+					i['status']='1'
+					i['grades']=grades
+					break
+			print(store)
+			result = sub.update_eval(qid,store)
+
+		if request.form['submit_button']=="reject":
+			for i in store:
+				if i['email']==email:
+					i['status']='2'
+					break
+			print(store)
+			result = sub.update_eval(qid,store)
+
+		if request.form['submit_button']=="delete":
+			result = sub.delete_question(qid)
+			flash("Assignment Deleted Successfully")
+	return redirect(url_for('portal.supervisors_panel'))
+
+
+@portal.route('/student_resource', methods=['POST','GET'])
+def student_resource():
+	st = Student_Resources()
+	if request.method=="POST":
+		f = request.files['file']
+		filename = f.filename
+		if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + "studentresources")):
+	 		os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + "studentresources"))
+		path = os.path.join(app.config['UPLOAD_FOLDER']+"studentresources",filename)
+		main_path = path.split("static/")[1]
+		main_path = main_path.split("\\")[0]
+		main_path = main_path + "/" + filename
+		print(main_path)
+		f.save(path)
+		rid = request.form.get('title')+session['name']+filename
+		data ={
+		"title":request.form.get('title'),
+		"rid":rid,
+		"description":request.form.get('description'),
+		"author":session['name'],
+		"email":session['id'],
+		"supervisor":request.form.get('supervisor'),
+		"pdf_name":filename,
+		"pdf_link":main_path,
+		"uploaded_on":str(datetime.now()).split('.')[0],
+		"status":"0",
+		}
+		result=st.add_student_resource(data)
+		flash("Data Successfully Sent for Verification")
+	return redirect(url_for('portal.profile'))
+
+@portal.route('/evalresource', methods=['POST','GET'])
+def evalresource():
+	st = Student_Resources()
+	if request.method=="POST":
+		rid = request.form.get('rid')
+		if request.form['submitbtn']=="verify":
+			print("accept")
+			data = st.update_resource_by_id(rid,"1")
+		if request.form['submitbtn']=="reject":
+			print("reject")
+			data = st.update_resource_by_id(rid,"2")
+
+	return redirect(url_for('portal.supervisors_panel'))
