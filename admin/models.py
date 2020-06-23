@@ -236,6 +236,13 @@ class Extractdata:
 			print(error)
 			return "something went wrong"
 
+	def get_scholars(self,batch,department):
+		try:
+			result=mongo.db.researcher.find({"$and":[{"batch":batch},{"department":department}]})
+			return result
+		except Exception as error:
+			return "None"
+
 class Jobs:
 	def __init__(self):
 		self.mongo =mongo.db

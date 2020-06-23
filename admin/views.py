@@ -450,9 +450,35 @@ def view_scholars():
                 "djoin":i.replace(" ","")
                 }
                 deplist.append(temp)
-            print(deplist)
-            users = exdata.get_user("Research Scholar")
+            users = []
             return render_template('admin/view_scholars.html', batches=batches, departments=deplist, users=users)
+        else:
+            return redirect(url_for("admin.login"))
+    except Exception as error:
+        print(error)
+        return render_template('admin/admin_login.html')
+
+@admin.route('/scholars_viewing',methods=['POST','GET'])
+def scholars_viewing():
+    try:
+        if session['logged_in']==True:
+            if request.method=="POST":
+                batch_object = Batch()
+                exdata = Extractdata()
+                batch = request.form.get('batch')
+                department = request.form.get('department')
+                users = exdata.get_scholars(batch,department)
+                batches = batch_object.get_batches()
+                departments = batch_object.get_departments()
+                deplist = []
+            for i in departments:
+                temp = {
+                "depname":i,
+                "djoin":i.replace(" ","")
+                }
+                deplist.append(temp)
+
+            return render_template('admin/view_scholars.html',users=users,batches=batches, departments=deplist)
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
