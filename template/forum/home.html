@@ -307,7 +307,7 @@
         const getData = () => {
             console.log('fetching data..')
             var text = $("#forumSearch").val()
-            if (text.length ==0) {
+            if (text.length == 0) {
                 $('#searchContainer').hide()
                 $('#normalData').show()
             } else {
@@ -359,9 +359,9 @@
 
 
                         }
-                            
-                            $heading=$(`<div><h3 class="title text-muted">showing total ${response.length} results..</h3></div>`)
-                            $('#searchContainer').prepend($heading);
+
+                        $heading = $(`<div><h3 class="title text-muted">showing total ${response.length} results..</h3></div>`)
+                        $('#searchContainer').prepend($heading);
 
 
                     },
@@ -477,11 +477,7 @@
 
     <script>
         $(document).ready(function () {
-            console.log("ready!");
-            $("#header").addClass("text-primary");
-            $("#header").addClass("py-0");
-            $("#headerTitle").addClass("text-primary");
-            $("#header").removeClass("navbar-transparent");
+            
             $("#askQuestion").click(function () {
                 $("#answerContainer").toggle();
             });
@@ -509,5 +505,7 @@
             $("abbr.timeago").timeago();
 
         });
+
+
     </script>
     {% endblock %}

@@ -9,33 +9,20 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16"
-        href="{{ url_for('portal.static',  filename='images/favicon.png') }}">
-    <title>MIT R&C</title>
-    <!-- Bootstrap Core CSS -->
-    <link href="{{ url_for('portal.static',  filename='css/material-kit.css') }}" rel="stylesheet">
-    <!-- Custom CSS -->
-    <link href="{{ url_for('portal.static',  filename='demo/demo.css') }}" rel="stylesheet">
-    <!-- You can change the theme colors from here -->
-    <link href="{{ url_for('portal.static',  filename='demo/vertical-nav.css') }}" id="theme" rel="stylesheet">
     <link rel="stylesheet" type="text/css"
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
-
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="author" content="colorlib.com">
-    <link href="https://fonts.googleapis.com/css?family=Poppins" rel="stylesheet" />
-    <link href="{{ url_for('portal.static',  filename='css/main.css') }}" rel="stylesheet" />
+    <!-- CSS Files -->
+    <link href="{{ url_for('portal.static',  filename='css/material-kit.css') }}" rel="stylesheet" />
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link href="{{ url_for('portal.static',  filename='demo/demo.css') }}" rel="stylesheet" />
+    <link href="{{ url_for('portal.static',  filename='demo/vertical-nav.css') }}" rel="stylesheet" />
     {% block css %}
     {% endblock %}
 
 
 
     <style>
-        
-
         .blurred-box {
             position: relative;
 
@@ -52,13 +39,13 @@
 </head>
 
 <body class="index-page sidebar-collapse" id="bdy" style="overflow-x: hidden;">
- 
 
-    <div class="section-basic" >
-      
+
+    <div class="section-basic">
+
         {% block main_page %}
         {% endblock %}
-        
+
     </div>
 
     <footer class="footer" style="color: white;">
@@ -82,59 +69,21 @@
     <!-- ============================================================== -->
     <!-- All Jquery -->
     <!-- ============================================================== -->
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
-    <script src="{{ url_for('portal.static', filename='js/core/jquery.min.js') }}" type="text/javascript"></script>
-    <script src="{{ url_for('portal.static', filename='js/core/popper.min.js') }}" type="text/javascript"></script>
-    <script src="{{ url_for('portal.static', filename='js/core/bootstrap-material-design.min.js') }}"
+    <script src="{{ url_for('portal.static', filename='js/core/jquery.min.js')}}" type="text/javascript"></script>
+    <script src="{{ url_for('portal.static', filename='js/core/popper.min.js')}}" type="text/javascript"></script>
+    <script src="{{ url_for('portal.static', filename='js/core/bootstrap-material-design.min.js')}}"
         type="text/javascript"></script>
-    <script src="{{ url_for('portal.static', filename='js/plugins/moment.min.js') }}"></script>
-    <script src="{{url_for('portal.static', filename='js/plugins/bootstrap-datetimepicker.js')}}"
-        type="text/javascript"></script>
-
-    <script src="{{ url_for('portal.static', filename='demo/demo.js') }}" type="text/javascript"></script>
-    <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
-    <script src="{{ url_for('portal.static', filename='js/material-kit.js') }}" type="text/javascript"></script>
-
-    <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
-    <script src="{{ url_for('portal.static', filename='js/plugins/nouislider.min.js') }}"
-        type="text/javascript"></script>
-    <!--  Google Maps Plugin    -->
-
-    <!--	Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
-    <script src="{{ url_for('portal.static', filename='js/plugins/bootstrap-tagsinput.js') }}"></script>
-    <!--	Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
-    <script src="{{ url_for('portal.static', filename='js/plugins/bootstrap-selectpicker.js') }}"
-        type="text/javascript"></script>
-    <!--	Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
-    <script src="{{ url_for('portal.static', filename='js/plugins/jasny-bootstrap.min.js') }}"
-        type="text/javascript"></script>
-    <!--	Plugin for Small Gallery in Product Page -->
-    <script src="{{ url_for('portal.static', filename='js/plugins/jquery.flexisel.js') }}"
-        type="text/javascript"></script>
-    <!-- Plugins for presentation and navigation  -->
-    <script src="{{ url_for('portal.static', filename='demo/modernizr.js') }}" type="text/javascript"></script>
-    <script src="{{ url_for('portal.static', filename='demo/vertical-nav.js') }}" type="text/javascript"></script>
-    <!-- Place this tag in your head or just before your close body tag. -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-
-    <script src="{{url_for('portal.static', filename='js/three.r95.min.js')}}"></script>
-    <script src="{{ url_for('portal.static', filename='js/vanta.rings.min.js')}}"></script>
-    <script src="{{url_for('portal.static', filename='js/p5.min.js')}}"></script>
-    <script src="{{ url_for('portal.static', filename='js/vanta.topology.min.js')}}"></script>
-    <script src="{{ url_for('portal.static', filename='js/extention/choices.js')}}"></script>
-    
-    
+    <script src="{{ url_for('portal.static', filename='js/plugins/moment.min.js')}}"></script>
     {% block javascript %}
     {% endblock %}
+    <!-- Plugins for presentation and navigation  -->
+    <script src="{{ url_for('portal.static', filename='demo/modernizr.js')}}" type="text/javascript"></script>
+    <script src="{{ url_for('portal.static', filename='demo/vertical-nav.js')}}" type="text/javascript"></script>
+
+    <!-- Control Center for Material Kit: parallax effects, scripts for the example pages etc -->
+    <script src="{{ url_for('portal.static', filename='js/material-kit.js')}}" type="text/javascript"></script>
+
+
 </body>
 
 </html>

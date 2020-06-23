@@ -414,3 +414,17 @@ class Student_Resources:
 			return "something went wrong"
 
 
+class Eresources:
+	def __init__(self):
+		self.mongo =mongo.db
+	
+	def get_data(self):
+		try:
+			result=list(mongo.db.resource.find())
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"

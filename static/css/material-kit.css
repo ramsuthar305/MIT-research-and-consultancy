@@ -17456,3 +17456,12 @@ button {
   color: #ce93d8;
 }
 
+.icon-list li {
+  display: inline-block;
+  vertical-align: top;
+  width: 49.5%;
+  padding: 7px 10px 7px 35px;
+  color: 
+  #333;
+  position: relative;
+}

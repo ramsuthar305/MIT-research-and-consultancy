@@ -7,8 +7,10 @@ from datetime import datetime, date
 #custom imports
 from app import *
 from .models import *
+import itertools
 
 user_object = Users()
+resource_object = Eresources()
 portal = Blueprint("portal", __name__, template_folder='../template', static_folder='../static',
                    static_url_path='../static')
 
@@ -23,7 +25,7 @@ def page_not_found(error):
 @portal.route('/')
 def index():
     print('called')
-    return render_template('portal/home.html')
+    return render_template('portal/home.html',publications=resource_object.get_data())
 
 
 @portal.route('/publication')
