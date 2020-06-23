@@ -53,7 +53,7 @@
                   
 <table class="table">
   
-   
+   {% if users %}
     <thead>
       <h3>{{ batch }} {{ department }}</h3>
         <tr>
@@ -75,6 +75,7 @@
             
         </tr>
     </thead>
+    {% endif %}
     
     <tbody>
      

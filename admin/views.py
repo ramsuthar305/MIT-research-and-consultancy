@@ -7,13 +7,12 @@ from datetime import datetime
 import os
 
 #custom imports
-from .models import Users, Shortlist
-from .models import Jobs
+
 from .models import *
 
-shorlist_obj=Shortlist()
+
 user_object = Users()
-jobs=Jobs()
+
 admin = Blueprint("admin", __name__, template_folder='../templates', static_folder='../static/admin',
                    static_url_path='../static/admin')
 
@@ -417,7 +416,49 @@ def editusers():
 def blockusers():
     try:
         if session['logged_in']==True:
-            return render_template('admin/blockusers.html')
+            exdata = Extractdata()
+            user = []
+            if request.method=="POST":
+                email = request.form.get('email')
+                usertype = request.form.get('usertype')
+                user = exdata.get_users_by_id(email,usertype)
+                if user.count()>0:
+                    user = user[0]
+                else:
+                    user = []
+            return render_template('admin/blockusers.html', user = user)
+        else:
+            return redirect(url_for("admin.login"))
+    except Exception as error:
+        print(error)
+        return render_template('admin/admin_login.html')
+
+@admin.route('/blocking',methods=['POST','GET'])
+def blocking():
+    try:
+        if session['logged_in']==True:
+            exdata = Extractdata()
+            if request.method=="POST":
+                if request.form['submitf']=="block":
+                    email = request.form.get('email')
+                    usertype = request.form.get('usertype')
+                    print(email)
+                    print(usertype)
+                    ue = UserEdits()
+                    stat = ue.block_user(email,usertype)
+                    if stat:
+                        flash("User Blocked Successfully")
+                if request.form['submitf']=="unblock":
+                    email = request.form.get('email')
+                    usertype = request.form.get('usertype')
+                    print(email)
+                    print(usertype)
+                    print("unblock")
+                    ue = UserEdits()
+                    stat = ue.unblock_user(email,usertype)
+                    if stat:
+                        flash("User Unblocked Successfully")
+            return redirect(url_for('admin.blockusers'))
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
@@ -462,6 +503,7 @@ def view_scholars():
 def scholars_viewing():
     try:
         if session['logged_in']==True:
+            users = ""
             if request.method=="POST":
                 batch_object = Batch()
                 exdata = Extractdata()
