@@ -467,7 +467,10 @@ def scholars_viewing():
                 exdata = Extractdata()
                 batch = request.form.get('batch')
                 department = request.form.get('department')
-                users = exdata.get_scholars(batch,department)
+                d = exdata.get_scholars(batch,department)
+                batch = d[0]
+                department = d[1]
+                users = d[2]
                 batches = batch_object.get_batches()
                 departments = batch_object.get_departments()
                 deplist = []
@@ -478,7 +481,7 @@ def scholars_viewing():
                 }
                 deplist.append(temp)
 
-            return render_template('admin/view_scholars.html',users=users,batches=batches, departments=deplist)
+            return render_template('admin/view_scholars.html',users=users,batches=batches, departments=deplist, batch=batch, department=department)
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:

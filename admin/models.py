@@ -239,9 +239,9 @@ class Extractdata:
 	def get_scholars(self,batch,department):
 		try:
 			result=mongo.db.researcher.find({"$and":[{"batch":batch},{"department":department}]})
-			return result
+			return (list([batch,department,result]))
 		except Exception as error:
-			return "None"
+			return False
 
 class Jobs:
 	def __init__(self):
