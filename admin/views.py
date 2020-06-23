@@ -469,7 +469,39 @@ def blocking():
 def removeusers():
     try:
         if session['logged_in']==True:
-            return render_template('admin/removeusers.html')
+            exdata = Extractdata()
+            user = []
+            if request.method=="POST":
+                email = request.form.get('email')
+                usertype = request.form.get('usertype')
+                user = exdata.get_users_by_id(email,usertype)
+                if user.count()>0:
+                    user = user[0]
+                else:
+                    user = []
+            return render_template('admin/removeusers.html', user = user)
+        else:
+            return redirect(url_for("admin.login"))
+    except Exception as error:
+        print(error)
+        return render_template('admin/admin_login.html')
+
+@admin.route('/removing',methods=['POST','GET'])
+def removing():
+    try:
+        if session['logged_in']==True:
+            exdata = Extractdata()
+            if request.method=="POST":
+                if request.form['submitf']=="remove":
+                    email = request.form.get('email')
+                    usertype = request.form.get('usertype')
+                    print(email)
+                    print(usertype)
+                    ue = UserEdits()
+                    stat = ue.remove_user(email,usertype)
+                    if stat:
+                        flash("User Removed Successfully")
+            return redirect(url_for('admin.removeusers'))
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:

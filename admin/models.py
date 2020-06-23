@@ -303,3 +303,24 @@ class UserEdits:
 				return result
 		except Exception as error:
 			print(error)
+
+	def remove_user(self,email,usertype):
+		try:
+			if usertype=="Research Scholar":
+				result = mongo.db.researcher.remove({"email":email})
+				result = mongo.db.authentication.remove({"uid":email})
+				return result
+			if usertype=="Research Supervisor":
+				result = mongo.db.supervisor.remove({"email":email})
+				result = mongo.db.authentication.remove({"uid":email})
+				return result
+			if usertype=="Research Co-Supervisor":
+				result = mongo.db.cosupervisor.remove({"email":email})
+				result = mongo.db.authentication.remove({"uid":email})
+				return result
+			if usertype=="Special User":
+				result = mongo.db.specialuser.remove({"email":email})
+				result = mongo.db.authentication.remove({"uid":email})
+				return result
+		except Exception as error:
+			print(error)
