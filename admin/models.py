@@ -64,6 +64,8 @@ class Supervisors:
 				result = mongo.db.supervisor.insert_one(user)
 			elif user_type=="Research Co-Supervisor":
 				result = mongo.db.cosupervisor.insert_one(user)
+			elif user_type=="Special User":
+				result = mongo.db.specialuser.insert_one(user)
 			else:
 				result = mongo.db.USERTYPE.insert_one(user)
 			if result:
@@ -203,6 +205,36 @@ class Batch:
 			return result
 		except Exception as error:
 			print(error)
+
+	def get_departments(self):
+		try:
+			departments = self.mongo.departments.find_one()
+			return departments['departments']
+		except Exception as error:
+			print('In exception :', error)
+			return []
+
+class Extractdata:
+	def __init__(self):
+		self.mongo =mongo.db
+
+	def get_user(self,usertype):
+		try:
+			if usertype == "Research Scholar":
+				result=mongo.db.researcher.find()
+			if usertype == "Research Supervisor":
+				result=mongo.db.supervisor.find()
+			if usertype == "Research Co-Supervisor":
+				result=mongo.db.cosupervisor.find()
+			if usertype == "Special User":
+				result=mongo.db.specialuser.find()
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
 
 class Jobs:
 	def __init__(self):

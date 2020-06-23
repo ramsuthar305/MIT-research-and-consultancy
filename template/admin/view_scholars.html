@@ -4,15 +4,84 @@
       <div class="content">
         <div class="container-fluid">
           <div class="row">
-            <div class="col-md-6 mx-auto">
+            <div class="col-md-12 mx-auto">
               <div class="card">
                 <div class="card-header card-header-primary">
                   <h4 class="card-title" id="page_name">View Scholars</h4>
-                  <p class="card-category">View All Scholars Batch Wise</p>
+                  <p class="card-category">View All Scholars Batch and Department wise</p>
                 </div>
-                <div class="card-body">
-                View Scholars
+                <div class="card-body" style="overflow-x: auto;">
+                <div class="row">
+                  <div class="col-md-2 mx-auto">
+                    <div class="btn-group">
+  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Batch
+  </button>
+  <div class="dropdown-menu">
+    {% for i in batches %}
+    <a class="dropdown-item" href="#{{ i['bjoin'] }}">{{ i['batch_name'] }}</a>
+    {% endfor %}
+  </div>
+</div>
+                  </div>
+                  <div class="col-md-2 mx-auto  ">
+                    <div class="btn-group">
+  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Department
+  </button>
+  <div class="dropdown-menu">
+    {% for i in departments %}
+    <a class="dropdown-item" href="3{{ i['djoin'] }}">{{ i['depname'] }}</a>
+    {% endfor %}
+  </div>
+</div>
+                  </div>
+                </div>
+                <div class="row">
+                  
+                
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Mobile No</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>DoB</th>
+            <th>Gender</th>
+            <th>Nationality</th>
+            <th>Department</th>
+            <th>Supervisor</th>
+            <th>Co-Supervisor</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+     
+      {% for i in users %}
+    
+        <tr>
+            <td>{{ i['first_name'] }} {{ i['last_name'] }}</td>
+            <td>{{ i['phone'] }}</td>
+            <td>{{ i['email'] }}</td>
+            <td>{{ i['address'] }}</td>
+            <td>{{ i['dob'] }}</td>
+            <td>{{ i['gender'] }}</td>
+            <td>{{ i['nationality'] }}</td>
+            <td>{{ i['department'] }}</td>
+            <td>{{ i['supervisor'] }}</td>
+            <td>{{ i['cosupervisor'] }}</td>
+            
+        </tr>
+        
 
+
+        {% endfor %}
+        
+   
+    </tbody>
+</table>
+</div>
             
                 </div>
               </div>
