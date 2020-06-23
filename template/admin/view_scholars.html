@@ -4,15 +4,111 @@
       <div class="content">
         <div class="container-fluid">
           <div class="row">
-            <div class="col-md-6 mx-auto">
+            <div class="col-md-12 mx-auto">
               <div class="card">
                 <div class="card-header card-header-primary">
                   <h4 class="card-title" id="page_name">View Scholars</h4>
-                  <p class="card-category">View All Scholars Batch Wise</p>
+                  <p class="card-category">View All Scholars Batch and Department wise</p>
                 </div>
                 <div class="card-body">
-                View Scholars
+                
+                  <form class="form" method="POST" action="{{url_for('admin.scholars_viewing')}}">
+                  
+<div class="row">
+                  <div class="col-md-4">
+                    <select class="form-control" name="batch">
+  <option value="None" >Select Batch</option>
+  {% for i in batches %}
+  <option value="{{ i['batch_name'] }}">{{ i['batch_name'] }}</option>
+  {% endfor %}
+</select>
+</div>
+                 
+                  
+                   <div class="col-md-4">
 
+<select class="form-control" name="department">
+  <option value="None" >Select Department</option>
+  {% for i in departments %}
+  <option value="{{ i['depname'] }}">{{ i['depname'] }}</option>
+  {% endfor %}
+</select>
+                  
+                  </div> 
+                
+                  <div class="col-md-4" style="text-align: center;">
+                    <button class="btn btn-info btn-round" >Fetch</button>
+                  </div>
+                  </div>
+                   
+                
+              </form>
+              
+
+
+
+
+
+                <div class="row" style="overflow-x: auto; margin-top: 100px;">
+                  
+<table class="table">
+  
+   {% if users %}
+    <thead>
+      <h3>{{ batch }} {{ department }}</h3>
+        <tr>
+          <th>Profile Pic</th>
+            <th>Name</th>
+            <th>Mobile No</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>DoB</th>
+            <th>Gender</th>
+            <th>Nationality</th>
+            <th>Department</th>
+            <th>Supervisor</th>
+            <th>Co-Supervisor</th>
+            <th>Twitter</th>
+            <th>Facebook</th>
+            <th>Skype</th>
+            <th>Github</th>
+            
+        </tr>
+    </thead>
+    {% endif %}
+    
+    <tbody>
+     
+      {% for i in users %}
+    
+        <tr>
+          <td><img src="{{ url_for('portal.static',  filename= i['profile_pic_link'] ) }}" height="100px" width="100px"></td>
+            <td>{{ i['first_name'] }} {{ i['last_name'] }}</td>
+            <td>{{ i['phone'] }}</td>
+            <td>{{ i['email'] }}</td>
+            <td>{{ i['address'] }}</td>
+            <td>{{ i['dob'] }}</td>
+            <td>{{ i['gender'] }}</td>
+            <td>{{ i['nationality'] }}</td>
+            <td>{{ i['department'] }}</td>
+            <td>{{ i['supervisor'] }}</td>
+            <td>{{ i['cosupervisor'] }}</td>
+            <td>{{ i['twitter'] }}</td>
+            <td>{{ i['facebook'] }}</td>
+            <td>{{ i['skype'] }}</td>
+            <td>{{ i['github'] }}</td>
+            
+        </tr>
+        
+
+
+        {% endfor %}
+        
+   
+    </tbody>
+</table>
+
+</div>
             
                 </div>
               </div>

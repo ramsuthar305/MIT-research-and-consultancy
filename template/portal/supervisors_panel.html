@@ -30,7 +30,7 @@
           <h2 class="title" style="color: black;">Supervisors Panel</h2>
           <div class="nav nav-pills nav-pills-rose">
             <div class="nav-tabs-wrapper">
-              <ul class="nav nav-pills" data-tabs="tabs">
+              <ul class="nav nav-pills" data-tabs="tabs" id="mainTab">
                 <li class="nav-item">
                   <a class="nav-link active show" href="#submissions" data-toggle="tab">
                     Submissions
@@ -370,4 +370,19 @@
 </div>
 
 
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('a[data-toggle="tab"]').on('click', function(e) {
+        window.localStorage.setItem('activeTab', $(e.target).attr('href'));
+    });
+    var activeTab = window.localStorage.getItem('activeTab');
+    if (activeTab) {
+        $('#mainTab a[href="' + activeTab + '"]').tab('show');
+        window.localStorage.removeItem("activeTab");
+    }
+});
+</script>
 {% endblock %}

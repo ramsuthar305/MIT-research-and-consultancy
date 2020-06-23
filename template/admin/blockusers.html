@@ -4,14 +4,119 @@
       <div class="content">
         <div class="container-fluid">
           <div class="row">
-            <div class="col-md-6 mx-auto">
+            <div class="col-md-12 mx-auto">
               <div class="card">
                 <div class="card-header card-header-primary">
                   <h4 class="card-title" id="page_name">Block Users</h4>
                   <p class="card-category">Block Users using Email ID</p>
                 </div>
                 <div class="card-body">
-                Block Users
+                  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">×</span></button>
+    {{message}}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+                  <form class="form" method="POST" action="{{url_for('admin.blockusers')}}">
+                <div class="row">
+                  <div class="col-md-4">
+                    <input type="email" name="email" class="form-control" placeholder="Enter Email" required>
+                  </div>
+                  <div class="col-md-4">
+                    <select class="form-control" name="usertype">
+                      <option value="Research Scholar">Research Scholar</option>
+                      <option value="Research Supervisor">Research Supervisor</option>
+                      <option value="Research Co-Supervisor">Research Co-Supervisor</option>
+                      <option value="Special User">Special User</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4" style="text-align: center;">
+                  <button type="submit" name="submit" class="btn btn-info btn-round">Fetch</button>
+                  </div>
+                </div>
+              </form>
+
+                <div class="row" style="overflow-x: auto; margin-top: 100px;">
+                  <table class="table">
+                    {% if user %}
+                    <thead>
+                      <th>Profile Pic</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Designation</th>
+                      <th style="text-align: center;">Block</th>
+                    </thead>
+                    <tbody>
+                      <form class="form" method="POST" action="{{url_for('admin.removing')}}">
+                        <input type="hidden" name="email" value="{{ user['email'] }}">
+                        <input type="hidden" name="usertype" value="{{ user['user_type'] }}">
+                      <td><img src="{{ url_for('portal.static',  filename= user['profile_pic_link'] ) }}" height="100px" width="100px"></td>
+                      <td>{{ user['first_name'] }} {{ user['last_name'] }}</td>
+                      <td>{{ user['email'] }}</td>
+                      <td>{{ user['user_type'] }}</td>
+                      {% if user['status']=="1" %}
+                      <td style="text-align: center;"><button type="button" rel="tooltip" class="btn btn-danger btn-round" data-toggle="modal" data-target="#exampleModal2">
+                    <i class="material-icons">block</i>
+                    Block
+                </button></td>
+                {% endif %}
+
+                {% if user['status']=="2" %}
+                      <td style="text-align: center;"><button type="button" rel="tooltip" class="btn btn-success btn-round" data-toggle="modal" data-target="#exampleModal1">
+                    <i class="material-icons">check_circle</i>
+                    Unblock
+                </button></td>
+                {% endif %}
+
+                <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Block Registration</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      Press Confirm to proceed to block user.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" name="submitf" value="block" class="btn btn-primary">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Block Registration</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      Press Confirm to proceed to unblock user.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" name="submitf" value="unblock" class="btn btn-primary">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+                    </tbody>
+                    {% endif %}
+                  </table>
+                </div>
 
             
                 </div>

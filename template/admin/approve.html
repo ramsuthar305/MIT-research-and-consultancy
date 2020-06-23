@@ -25,6 +25,7 @@
       <table class="table">
     <thead>
         <tr>
+          <th>Profile Pic</th>
             <th>Name</th>
             <th>Mobile No</th>
             <th>Email</th>
@@ -44,6 +45,7 @@
       {% for i in pending %}
       <input type="hidden" name="userid" value="{{ i['_id'] }}">
         <tr>
+          <td><img src="{{ url_for('portal.static',  filename= i['profile_pic_link'] ) }}" height="100px" width="100px"></td>
             <td>{{ i['first_name'] }} {{ i['last_name'] }}</td>
             <td>{{ i['phone'] }}</td>
             <td>{{ i['email'] }}</td>

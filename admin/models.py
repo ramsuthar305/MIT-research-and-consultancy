@@ -64,6 +64,8 @@ class Supervisors:
 				result = mongo.db.supervisor.insert_one(user)
 			elif user_type=="Research Co-Supervisor":
 				result = mongo.db.cosupervisor.insert_one(user)
+			elif user_type=="Special User":
+				result = mongo.db.specialuser.insert_one(user)
 			else:
 				result = mongo.db.USERTYPE.insert_one(user)
 			if result:
@@ -204,73 +206,121 @@ class Batch:
 		except Exception as error:
 			print(error)
 
-class Jobs:
+	def get_departments(self):
+		try:
+			departments = self.mongo.departments.find_one()
+			return departments['departments']
+		except Exception as error:
+			print('In exception :', error)
+			return []
+
+class Extractdata:
 	def __init__(self):
 		self.mongo =mongo.db
-	
-	def put_job(self,job):
+
+	def get_user(self,usertype):
 		try:
-			result=mongo.db.jobs.insert_one(job)
-			
+			if usertype == "Research Scholar":
+				result=mongo.db.researcher.find()
+			if usertype == "Research Supervisor":
+				result=mongo.db.supervisor.find()
+			if usertype == "Research Co-Supervisor":
+				result=mongo.db.cosupervisor.find()
+			if usertype == "Special User":
+				result=mongo.db.specialuser.find()
 			if result:
-				return result.inserted_id
+				return result
 			else:
 				return False
 		except Exception as error:
 			print(error)
 			return "something went wrong"
 
-	def put_aptitude(self,job_id,apti):
+	def get_scholars(self,batch,department):
 		try:
-			result=mongo.db.jobs.update_one({"_id":ObjectId(job_id)},{"$set":{"aptitude":apti}})
-			if result:
-				return True
-			else:
-				return False
+			result=mongo.db.researcher.find({"$and":[{"batch":batch},{"department":department}]})
+			return (list([batch,department,result]))
+		except Exception as error:
+			return False
+
+	def get_users_by_id(self,email,usertype):
+		try:
+			if usertype=="Research Scholar":
+				result = mongo.db.researcher.find({"email":email})
+				return result
+			if usertype=="Research Supervisor":
+				result = mongo.db.supervisor.find({"email":email})
+				return result
+			if usertype=="Research Co-Supervisor":
+				result = mongo.db.cosupervisor.find({"email":email})
+				return result
+			if usertype=="Special User":
+				result = mongo.db.specialuser.find({"email":email})
+				return result
+
 		except Exception as error:
 			print(error)
-			return "something went wrong"
 
-	def put_personality(self,job_id,personality):
+class UserEdits:
+	def block_user(self,email,usertype):
 		try:
-			result=mongo.db.jobs.update_one({"_id":ObjectId(job_id)},{"$set":{"personality":personality}})
-			if result:
-				return True
-			else:
-				return False
+			if usertype=="Research Scholar":
+				result = mongo.db.researcher.update({"email":email},{"$set":{"status":"2"}})
+				result = mongo.db.authentication.update({"uid":email},{"$set":{"status":"2"}})
+				return result
+			if usertype=="Research Supervisor":
+				result = mongo.db.supervisor.update({"email":email},{"$set":{"status":"2"}})
+				result = mongo.db.authentication.update({"uid":email},{"$set":{"status":"2"}})
+				return result
+			if usertype=="Research Co-Supervisor":
+				result = mongo.db.cosupervisor.update({"email":email},{"$set":{"status":"2"}})
+				result = mongo.db.authentication.update({"uid":email},{"$set":{"status":"2"}})
+				return result
+			if usertype=="Special User":
+				result = mongo.db.specialuser.update({"email":email},{"$set":{"status":"2"}})
+				result = mongo.db.authentication.update({"uid":email},{"$set":{"status":"2"}})
+				return result
 		except Exception as error:
 			print(error)
-			return "something went wrong"
 
-	def get_all_jobs(self):
+	def unblock_user(self,email,usertype):
 		try:
-			result= mongo.db.jobs.find({})
-			print('This is rresult: ',result)
-			return result
+			if usertype=="Research Scholar":
+				result = mongo.db.researcher.update({"email":email},{"$set":{"status":"1"}})
+				result = mongo.db.authentication.update({"uid":email},{"$set":{"status":"1"}})
+				return result
+			if usertype=="Research Supervisor":
+				result = mongo.db.supervisor.update({"email":email},{"$set":{"status":"1"}})
+				result = mongo.db.authentication.update({"uid":email},{"$set":{"status":"1"}})
+				return result
+			if usertype=="Research Co-Supervisor":
+				result = mongo.db.cosupervisor.update({"email":email},{"$set":{"status":"1"}})
+				result = mongo.db.authentication.update({"uid":email},{"$set":{"status":"1"}})
+				return result
+			if usertype=="Special User":
+				result = mongo.db.specialuser.update({"email":email},{"$set":{"status":"1"}})
+				result = mongo.db.authentication.update({"uid":email},{"$set":{"status":"1"}})
+				return result
 		except Exception as error:
 			print(error)
-			return "something went wrong"
 
-	def get_job(self,job_id):
+	def remove_user(self,email,usertype):
 		try:
-			result=mongo.db.jobs.find_one({"_id":ObjectId(job_id)})
-			return result
+			if usertype=="Research Scholar":
+				result = mongo.db.researcher.remove({"email":email})
+				result = mongo.db.authentication.remove({"uid":email})
+				return result
+			if usertype=="Research Supervisor":
+				result = mongo.db.supervisor.remove({"email":email})
+				result = mongo.db.authentication.remove({"uid":email})
+				return result
+			if usertype=="Research Co-Supervisor":
+				result = mongo.db.cosupervisor.remove({"email":email})
+				result = mongo.db.authentication.remove({"uid":email})
+				return result
+			if usertype=="Special User":
+				result = mongo.db.specialuser.remove({"email":email})
+				result = mongo.db.authentication.remove({"uid":email})
+				return result
 		except Exception as error:
 			print(error)
-			return "something went wrong"
-
-class Shortlist:
-	def __init__(self):
-		self.mongo = mongo.db
-
-	def get_profiles(self,job_id):
-		profiles=mongo.db.shortlist.find({"job_id":job_id})
-		users=Users()
-		all_profiles=[]
-		for profile in profiles:
-			user=users.get_user_by_id(profile['user_id'])
-			user['score']=profile['aptiscore']+profile['personalityscore']+profile['skillscore']
-			user['outoff']=profile['totalScore']
-			all_profiles.append(user)
-		print(all_profiles)
-		return all_profiles

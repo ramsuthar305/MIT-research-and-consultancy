@@ -7,13 +7,12 @@ from datetime import datetime
 import os
 
 #custom imports
-from .models import Users, Shortlist
-from .models import Jobs
+
 from .models import *
 
-shorlist_obj=Shortlist()
+
 user_object = Users()
-jobs=Jobs()
+
 admin = Blueprint("admin", __name__, template_folder='../templates', static_folder='../static/admin',
                    static_url_path='../static/admin')
 
@@ -313,7 +312,6 @@ def supervisors_registration():
                 "address":request.form.get('address'),
                 "gender":request.form.get('gender'),
                 "nationality":request.form.get('nationality'),
-                "profile_picture":None,
                 "twitter":request.form.get('twitter'),
                 "skype":request.form.get('skype'),
                 "facebook":request.form.get('facebook'),
@@ -345,7 +343,7 @@ def register_specialusers():
 
 @admin.route('/specialusers_registration',methods=['POST','GET'])
 def specialusers_registration():
-    specialusers_object = SpecialUsers()
+    specialusers_object = Supervisors()
     try:
         if request.method == 'POST':
             user_type = "Special User"
@@ -384,16 +382,17 @@ def specialusers_registration():
                 "address":request.form.get('address'),
                 "gender":request.form.get('gender'),
                 "nationality":request.form.get('nationality'),
-                "profile_picture":None,
                 "twitter":request.form.get('twitter'),
                 "skype":request.form.get('skype'),
                 "facebook":request.form.get('facebook'),
                 "github":request.form.get('repos'),
                 "info":request.form.get('info'),
+                "profile_pic":filename,
+                "profile_pic_link":main_path,
                 "status":"1",
                 "user_type":user_type
             }
-            registration_status = specialusers_object.save_specialuser(user,user_type)
+            registration_status = specialusers_object.save_supervisor(user,user_type)
             flash('Registered Successfully')
             return redirect(url_for("admin.register_specialusers"))
         else:
@@ -417,7 +416,49 @@ def editusers():
 def blockusers():
     try:
         if session['logged_in']==True:
-            return render_template('admin/blockusers.html')
+            exdata = Extractdata()
+            user = []
+            if request.method=="POST":
+                email = request.form.get('email')
+                usertype = request.form.get('usertype')
+                user = exdata.get_users_by_id(email,usertype)
+                if user.count()>0:
+                    user = user[0]
+                else:
+                    user = []
+            return render_template('admin/blockusers.html', user = user)
+        else:
+            return redirect(url_for("admin.login"))
+    except Exception as error:
+        print(error)
+        return render_template('admin/admin_login.html')
+
+@admin.route('/blocking',methods=['POST','GET'])
+def blocking():
+    try:
+        if session['logged_in']==True:
+            exdata = Extractdata()
+            if request.method=="POST":
+                if request.form['submitf']=="block":
+                    email = request.form.get('email')
+                    usertype = request.form.get('usertype')
+                    print(email)
+                    print(usertype)
+                    ue = UserEdits()
+                    stat = ue.block_user(email,usertype)
+                    if stat:
+                        flash("User Blocked Successfully")
+                if request.form['submitf']=="unblock":
+                    email = request.form.get('email')
+                    usertype = request.form.get('usertype')
+                    print(email)
+                    print(usertype)
+                    print("unblock")
+                    ue = UserEdits()
+                    stat = ue.unblock_user(email,usertype)
+                    if stat:
+                        flash("User Unblocked Successfully")
+            return redirect(url_for('admin.blockusers'))
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
@@ -428,7 +469,39 @@ def blockusers():
 def removeusers():
     try:
         if session['logged_in']==True:
-            return render_template('admin/removeusers.html')
+            exdata = Extractdata()
+            user = []
+            if request.method=="POST":
+                email = request.form.get('email')
+                usertype = request.form.get('usertype')
+                user = exdata.get_users_by_id(email,usertype)
+                if user.count()>0:
+                    user = user[0]
+                else:
+                    user = []
+            return render_template('admin/removeusers.html', user = user)
+        else:
+            return redirect(url_for("admin.login"))
+    except Exception as error:
+        print(error)
+        return render_template('admin/admin_login.html')
+
+@admin.route('/removing',methods=['POST','GET'])
+def removing():
+    try:
+        if session['logged_in']==True:
+            exdata = Extractdata()
+            if request.method=="POST":
+                if request.form['submitf']=="remove":
+                    email = request.form.get('email')
+                    usertype = request.form.get('usertype')
+                    print(email)
+                    print(usertype)
+                    ue = UserEdits()
+                    stat = ue.remove_user(email,usertype)
+                    if stat:
+                        flash("User Removed Successfully")
+            return redirect(url_for('admin.removeusers'))
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
@@ -439,7 +512,50 @@ def removeusers():
 def view_scholars():
     try:
         if session['logged_in']==True:
-            return render_template('admin/view_scholars.html')
+            batch_object = Batch()
+            exdata = Extractdata()
+            batches = batch_object.get_batches()
+            departments = batch_object.get_departments()
+            deplist = []
+            for i in departments:
+                temp = {
+                "depname":i,
+                "djoin":i.replace(" ","")
+                }
+                deplist.append(temp)
+            users = []
+            return render_template('admin/view_scholars.html', batches=batches, departments=deplist, users=users)
+        else:
+            return redirect(url_for("admin.login"))
+    except Exception as error:
+        print(error)
+        return render_template('admin/admin_login.html')
+
+@admin.route('/scholars_viewing',methods=['POST','GET'])
+def scholars_viewing():
+    try:
+        if session['logged_in']==True:
+            users = ""
+            if request.method=="POST":
+                batch_object = Batch()
+                exdata = Extractdata()
+                batch = request.form.get('batch')
+                department = request.form.get('department')
+                d = exdata.get_scholars(batch,department)
+                batch = d[0]
+                department = d[1]
+                users = d[2]
+                batches = batch_object.get_batches()
+                departments = batch_object.get_departments()
+                deplist = []
+            for i in departments:
+                temp = {
+                "depname":i,
+                "djoin":i.replace(" ","")
+                }
+                deplist.append(temp)
+
+            return render_template('admin/view_scholars.html',users=users,batches=batches, departments=deplist, batch=batch, department=department)
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
@@ -450,7 +566,9 @@ def view_scholars():
 def view_supervisors():
     try:
         if session['logged_in']==True:
-            return render_template('admin/view_supervisors.html')
+            exdata = Extractdata()
+            users = exdata.get_user("Research Supervisor")
+            return render_template('admin/view_supervisors.html',users=users)
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
@@ -461,7 +579,9 @@ def view_supervisors():
 def view_cosupervisors():
     try:
         if session['logged_in']==True:
-            return render_template('admin/view_cosupervisors.html')
+            exdata = Extractdata()
+            users = exdata.get_user("Research Co-Supervisor")
+            return render_template('admin/view_cosupervisors.html',users=users)
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
@@ -472,7 +592,9 @@ def view_cosupervisors():
 def view_authorities():
     try:
         if session['logged_in']==True:
-            return render_template('admin/view_authorities.html')
+            exdata = Extractdata()
+            users = exdata.get_user("Special User")
+            return render_template('admin/view_authorities.html', users=users)
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
