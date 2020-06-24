@@ -272,14 +272,8 @@ def promoting():
                 d = ex.get_scholars(batch,department)
                 users = d[2]
                 if request.form['submitf']=="promote":
-                    print(email)
                     euser = ex.get_users_by_id(email,"Research Scholar")
-                    print(euser[0])
-                    print("before")
                     esem = euser[0]['semesters'][0]
-                    print("after")
-                    print(esem)
-                    print(esem['sem2'])
                     
                     if esem['sem1']=="0":
                         print("sem1")
@@ -322,6 +316,52 @@ def promoting():
                         esem['sem6'] = "1"
                         esem['next'] = "none"
                         esem['prev'] = "sem 6"
+                        u.replace_sem(email,esem)
+                        return render_template('admin/promote.html',users=users,batches=batches, departments=deplist, batch=batch, department=department)
+                if request.form['submitf']=="demote":
+                    euser = ex.get_users_by_id(email,"Research Scholar")
+                    esem = euser[0]['semesters'][0]
+                    
+                    if esem['sem6']=="1":
+                        print("sem6")
+                        esem['sem6'] = "0"
+                        esem['next'] = "sem 6"
+                        esem['prev'] = "sem 5"
+                        u.replace_sem(email,esem)
+                        return render_template('admin/promote.html',users=users,batches=batches, departments=deplist, batch=batch, department=department)
+                    if esem['sem5']=="1":
+                        print("sem5")
+                        esem['sem5'] = "0"
+                        esem['next'] = "sem 5"
+                        esem['prev'] = "sem 4"
+                        u.replace_sem(email,esem)
+                        return render_template('admin/promote.html',users=users,batches=batches, departments=deplist, batch=batch, department=department)
+                    if esem['sem4']=="1":
+                        print("sem4")
+                        esem['sem4'] = "0"
+                        esem['next'] = "sem 4"
+                        esem['prev'] = "sem 3"
+                        u.replace_sem(email,esem)
+                        return render_template('admin/promote.html',users=users,batches=batches, departments=deplist, batch=batch, department=department)
+                    if esem['sem3']=="1":
+                        print("sem3")
+                        esem['sem3'] = "0"
+                        esem['next'] = "sem 3"
+                        esem['prev'] = "sem 2"
+                        u.replace_sem(email,esem)
+                        return render_template('admin/promote.html',users=users,batches=batches, departments=deplist, batch=batch, department=department)
+                    if esem['sem2']=="1":
+                        print("sem2")
+                        esem['sem2'] = "0"
+                        esem['next'] = "sem 2"
+                        esem['prev'] = "sem 1"
+                        u.replace_sem(email,esem)
+                        return render_template('admin/promote.html',users=users,batches=batches, departments=deplist, batch=batch, department=department)
+                    if esem['sem1']=="1":
+                        print("sem1")
+                        esem['sem1'] = "0"
+                        esem['next'] = "sem 1"
+                        esem['prev'] = "none"
                         u.replace_sem(email,esem)
                         return render_template('admin/promote.html',users=users,batches=batches, departments=deplist, batch=batch, department=department)
 
