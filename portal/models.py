@@ -454,8 +454,7 @@ class Collaborations:
 
 	def fetch_col_researcher(self):
 		try:
-			name = session['first_name'] + " " + session['last_name']
-			result = mongo.db.collaborations.find({"student_name":name})
+			result = mongo.db.collaborations.find({"student_email":session['email']})
 			if result:
 				return result
 			else:
@@ -463,7 +462,12 @@ class Collaborations:
 		except Exception as error:
 			return "Something went wrong"
 
-
+	def delete_col(self,cid):
+		try:
+			result = mongo.db.collaborations.remove({'cid':cid})
+			return result
+		except Exception as error:
+			return "Something went wrong"
 
 class Eresources:
 	def __init__(self):

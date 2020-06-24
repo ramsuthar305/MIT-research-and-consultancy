@@ -641,26 +641,36 @@
     <table class="table">
     <thead>
         <tr>
-            <th>Name</th>
+            <th>Collaborator 1</th>
+            <th>Collaborator 2</th>
             <th>Title</th>
-            <th>Description</th>
-            <th>pdf</th>
+            <th>File</th>
+            {% if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
+            <th>Action</th>
+            {% endif %}
             
         </tr>
     </thead>
     <tbody>
-     
-      {% for i in resource %}
-      {% if i['status']=='1' and i['email']==session['id'] %}
+     {% if cdata %}
+      {% for i in cdata %}
+      <form action="{{url_for('portal.delete_collab')}}" method="POST" enctype = "multipart/form-data">
         <tr style="color: black;">
-            <td>{{ i['author'] }}</td>
-            <td>{{ i['title'] }}</td>
-            <td>{{ i['description'] }}</td>
-            <td><a href="{{ url_for('portal.static',  filename=i['pdf_link'] ) }}" target="_blank">{{ i['pdf_name'] }}</a></td>
-            
+            <td>{{ i['supervisor_name'] }}</td>
+            <td>{{ i['student_name'] }}</td>
+            <td>{{ i['collabs'][0]['ctitle'] }}</td>
+            <td><a href="{{ url_for('portal.static',  filename=i['collabs'][0]['pdf_link'] ) }}" target="_blank">{{ i['collabs'][0]['pdf_name'] }}</a></td>
+            {% if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
+            <td><button type="Submit" class="btn btn-danger btn-round">
+              <i class="material-icons">delete</i>
+              Delete
+            </button></td>
+            {% endif %}
         </tr>
-        {% endif %}
+        <input type="hidden" name="cid" value="{{ i['cid'] }}">
+      </form>
         {% endfor %}
+        {% endif %}
       
         
         

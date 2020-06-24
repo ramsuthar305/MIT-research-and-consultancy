@@ -57,7 +57,13 @@ def profile():
                 resource = st.fetch_resource()
                 resource1 = st.fetch_resource()
                 resource2 = st.fetch_resource()
-                return render_template('portal/userprofile.html',user=user,quests=quests1,answers=answers,qidlist=qidlist,resource=resource,resource1=resource1,resource2=resource2,fuser=fuser)
+                c = Collaborations()
+                cdata = list(c.fetch_col_researcher())
+                if len(cdata)>0:
+                    pass
+                else:
+                    cdata = []
+                return render_template('portal/userprofile.html',user=user,quests=quests1,answers=answers,qidlist=qidlist,resource=resource,resource1=resource1,resource2=resource2,fuser=fuser,cdata=cdata)
             if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor":
                 if request.method == "POST":
                     email2 = request.form.get('email2')
@@ -69,8 +75,10 @@ def profile():
                         fuser = ""
                 c = Collaborations()
                 cdata = list(c.fetch_col_supervisor())
-                print(cdata)
-                cdata = ""
+                if len(cdata)>0:
+                    pass
+                else:
+                    cdata = ""
                 return render_template('portal/userprofile.html', user = user, fuser=fuser, cdata = cdata)
         else:
             return redirect(url_for('portal.signin'))
@@ -91,9 +99,28 @@ def add_collab():
                     dept2 = request.form.get('dept2')
                     fname = request.form.get('fname')
                     lname = request.form.get('lname')
+                    ctitle = request.form.get('ctitle')
+                    f = request.files['file']
+                    filename = f.filename
+                    if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + "collaborations")):
+                        os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + "collaborations"))
+                    path = os.path.join(app.config['UPLOAD_FOLDER']+"collaborations",filename)
+                    main_path = path.split("static/")[1]
+                    main_path = main_path.split("\\")[0]
+                    main_path = main_path + "/" + filename
+                    print(main_path)
+                    f.save(path)
+                    L = []
+                    cd = {
+                    'ctitle':request.form.get('ctitle'),
+                    'cdescription':request.form.get('cdesc'),
+                    'pdf_name':filename,
+                    'pdf_link':main_path,
+                    }
+                    L.append(cd)
                     meuser = exdata.get_researcher()
                     collab ={
-                    "cid":session['email']+email2,
+                    "cid":session['email']+email2+main_path+ctitle,
                     "supervisor_name":meuser['first_name'] + " " + meuser['last_name'],
                     "supervisor_email":meuser['email'],
                     "supervisor_dept":meuser['department'],
@@ -101,12 +128,31 @@ def add_collab():
                     "student_email":email2,
                     "student_batch":batch2,
                     "student_dept":dept2,
-                    "collabs":[]
+                    "collabs":L
                     }
-                    print(collab)
                     c = Collaborations()
                     stat = c.add_col(collab)
                     flash("Collab Added Successfully")
+                return redirect(url_for('portal.profile'))
+        else:
+            return redirect(url_for('portal.signin'))
+    except Exception as error:
+        print(error)
+        return redirect(url_for('portal.signin'))
+
+@portal.route('/delete_collab',methods=['POST','GET'])
+def delete_collab():
+    try:
+        if session['logged_in']==True:
+            exdata = Extract_Data()
+            if session['user_type'] == "Research Supervisor" or session['user_type'] == "Research Co-Supervisor":
+                if request.method=="POST":
+                    cid = request.form.get('cid')
+                    print(cid)
+                    c = Collaborations()
+                    stat = c.delete_col(cid)
+                    if stat:
+                        flash("Collaboration deleted successfully")
                 return redirect(url_for('portal.profile'))
         else:
             return redirect(url_for('portal.signin'))
