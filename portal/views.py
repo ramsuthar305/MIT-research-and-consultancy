@@ -103,7 +103,9 @@ def registration():
             "sem3":"0",
             "sem4":"0",
             "sem5":"0",
-            "sem6":"0"
+            "sem6":"0",
+            "next":"1",
+            "prev":"none",
             }
             tl.append(semis)
             
@@ -390,7 +392,13 @@ def progress():
     try:
         if session['logged_in']==True:
             print('in here')
-            return render_template('portal/progress.html')
+            ex = Extract_Data()
+            result = ex.get_researcher()
+            sems = result['semesters'][0]
+            print(sems)
+            current = sems['next']
+            print(current)
+            return render_template('portal/progress.html',current=current,sems=sems)
         else:
             return redirect(url_for("portal.signin"))
     except Exception as error:
