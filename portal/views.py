@@ -36,12 +36,13 @@ def publication():
     
 
 
-@portal.route('/profile')
+@portal.route('/profile',methods=['POST','GET'])
 def profile():
     try:
         if session['logged_in']==True:
             exdata = Extract_Data()
             user = exdata.get_researcher()
+            fuser = ""
             if session['user_type']=="Research Scholar":
                 sub = Submissions()
                 st = Student_Resources()
@@ -56,14 +57,57 @@ def profile():
                 resource = st.fetch_resource()
                 resource1 = st.fetch_resource()
                 resource2 = st.fetch_resource()
-                return render_template('portal/userprofile.html',user=user,quests=quests1,answers=answers,qidlist=qidlist,resource=resource,resource1=resource1,resource2=resource2)
+                return render_template('portal/userprofile.html',user=user,quests=quests1,answers=answers,qidlist=qidlist,resource=resource,resource1=resource1,resource2=resource2,fuser=fuser)
             if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor":
-                return render_template('portal/userprofile.html', user = user)
+                if request.method == "POST":
+                    email2 = request.form.get('email2')
+                    print(email2)
+                    fuser=exdata.get_users_by_id(email2,"Research Scholar")
+                    if fuser.count()>0:
+                        fuser = fuser[0]
+                    else:
+                        fuser = ""
+                return render_template('portal/userprofile.html', user = user, fuser=fuser)
         else:
             return redirect(url_for('portal.signin'))
     except Exception as error:
         print(error)
         return redirect(url_for('portal.signin'))
+
+@portal.route('/add_collab',methods=['POST','GET'])
+def add_collab():
+    try:
+        if session['logged_in']==True:
+            exdata = Extract_Data()
+            if session['user_type'] == "Research Supervisor" or session['user_type'] == "Research Co-Supervisor":
+                if request.method == "POST":
+                    print("add collab")
+                    email2 = request.form.get('email2')
+                    batch2 = request.form.get('batch2')
+                    dept2 = request.form.get('dept2')
+                    fname = request.form.get('fname')
+                    lname = request.form.get('lname')
+                    meuser = exdata.get_researcher()
+                    collab ={
+                    "cid":session['email']+email2,
+                    "supervisor_name":meuser['first_name'] + " " + meuser['last_name'],
+                    "supervisor_email":meuser['email'],
+                    "supervisor_dept":meuser['department'],
+                    "student_name":fname + " " + lname,
+                    "student_email":email2,
+                    "student_batch":batch2,
+                    "student_dept":dept2,
+                    "collabs":[]
+                    }
+                    print(collab)
+                    flash("Collab Added Successfully")
+                return redirect(url_for('portal.profile'))
+        else:
+            return redirect(url_for('portal.signin'))
+    except Exception as error:
+        print(error)
+        return redirect(url_for('portal.signin'))
+
 
 @portal.route('/signup')
 def signup():

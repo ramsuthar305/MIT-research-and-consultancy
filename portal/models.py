@@ -228,6 +228,24 @@ class Extract_Data:
 			print(error)
 			return "something went wrong"
 
+	def get_users_by_id(self,email,usertype):
+		try:
+			if usertype=="Research Scholar":
+				result = mongo.db.researcher.find({"email":email})
+				return result
+			if usertype=="Research Supervisor":
+				result = mongo.db.supervisor.find({"email":email})
+				return result
+			if usertype=="Research Co-Supervisor":
+				result = mongo.db.cosupervisor.find({"email":email})
+				return result
+			if usertype=="Special User":
+				result = mongo.db.specialuser.find({"email":email})
+				return result
+
+		except Exception as error:
+			print(error)
+
 
 class Submissions:
 	def __init__(self):

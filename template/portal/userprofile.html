@@ -43,6 +43,11 @@
                 <h3 class="info-title" style="color: black;">Social Media Links</h3>
               </div>
             </div>
+
+            <div class="row">
+ 
+
+</div>
             
             <div class="row">
   <div class="col-md-6 ml-auto mr-auto" >
@@ -70,21 +75,7 @@
     </div>
   </div>
 </div>
-<div class="row">
-  <div class="col-md-6 ml-auto mr-auto" >
-    <div class="card card-pricing " style="background: #D44638;" >
-      <div class="card-body ">
-        <a href="{{ user['email'] }}" style="color: white;">
-        <div class="icon">
-            <i class="material-icons">email</i>
-        </div>
-        </a>
-        
-        </div>
-    </div>
-  </div>
 
-</div>
 
 <div class="row">
   <div class="col-md-6 ml-auto mr-auto" >
@@ -112,6 +103,7 @@
     </div>
   </div>
 </div>
+
             
             
             
@@ -173,6 +165,14 @@
                         </span>
                     </div>
                         <input type="text" class="form-control text-center" value="{{ user['phone'] }}" disabled>
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">email</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control text-center" value="{{ user['email'] }}" disabled>
                   </div>
 
                   <div class="input-group" style="margin-bottom: 20px;">
@@ -536,20 +536,124 @@
 
 
  <div class="tab-pane text-center gallery" id="collab">
-            <div class="row">
+           <div class="row">
               <div class="col-md-12 ml-auto">
-                <h3 style="color: black;">Coming Soon</h3>
-                <div class="row">
+    {% if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
+                <h3 style="color: black;">Send Collaboration Request</h3>
+               
+                  
+    <form action="{{url_for('portal.profile')}}" method="POST" enctype = "multipart/form-data">
+                  <div class="col-md-12">
                   <div class="col-md-6 ml-auto mr-auto">
-                
+                  <div class="form-group">
+                    <label for="email2">Email</label>
+                    <input type="text" name="email2" class="form-control" id="email" required>
+                  </div>
+                </div>
 
                 </div>
-                </div>
+
+  <div class="form-group">
+    <label>Get User</label>
+    <button class="btn btn-success btn-round">Fetch</button>
+  </div>
+  
+
+   </form>
+{% if fuser %}
+   <div class="card card-nav-tabs">
+  <div class="card-header card-header-info">
+    Fetched User
+  </div>
+  <div class="card-body" style="overflow-x: auto;">
+    <table class="table">
+    <thead>
+        <tr>
+          <th>Profile Pic</th>
+            <th>Name</th>
+            <th>Batch</th>
+            <th>Department</th> 
+            <th>Collab</th>
+            <th>Cancel</th>           
+        </tr>
+    </thead>
+    <tbody>
+     
+      <form action="{{url_for('portal.add_collab')}}" method="POST" enctype = "multipart/form-data">
+        <tr style="color: black;">
+            <td><img src="{{ url_for('portal.static',  filename=fuser['profile_pic_link'] ) }}" height="100px" width="100px" style="border-radius:50%;"></td>
+            <td>{{ fuser['first_name'] }} {{ fuser['last_name'] }}</td>
+            <td>{{ fuser['batch'] }}</td>
+            <td>{{ fuser['department'] }}</td>
+            <td><button class="btn btn-success btn-round">Collab</button></td>
+            <td><a class="btn btn-danger btn-round" href="{{url_for('portal.profile')}}">Cancel</a></td>
+        </tr>
+        <input type="hidden" name="email2" value="{{ fuser['email'] }}">
+        <input type="hidden" name="batch2" value="{{ fuser['batch'] }}">
+        <input type="hidden" name="dept2" value="{{ fuser['department'] }}">
+        <input type="hidden" name="fname" value="{{ fuser['first_name'] }}">
+        <input type="hidden" name="lname" value="{{ fuser['last_name'] }}">
+      </form>
+      
+        
+        
+    </tbody>
+</table>
+  </div>
+</div>
+{% endif %}
+
+{% endif %}
+
+               
+
+
+                
+
+
+
+                <h3 style="color: black;">My Collaborations</h3>
+
+    <div class="card card-nav-tabs">
+  <div class="card-header card-header-info">
+    Collaborations
+  </div>
+  <div class="card-body" style="overflow-x: auto;">
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>pdf</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+     
+      {% for i in resource %}
+      {% if i['status']=='1' and i['email']==session['id'] %}
+        <tr style="color: black;">
+            <td>{{ i['author'] }}</td>
+            <td>{{ i['title'] }}</td>
+            <td>{{ i['description'] }}</td>
+            <td><a href="{{ url_for('portal.static',  filename=i['pdf_link'] ) }}" target="_blank">{{ i['pdf_name'] }}</a></td>
+            
+        </tr>
+        {% endif %}
+        {% endfor %}
+      
+        
+        
+    </tbody>
+</table>
+  </div>
+</div>
+
+  </div>
 
 
   </div>
-              
-            </div>
 
 
 
