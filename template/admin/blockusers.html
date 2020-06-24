@@ -55,7 +55,7 @@
                       <form class="form" method="POST" action="{{url_for('admin.removing')}}">
                         <input type="hidden" name="email" value="{{ user['email'] }}">
                         <input type="hidden" name="usertype" value="{{ user['user_type'] }}">
-                      <td><img src="{{ url_for('portal.static',  filename= user['profile_pic_link'] ) }}" height="100px" width="100px"></td>
+                      <td><img src="{{ url_for('portal.static',  filename= user['profile_pic_link'] ) }}" height="100px" width="100px" style="border-radius: 50%;"></td>
                       <td>{{ user['first_name'] }} {{ user['last_name'] }}</td>
                       <td>{{ user['email'] }}</td>
                       <td>{{ user['user_type'] }}</td>
