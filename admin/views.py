@@ -550,7 +550,17 @@ def specialusers_registration():
 def editusers():
     try:
         if session['logged_in']==True:
-            return render_template('admin/editusers.html')
+            exdata = Extractdata()
+            user = []
+            if request.method=="POST":
+                email = request.form.get('email')
+                usertype = request.form.get('usertype')
+                user = exdata.get_users_by_id(email,usertype)
+                if user.count()>0:
+                    user = user[0]
+                else:
+                    user = []
+            return render_template('admin/editusers.html', user = user)
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
@@ -572,6 +582,32 @@ def blockusers():
                 else:
                     user = []
             return render_template('admin/blockusers.html', user = user)
+        else:
+            return redirect(url_for("admin.login"))
+    except Exception as error:
+        print(error)
+        return render_template('admin/admin_login.html')
+
+@admin.route('/editing',methods=['POST','GET'])
+def editing():
+    try:
+        if session['logged_in']==True:
+            exdata = Extractdata()
+            if request.method=="POST":
+                if request.form['submitf']=="edit":
+                    email = request.form.get('email')
+                    usertype = request.form.get('usertype')
+                    print(email)
+                    print(usertype)
+                    user = exdata.get_users_by_id(email,usertype)
+                    user = user[0]
+                    '''
+                    ue = UserEdits()
+                    stat = ue.block_user(email,usertype)
+                    if stat:
+                        flash("Changes Saved Successfully")
+                    '''
+            return render_template('admin/edit_profile.html',user=user)
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:

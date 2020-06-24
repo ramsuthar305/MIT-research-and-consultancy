@@ -43,46 +43,78 @@
                 <h3 class="info-title" style="color: black;">Social Media Links</h3>
               </div>
             </div>
-            <div class="info info-horizontal">
-              <div class="icon icon-rose">
-                <i class="material-icons">email</i>
-              </div>
-              <div class="description">
-                <h4 class="info-title" style="color: black;"><a href="#" style="color: blue;">{{ user['email'] }}</a></h4>
-              </div>
-            </div>
-            <div class="info info-horizontal">
-              <div class="icon icon-rose">
-                <i class="fa fa-twitter"></i>
-              </div>
-              <div class="description">
-                <h4 class="info-title" style="color: black;"><a href="#" style="color: blue;">{{ user['twitter'] }}</a></h4>
-              </div>
-            </div>
-            <div class="info info-horizontal">
-              <div class="icon icon-rose">
-                <i class="fa fa-facebook"></i>
-              </div>
-              <div class="description">
-                <h4 class="info-title" style="color: black;"><a href="#" style="color: blue;">{{ user['twitter'] }}</a></h4>
-              </div>
-            </div>
-            <div class="info info-horizontal">
-              <div class="icon icon-rose">
-                <i class="fa fa-skype"></i>
-              </div>
-              <div class="description">
-                <h4 class="info-title" style="color: black;"><a href="#" style="color: blue;">{{ user['skype'] }}</a></h4>
-              </div>
-            </div>
-            <div class="info info-horizontal">
-              <div class="icon icon-rose">
-                <i class="fa fa-github"></i>
-              </div>
-              <div class="description">
-                <h4 class="info-title" style="color: black;"><a href="#" style="color: blue;">{{ user['github'] }}</a></h4>
-              </div>
-            </div>
+            
+            <div class="row">
+  <div class="col-md-6 ml-auto mr-auto" >
+    <div class="card card-pricing " style="background: #00ACEE;" >
+      <div class="card-body ">
+        <a href="{{ user['twitter'] }}" style="color: white;">
+        <div class="icon">
+            <i class="fa fa-twitter"></i>
+        </div>
+        </a>
+        
+        </div>
+    </div>
+  </div>
+  <div class="col-md-6 ml-auto mr-auto" >
+    <div class="card card-pricing" style="background: #3B5998;" >
+      <div class="card-body ">
+        <a href="{{ user['facebook'] }}" style="color: white;">
+        <div class="icon">
+            <i class="fa fa-facebook"></i>
+        </div>
+        </a>
+        
+        </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6 ml-auto mr-auto" >
+    <div class="card card-pricing " style="background: #D44638;" >
+      <div class="card-body ">
+        <a href="{{ user['email'] }}" style="color: white;">
+        <div class="icon">
+            <i class="material-icons">email</i>
+        </div>
+        </a>
+        
+        </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col-md-6 ml-auto mr-auto" >
+    <div class="card card-pricing " style="background: #00AFF0;" >
+      <div class="card-body ">
+        <a href="{{ user['skype'] }}" style="color: white;">
+        <div class="icon">
+            <i class="fa fa-skype"></i>
+        </div>
+        </a>
+        
+        </div>
+    </div>
+  </div>
+  <div class="col-md-6 ml-auto mr-auto" >
+    <div class="card card-pricing" style="background: #211F1F" >
+      <div class="card-body ">
+        <a href="{{ user['github'] }}" style="color: white;">
+        <div class="icon">
+            <i class="fa fa-github"></i>
+        </div>
+        </a>
+        
+        </div>
+    </div>
+  </div>
+</div>
+            
+            
+            
           </div>
           <div class="col-md-8 text-center">
             <div class="row">
@@ -536,8 +568,6 @@
       <div class="about-description text-center" style="margin-bottom: 50px;">
         <div class="row" >
           <div class="col-md-8 ml-auto mr-auto">
-
-              <a href="#" class="btn btn-info btn-round">Edit</a>
               <a href="{{url_for('portal.logout')}}" class="btn btn-danger btn-round">Log Out</a>
               
           </div>
