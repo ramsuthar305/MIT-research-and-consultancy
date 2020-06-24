@@ -32,16 +32,16 @@
                 </li>
                 {% if session['logged_in'] %}
                 <li class="nav-item">
-                    <a href="{{url_for('portal.profile')}}"  style="cursor: pointer;">
+                    <b><a href="{{url_for('portal.profile')}}"  style="cursor: pointer; color: limegreen">
                         <i class="material-icons">account_circle</i>
                         {{session['name']}}
-                    </a>
+                    </a></b>
                 </li>
                 <li class="nav-item">
-                    <a href="{{url_for('portal.logout')}}"  style="cursor: pointer;">
+                    <b><a href="{{url_for('portal.logout')}}"  style="cursor: pointer; color: tomato;">
                         <i class="material-icons">exit</i>
                         Logout
-                    </a>
+                    </a></b>
                 </li>
                 {% else %}
                 <li class="nav-item">

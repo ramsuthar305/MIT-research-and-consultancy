@@ -219,11 +219,116 @@ def authorize():
 def promote():
     try:
         if session['logged_in']==True:
-            return render_template('admin/promote.html')
+            u = UserEdits()
+            users = ""
+            batch = ""
+            department = ""
+            batch_object = Batch()
+            batches = batch_object.get_batches()
+            deplist = []
+            departments = batch_object.get_departments()
+            for i in departments:
+                temp = {
+                "depname":i,
+                "djoin":i.replace(" ","")
+                }
+                deplist.append(temp)
+            if request.method=="POST":
+                exdata = Extractdata()
+                batch = request.form.get('batch')
+                department = request.form.get('department')
+                d = exdata.get_scholars(batch,department)
+                users = d[2]
+
+            return render_template('admin/promote.html',users=users,batches=batches, departments=deplist, batch=batch, department=department)
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
         print(error)
+        return render_template('admin/admin_login.html')
+
+@admin.route('/promoting',methods=['POST','GET'])
+def promoting():
+    try:
+        if session['logged_in']==True:
+            u = UserEdits()
+            ex = Extractdata()
+            buser = ex.get_user("Research Scholar")
+            print(buser.count())
+            batch_object = Batch()
+            batches = batch_object.get_batches()
+            deplist = []
+            departments = batch_object.get_departments()
+            for i in departments:
+                temp = {
+                "depname":i,
+                "djoin":i.replace(" ","")
+                }
+                deplist.append(temp)
+            if request.method=="POST":
+                email = request.form.get('email')
+                batch = request.form.get('batch')
+                department = request.form.get('department')
+                d = ex.get_scholars(batch,department)
+                users = d[2]
+                if request.form['submitf']=="promote":
+                    print(email)
+                    euser = ex.get_users_by_id(email,"Research Scholar")
+                    print(euser[0])
+                    print("before")
+                    esem = euser[0]['semesters'][0]
+                    print("after")
+                    print(esem)
+                    print(esem['sem2'])
+                    
+                    if esem['sem1']=="0":
+                        print("sem1")
+                        esem['sem1'] = "1"
+                        esem['next'] = "sem 2"
+                        esem['prev'] = "sem 1"
+                        u.replace_sem(email,esem)
+                        return render_template('admin/promote.html',users=users,batches=batches, departments=deplist, batch=batch, department=department)
+                    print("hello")
+                    if esem['sem2']=="0":
+                        print("sem2")
+                        esem['sem2'] = "1"
+                        esem['next'] = "sem 3"
+                        esem['prev'] = "sem 2"
+                        u.replace_sem(email,esem)
+                        return render_template('admin/promote.html',users=users,batches=batches, departments=deplist, batch=batch, department=department)
+                    if esem['sem3']=="0":
+                        print("sem3")
+                        esem['sem3'] = "1"
+                        esem['next'] = "sem 4"
+                        esem['prev'] = "sem 3"
+                        u.replace_sem(email,esem)
+                        return render_template('admin/promote.html',users=users,batches=batches, departments=deplist, batch=batch, department=department)
+                    if esem['sem4']=="0":
+                        print("sem4")
+                        esem['sem4'] = "1"
+                        esem['next'] = "sem 5"
+                        esem['prev'] = "sem 4"
+                        u.replace_sem(email,esem)
+                        return render_template('admin/promote.html',users=users,batches=batches, departments=deplist, batch=batch, department=department)
+                    if esem['sem5']=="0":
+                        print("sem5")
+                        esem['sem5'] = "1"
+                        esem['next'] = "sem 6"
+                        esem['prev'] = "sem 5"
+                        u.replace_sem(email,esem)
+                        return render_template('admin/promote.html',users=users,batches=batches, departments=deplist, batch=batch, department=department)
+                    if esem['sem6']=="0":
+                        print("sem6")
+                        esem['sem6'] = "1"
+                        esem['next'] = "none"
+                        esem['prev'] = "sem 6"
+                        u.replace_sem(email,esem)
+                        return render_template('admin/promote.html',users=users,batches=batches, departments=deplist, batch=batch, department=department)
+
+            return redirect(url_for('admin.promote'))
+        else:
+            return redirect(url_for("admin.login"))
+    except Exception as error:
         return render_template('admin/admin_login.html')
 
 @admin.route('/notice',methods=['POST','GET'])

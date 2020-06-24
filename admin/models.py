@@ -324,3 +324,30 @@ class UserEdits:
 				return result
 		except Exception as error:
 			print(error)
+
+	def replace_sem(self,email,sem):
+		try:
+			L = []
+			L.append(sem)
+			result = mongo.db.researcher.update({"email":email},{"$set":{"semesters":L}})
+			return result
+		except Exception as error:
+			print(error)
+
+	def timepass(self):
+		try:
+			L = []
+			sem = {
+			"sem1":"0",
+			"sem2":"0",
+			"sem3":"0",
+			"sem4":"0",
+			"sem5":"0",
+			"sem6":"0",
+			}
+			L.append(sem)
+			result = mongo.db.researcher.update({"email":"safirmotiwala@gmail.com"},{"$set":{"semesters":L}})
+			result = mongo.db.researcher.update({"email":"ramsuthar305@gmail.com"},{"$set":{"semesters":L}})
+			result = mongo.db.researcher.update({"email":"vinayak@gmail.com"},{"$set":{"semesters":L}})
+		except Exception as e:
+			raise e

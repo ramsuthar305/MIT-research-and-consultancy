@@ -4,15 +4,140 @@
       <div class="content">
         <div class="container-fluid">
           <div class="row">
-            <div class="col-md-6 mx-auto">
+            <div class="col-md-12 mx-auto">
               <div class="card">
                 <div class="card-header card-header-primary">
                   <h4 class="card-title" id="page_name">Promote Researchers</h4>
                   <p class="card-category">Promote each Semester</p>
                 </div>
                 <div class="card-body">
-                Promote
+                
+                  <form class="form" method="POST" action="{{url_for('admin.promote')}}">
+                  
+<div class="row">
+                  <div class="col-md-4">
+                    <select class="form-control" name="batch">
+  <option value="None" >Select Batch</option>
+  {% for i in batches %}
+  <option value="{{ i['batch_name'] }}">{{ i['batch_name'] }}</option>
+  {% endfor %}
+</select>
+</div>
+                 
+                  
+                   <div class="col-md-4">
 
+<select class="form-control" name="department">
+  <option value="None" >Select Department</option>
+  {% for i in departments %}
+  <option value="{{ i['depname'] }}">{{ i['depname'] }}</option>
+  {% endfor %}
+</select>
+                  
+                  </div> 
+                
+                  <div class="col-md-4" style="text-align: center;">
+                    <button class="btn btn-info btn-round" >Fetch</button>
+                  </div>
+                  </div>
+                   
+                
+              </form>
+              
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">×</span></button>
+    {{message}}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+
+
+
+
+                <div class="row" style="overflow-x: auto; margin-top: 100px;">
+                  
+<table class="table">
+  
+   {% if users %}
+    <thead>
+      <h3>{{ batch }} {{ department }}</h3>
+        <tr>
+          <th>Profile Pic</th>
+            <th>Name</th>
+            <th>Mobile No</th>
+            <th>Email</th>
+            <th>Promote</th>
+            <th>Demote</th>
+        </tr>
+    </thead>
+    {% endif %}
+    
+    <tbody>
+
+      
+     
+      {% for i in users %}
+      <form class="form" method="POST" action="{{url_for('admin.promoting')}}" enctype="multipart/form-data">
+    <input type="hidden" name="email" value="{{ i['_id'] }}">
+    <input type="hidden" name="batch" value="{{ i['batch'] }}">
+    <input type="hidden" name="department" value="{{ i['department'] }}">
+        <tr>
+          <td><img src="{{ url_for('portal.static',  filename= i['profile_pic_link'] ) }}" height="100px" width="100px" style="border-radius: 50%;"></td>
+            <td>{{ i['first_name'] }} {{ i['last_name'] }}</td>
+            <td>{{ i['phone'] }}</td>
+            <td>{{ i['email'] }}</td>
+
+            {% if i['semesters'][0]['sem1']=="0" %}
+            <td><button type="submit" name="submitf" value="promote" class="btn btn-success btn-round">
+                    <i class="material-icons">thumb_up</i>
+                    Sem 1
+                </button></td>
+                <td><button type="submit" name="submitf" value="demote" class="btn btn-danger btn-round" disabled>
+                    <i class="material-icons">thumb_down</i>
+                    Sem 1
+                </button></td>
+              
+            {% elif i['semesters'][0]['next']=="none" %}
+            <td><button type="submit" name="submitf" value="promote" class="btn btn-success btn-round" disabled>
+                    <i class="material-icons">thumb_up</i>
+                    Promoted
+                </button></td>
+                <td><button type="submit" name="submitf" value="demote" class="btn btn-danger btn-round" >
+                    <i class="material-icons">thumb_down</i>
+                    {{ i['semesters'][0]['prev'] }}
+                </button></td>
+              {% else %}
+                <td><button type="submit" name="submitf" value="promote" class="btn btn-success btn-round">
+                    <i class="material-icons">thumb_up</i>
+                    {{ i['semesters'][0]['next'] }}
+                </button></td>
+                <td><button type="submit" name="submitf" value="demote" class="btn btn-danger btn-round" >
+                    <i class="material-icons">thumb_down</i>
+                    {{ i['semesters'][0]['prev'] }}
+                </button></td>
+                {% endif %}
+
+              
+          
+         
+            
+        </tr>
+
+        
+
+  </form>
+        {% endfor %}
+        
+ 
+    </tbody>
+</table>
+
+</div>
             
                 </div>
               </div>

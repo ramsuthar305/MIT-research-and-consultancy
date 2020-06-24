@@ -81,6 +81,7 @@ def registration():
     exdata = Extract_Data()
     active=exdata.get_active_batch()
     bpath = "temp"
+    tl = []
     try:
         if request.method == 'POST':
             email= request.form.get('email')
@@ -96,6 +97,15 @@ def registration():
             print(main_path)
             f.save(path)
             #x = request.get_json(force=True)
+            semis = {
+            "sem1":"0",
+            "sem2":"0",
+            "sem3":"0",
+            "sem4":"0",
+            "sem5":"0",
+            "sem6":"0"
+            }
+            tl.append(semis)
             
             user_type="Research Scholar"
             user={
@@ -111,7 +121,6 @@ def registration():
                 "address":request.form.get('address'),
                 "gender":request.form.get('gender'),
                 "nationality":request.form.get('nationality'),
-                "profile_picture":None,
                 "twitter":request.form.get('twitter'),
                 "skype":request.form.get('skype'),
                 "facebook":request.form.get('facebook'),
@@ -123,7 +132,7 @@ def registration():
                 "created_on":str(datetime.now()).split('.')[0],
                 "status":"0",
                 "user_type":user_type,
-                "semesters":[]
+                "semesters":tl
             }
             registration_status = user_object.temp_user(user)
             flash("Registration Successful. You will receive an email after your account is activated")

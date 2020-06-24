@@ -405,7 +405,7 @@
     <tbody>
      
       {% for i in resource %}
-      {% if i['status']=='1' %}
+      {% if i['status']=='1' and i['email']==session['id'] %}
         <tr style="color: black;">
             <td>{{ i['author'] }}</td>
             <td>{{ i['title'] }}</td>
@@ -443,7 +443,7 @@
     <tbody>
      
       {% for i in resource1 %}
-      {% if i['status']=='0' %}
+      {% if i['status']=='0' and i['email']==session['id'] %}
         <tr style="color: black;">
             <td>{{ i['author'] }}</td>
             <td>{{ i['title'] }}</td>
@@ -480,7 +480,7 @@
     <tbody>
      
       {% for i in resource2 %}
-      {% if i['status']=='2' %}
+      {% if i['status']=='2' and i['email']==session['id'] %}
         <tr style="color: black;">
             <td>{{ i['author'] }}</td>
             <td>{{ i['title'] }}</td>
@@ -569,6 +569,8 @@
     }
 });
 </script>
+
+
 
 
 
