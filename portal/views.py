@@ -67,7 +67,11 @@ def profile():
                         fuser = fuser[0]
                     else:
                         fuser = ""
-                return render_template('portal/userprofile.html', user = user, fuser=fuser)
+                c = Collaborations()
+                cdata = list(c.fetch_col_supervisor())
+                print(cdata)
+                cdata = ""
+                return render_template('portal/userprofile.html', user = user, fuser=fuser, cdata = cdata)
         else:
             return redirect(url_for('portal.signin'))
     except Exception as error:
@@ -100,6 +104,8 @@ def add_collab():
                     "collabs":[]
                     }
                     print(collab)
+                    c = Collaborations()
+                    stat = c.add_col(collab)
                     flash("Collab Added Successfully")
                 return redirect(url_for('portal.profile'))
         else:

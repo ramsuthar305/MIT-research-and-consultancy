@@ -431,6 +431,39 @@ class Student_Resources:
 			print(error)
 			return "something went wrong"
 
+class Collaborations:
+	def __init__(self):
+		self.mongo =mongo.db
+
+	def add_col(self,data):
+		try:
+			result = mongo.db.collaborations.insert_one(data)
+			return result
+		except Exception as error:
+			return "Something went wrong"
+
+	def fetch_col_supervisor(self):
+		try:
+			result = mongo.db.collaborations.find({"supervisor_email":session['email']})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			return "Something went wrong"
+
+	def fetch_col_researcher(self):
+		try:
+			name = session['first_name'] + " " + session['last_name']
+			result = mongo.db.collaborations.find({"student_name":name})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			return "Something went wrong"
+
+
 
 class Eresources:
 	def __init__(self):
