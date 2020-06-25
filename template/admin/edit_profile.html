@@ -25,7 +25,7 @@
   {% endif %}
   {% endwith %}
                 
-  <form class="text-center" action="{{url_for('admin.specialusers_registration')}}" method="POST" enctype="multipart/form-data">
+  <form class="text-center" action="{{url_for('admin.editing')}}" method="POST" enctype="multipart/form-data">
                   
 
                 <div class="row">
@@ -54,6 +54,7 @@
                     </div>
                         <input type="text" class="form-control text-center" placeholder="{{ user['batch'] }}" disabled>
                   </div>
+                  <input type="hidden" name="ubatch" value="{{ user['batch'] }}">
                   {% endif %}
                   {% if user['user_type']=="Special User" %}
                   <div class="input-group" style="margin-bottom: 20px;">
@@ -62,7 +63,7 @@
                           <i class="material-icons">military_tech</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" name="utitle" placeholder="{{ user['title'] }}">
+                        <input type="text" class="form-control text-center" name="title" placeholder="{{ user['title'] }}">
                   </div>
                   {% endif %}
                   <div class="input-group" style="margin-bottom: 20px;">
@@ -71,7 +72,7 @@
                           <i class="material-icons">perm_identity</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" name="ufname" placeholder="{{ user['first_name'] }}">
+                        <input type="text" class="form-control text-center" name="first_name" placeholder="{{ user['first_name'] }}">
                   </div>
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
@@ -79,7 +80,7 @@
                           <i class="material-icons">perm_identity</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" name="ulname" placeholder="{{ user['last_name'] }}">
+                        <input type="text" class="form-control text-center" name="last_name" placeholder="{{ user['last_name'] }}">
                   </div>
                 <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
@@ -87,7 +88,7 @@
                           <i class="material-icons">phone</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" name="uphone" placeholder ="{{ user['phone'] }}">
+                        <input type="text" class="form-control text-center" name="phone" placeholder ="{{ user['phone'] }}">
                   </div>
 
                   <div class="input-group" style="margin-bottom: 20px;">
@@ -96,7 +97,7 @@
                           <i class="material-icons">home</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" name="uaddress" placeholder="{{ user['address'] }}">
+                        <input type="text" class="form-control text-center" name="address" placeholder="{{ user['address'] }}">
                   </div>
 
                   <div class="input-group" style="margin-bottom: 20px;">
@@ -106,7 +107,7 @@
                         </span>
                     </div>
                         <input type="text" class="form-control text-center" placeholder="{{ user['dob'] }}" disabled>
-                        <input type="date" name="udob" class="form-control">
+                        <input type="date" name="dob" class="form-control">
                   </div>
 
                   <div class="input-group" style="margin-bottom: 20px;">
@@ -115,8 +116,8 @@
                           <i class="material-icons">person_pin</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['gender'] }}">
-                        <select class="form-control" name="ugender">
+                        <input type="text" class="form-control text-center" placeholder="{{ user['gender'] }}" disabled>
+                        <select class="form-control" name="gender">
                           <option value="None">Select Gender</option>
                           <option value="Male">Male</option>
                           <option value="Female">Female</option>
@@ -130,17 +131,17 @@
                           <i class="material-icons">location_on</i>
                         </span>
                     </div>
-                        <input type="text" name="unationality" class="form-control text-center" placeholder="{{ user['nationality'] }}">
+                        <input type="text" name="nationality" class="form-control text-center" placeholder="{{ user['nationality'] }}">
                   </div>
-                  {% if session['user_type']=="Research Scholar" or session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
+                  {% if user['user_type']=="Research Scholar" or user['user_type']=="Research Supervisor" or user['user_type']=="Research Co-Supervisor" %}
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
                           <i class="material-icons">school</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['department'] }}" disabled />
-                        <select class="form-control" name="udepartment">
+                        <input type="text" class="form-control text-center" placeholder="{{ user['department'] }}" disabled>
+                        <select class="form-control" name="department">
                           <option value="None">Select New Department</option>
                           {% for i in departments%}
                           <option value="{{ i }}">{{ i }}</option>
@@ -156,7 +157,7 @@
                         </span>
                     </div>
                         <input type="text" class="form-control text-center" placeholder="{{ user['supervisor'] }}" disabled>
-                        <select class="form-control" name="usupervisor">
+                        <select class="form-control" name="supervisor">
                           <option value="None">Select Supervisor</option>
                           {% for i in supers%}
                           <option value="{{ i['first_name'] }} {{ i['last_name'] }}">{{ i['first_name'] }} {{ i['last_name'] }}</option>
@@ -189,6 +190,16 @@
                         <input type="text" class="form-control text-center" name="subdepartment" placeholder="{{ user['subdepartment'] }}">
                   </div>
                   {% endif %}
+                  {% if user['user_type']=="Special User" %}
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">info</i>
+                        </span>
+                    </div>
+                        <textarea class="form-control text-center" name="info" placeholder="{{ user['info'] }}"></textarea>
+                  </div>
+                  {% endif %}
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
@@ -210,7 +221,7 @@
                           <i class="fa fa-twitter"></i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" name="utwitter" placeholder="{{ user['twitter'] }}">
+                        <input type="text" class="form-control text-center" name="twitter" placeholder="{{ user['twitter'] }}">
                   </div>
 
                   </div>
@@ -221,7 +232,7 @@
                           <i class="fa fa-facebook"></i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" name="ufacebook" placeholder="{{ user['facebook'] }}">
+                        <input type="text" class="form-control text-center" name="facebook" placeholder="{{ user['facebook'] }}">
                   </div>
 
                   </div>
@@ -235,7 +246,7 @@
                           <i class="fa fa-skype"></i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" name="uskype" placeholder="{{ user['skype'] }}">
+                        <input type="text" class="form-control text-center" name="skype" placeholder="{{ user['skype'] }}">
                   </div>
 
                   </div>
@@ -246,7 +257,7 @@
                           <i class="fa fa-github"></i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" name="ugithub" placeholder="{{ user['github'] }}">
+                        <input type="text" class="form-control text-center" name="github" placeholder="{{ user['github'] }}">
                   </div>
 
                   </div>
@@ -257,7 +268,7 @@
                 <div class="row text-center">
                    <div class="col-md-3 mx-auto"></div>
                    <div class="col-md-3 mx-auto">
-                    <button type="submit" name="submit" value="update_profile" class="btn btn-success btn-round">Save</button>
+                    <button type="submit" name="submitf" value="update_profile" class="btn btn-success btn-round">Save</button>
                   </div>
                   <div class="col-md-3 mx-auto">
                     <a class="btn btn-danger btn-round" href="{{url_for('admin.editusers')}}">Exit</a>
@@ -268,7 +279,8 @@
                 </div>
 
             
-
+<input type="hidden" name="uemail" value="{{ user['email'] }}">
+<input type="hidden" name="uusertype" value="{{ user['user_type'] }}">
 
 </form>
 

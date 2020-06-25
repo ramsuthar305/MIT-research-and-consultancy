@@ -576,6 +576,7 @@ def editing():
             departments = list(batch_object.get_departments())
             supers = exdata.get_supervisors()
             cosupers = exdata.get_cosupervisors()
+            ue = UserEdits()
             if request.method=="POST":
                 if request.form['submitf']=="edit":
                     email = request.form.get('email')
@@ -584,12 +585,70 @@ def editing():
                     print(usertype)
                     user = exdata.get_users_by_id(email,usertype)
                     user = user[0]
-                    '''
-                    ue = UserEdits()
-                    stat = ue.block_user(email,usertype)
+
+                if request.form['submitf']=="update_profile":
+                    print("Hello Updater")
+                    email = request.form.get('uemail')
+                    usertype = request.form.get('uusertype')
+                    batch = request.form.get('ubatch')
+                    print(email)
+                    print(usertype)
+                    user = exdata.get_users_by_id(email,usertype)
+                    user = user[0]
+                    data = {}
+                    scholar_details = ['first_name','last_name','phone','address','dob','gender','nationality','department','supervisor','cosupervisor','twitter','facebook','skype','github']
+                    supervisor_details = ['first_name','last_name','phone','address','dob','gender','nationality','department','subdepartment','twitter','facebook','skype','github']
+                    special_details = ['title','first_name','last_name','phone','address','dob','gender','nationality','twitter','facebook','skype','github','info']
+                    if usertype == 'Research Scholar':
+                        for i in scholar_details:
+                            temp = request.form.get(i)
+                            if temp != None and temp!="None" and temp!='':
+                                data[i] = temp
+                        print(data)
+                    elif usertype == 'Research Supervisor' or usertype=='Research Co-Supervisor':
+                        for i in supervisor_details:
+                            temp = request.form.get(i)
+                            if temp != None and temp!="None" and temp!='':
+                                data[i] = temp
+                        print(data)
+                    elif usertype == 'Special User':
+                        for i in special_details:
+                            temp = request.form.get(i)
+                            if temp != None and temp!="None" and temp!='':
+                                data[i] = temp
+                        print(data)
+                    else:
+                        pass
+                    f = request.files['file']
+                    print(f)
+                    filename = f.filename
+                    if filename =="":
+                        pass
+                    else:
+                        if usertype == "Research Scholar":
+                            if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + batch + "/" + email)):
+                                os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + batch + "/" + email))
+                            path = os.path.join(app.config['UPLOAD_FOLDER']+batch + "/" + email,filename)
+                        else:
+                            if usertype == "Research Supervisor":
+                                bpath = "supervisors"
+                            if usertype == "Research Co-Supervisor":
+                                bpath = "cosupervisors"
+                            if usertype == "Special User":
+                                bpath = "specialusers"
+                            if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + "registrations/" + bpath)):
+                                os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + "registrations/" + bpath))
+                            path = os.path.join(app.config['UPLOAD_FOLDER']+"registrations/" + bpath,filename)
+                        main_path = path.split("static/")[1]
+                        main_path = main_path.split("\\")[0]
+                        main_path = main_path + "/" + filename
+                        print(main_path)
+                        f.save(path)
+                        data['profile_pic'] = filename
+                        data['profile_pic_link'] = main_path
+                    stat = ue.update_prof(usertype,data,email)
                     if stat:
-                        flash("Changes Saved Successfully")
-                    '''
+                        flash("Profile Updated Successfully. If the changes do not load, refresh once!")
             return render_template('admin/edit_profile.html',user=user,departments=departments,supers=supers,cosupers=cosupers)
         else:
             return redirect(url_for("admin.login"))

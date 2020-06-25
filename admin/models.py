@@ -393,3 +393,21 @@ class UserEdits:
 			result = mongo.db.researcher.update({"email":"vinayak@gmail.com"},{"$set":{"semesters":L}})
 		except Exception as e:
 			raise e
+
+	def update_prof(self,usertype,data,email):
+		try:
+			if usertype == "Research Scholar":
+				for i,j in zip(data,data.values()):
+					result = mongo.db.researcher.update({"_id":email},{"$set":{i:j}})
+			if usertype == "Research Supervisor":
+				for i,j in zip(data,data.values()):
+					result = mongo.db.supervisor.update({"_id":email},{"$set":{i:j}})
+			if usertype == "Research Co-Supervisor":
+				for i,j in zip(data,data.values()):
+					result = mongo.db.cosupervisor.update({"_id":email},{"$set":{i:j}})
+			if usertype == "Special User":
+				for i,j in zip(data,data.values()):
+					result = mongo.db.specialuser.update({"_id":email},{"$set":{i:j}})
+			return True
+		except Exception as error:
+			print(error)
