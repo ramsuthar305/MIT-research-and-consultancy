@@ -25,6 +25,7 @@
   {% endif %}
   {% endwith %}
                 
+  <form class="text-center" action="{{url_for('admin.specialusers_registration')}}" method="POST" enctype="multipart/form-data">
                   
 
                 <div class="row">
@@ -42,6 +43,8 @@
 
                   <div class="col-md-6 text-center">
                     
+
+
                     {% if user['user_type']=="Research Scholar" %}
             <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
@@ -52,13 +55,23 @@
                         <input type="text" class="form-control text-center" placeholder="{{ user['batch'] }}" disabled>
                   </div>
                   {% endif %}
+                  {% if user['user_type']=="Special User" %}
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
                           <i class="material-icons">military_tech</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['title'] }}">
+                        <input type="text" class="form-control text-center" name="utitle" placeholder="{{ user['title'] }}">
+                  </div>
+                  {% endif %}
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">perm_identity</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control text-center" name="ufname" placeholder="{{ user['first_name'] }}">
                   </div>
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
@@ -66,15 +79,7 @@
                           <i class="material-icons">perm_identity</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['first_name'] }}">
-                  </div>
-                  <div class="input-group" style="margin-bottom: 20px;">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">
-                          <i class="material-icons">perm_identity</i>
-                        </span>
-                    </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['last_name'] }}">
+                        <input type="text" class="form-control text-center" name="ulname" placeholder="{{ user['last_name'] }}">
                   </div>
                 <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
@@ -82,7 +87,7 @@
                           <i class="material-icons">phone</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder ="{{ user['phone'] }}">
+                        <input type="text" class="form-control text-center" name="uphone" placeholder ="{{ user['phone'] }}">
                   </div>
 
                   <div class="input-group" style="margin-bottom: 20px;">
@@ -91,7 +96,7 @@
                           <i class="material-icons">home</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['address'] }}">
+                        <input type="text" class="form-control text-center" name="uaddress" placeholder="{{ user['address'] }}">
                   </div>
 
                   <div class="input-group" style="margin-bottom: 20px;">
@@ -100,7 +105,8 @@
                           <i class="material-icons">cake</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['dob'] }}">
+                        <input type="text" class="form-control text-center" placeholder="{{ user['dob'] }}" disabled>
+                        <input type="date" name="udob" class="form-control">
                   </div>
 
                   <div class="input-group" style="margin-bottom: 20px;">
@@ -110,6 +116,12 @@
                         </span>
                     </div>
                         <input type="text" class="form-control text-center" placeholder="{{ user['gender'] }}">
+                        <select class="form-control" name="ugender">
+                          <option value="None">Select Gender</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          <option value="Prefer not to say">Prefer not to say</option>
+                        </select>
                   </div>
 
                   <div class="input-group" style="margin-bottom: 20px;">
@@ -118,7 +130,7 @@
                           <i class="material-icons">location_on</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['nationality'] }}">
+                        <input type="text" name="unationality" class="form-control text-center" placeholder="{{ user['nationality'] }}">
                   </div>
                   {% if session['user_type']=="Research Scholar" or session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
                   <div class="input-group" style="margin-bottom: 20px;">
@@ -128,7 +140,7 @@
                         </span>
                     </div>
                         <input type="text" class="form-control text-center" placeholder="{{ user['department'] }}" disabled />
-                        <select class="form-control">
+                        <select class="form-control" name="udepartment">
                           <option value="None">Select New Department</option>
                           {% for i in departments%}
                           <option value="{{ i }}">{{ i }}</option>
@@ -143,7 +155,13 @@
                           <i class="fa fa-group"></i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['supervisor'] }}">
+                        <input type="text" class="form-control text-center" placeholder="{{ user['supervisor'] }}" disabled>
+                        <select class="form-control" name="usupervisor">
+                          <option value="None">Select Supervisor</option>
+                          {% for i in supers%}
+                          <option value="{{ i['first_name'] }} {{ i['last_name'] }}">{{ i['first_name'] }} {{ i['last_name'] }}</option>
+                          {% endfor %}
+                        </select>
                   </div>
 
                   <div class="input-group" style="margin-bottom: 20px;">
@@ -152,7 +170,13 @@
                           <i class="fa fa-group"></i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['cosupervisor'] }}">
+                        <input type="text" class="form-control text-center" placeholder="{{ user['cosupervisor'] }}" disabled>
+                        <select class="form-control" name="cosupervisor">
+                          <option value="None">Select Co-Supervisor</option>
+                          {% for i in cosupers%}
+                          <option value="{{ i['first_name'] }} {{ i['last_name'] }}">{{ i['first_name'] }} {{ i['last_name'] }}</option>
+                          {% endfor %}
+                        </select>
                   </div>
                   {% endif %}
                   {% if user['user_type']=="Research Supervisor" or user['user_type']=="Research Co-Supervisor" %}
@@ -162,7 +186,7 @@
                           <i class="fa fa-group"></i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['subdepartment'] }}">
+                        <input type="text" class="form-control text-center" name="subdepartment" placeholder="{{ user['subdepartment'] }}">
                   </div>
                   {% endif %}
                   <div class="input-group" style="margin-bottom: 20px;">
@@ -186,7 +210,7 @@
                           <i class="fa fa-twitter"></i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['twitter'] }}">
+                        <input type="text" class="form-control text-center" name="utwitter" placeholder="{{ user['twitter'] }}">
                   </div>
 
                   </div>
@@ -197,7 +221,7 @@
                           <i class="fa fa-facebook"></i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['facebook'] }}">
+                        <input type="text" class="form-control text-center" name="ufacebook" placeholder="{{ user['facebook'] }}">
                   </div>
 
                   </div>
@@ -211,7 +235,7 @@
                           <i class="fa fa-skype"></i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['skype'] }}">
+                        <input type="text" class="form-control text-center" name="uskype" placeholder="{{ user['skype'] }}">
                   </div>
 
                   </div>
@@ -222,7 +246,7 @@
                           <i class="fa fa-github"></i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['github'] }}">
+                        <input type="text" class="form-control text-center" name="ugithub" placeholder="{{ user['github'] }}">
                   </div>
 
                   </div>
@@ -233,7 +257,7 @@
                 <div class="row text-center">
                    <div class="col-md-3 mx-auto"></div>
                    <div class="col-md-3 mx-auto">
-                    <button type="submit" name="submit" value="update_researcher" class="btn btn-success btn-round">Save</button>
+                    <button type="submit" name="submit" value="update_profile" class="btn btn-success btn-round">Save</button>
                   </div>
                   <div class="col-md-3 mx-auto">
                     <a class="btn btn-danger btn-round" href="{{url_for('admin.editusers')}}">Exit</a>
@@ -244,6 +268,10 @@
                 </div>
 
             
+
+
+</form>
+
                 </div>
 
 
@@ -253,6 +281,7 @@
           </div>
         </div>
       </div>
+
       
 
 {% endblock %}

@@ -281,6 +281,28 @@ class Extractdata:
 		except Exception as error:
 			print(error)
 
+	def get_supervisors(self):
+		try:
+			result=mongo.db.supervisor.find()
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
+	def get_cosupervisors(self):
+		try:
+			result=mongo.db.cosupervisor.find()
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"
+
 class UserEdits:
 	def block_user(self,email,usertype):
 		try:

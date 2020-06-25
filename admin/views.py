@@ -574,6 +574,8 @@ def editing():
             exdata = Extractdata()
             batch_object = Batch()
             departments = list(batch_object.get_departments())
+            supers = exdata.get_supervisors()
+            cosupers = exdata.get_cosupervisors()
             if request.method=="POST":
                 if request.form['submitf']=="edit":
                     email = request.form.get('email')
@@ -588,7 +590,7 @@ def editing():
                     if stat:
                         flash("Changes Saved Successfully")
                     '''
-            return render_template('admin/edit_profile.html',user=user,departments=departments)
+            return render_template('admin/edit_profile.html',user=user,departments=departments,supers=supers,cosupers=cosupers)
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:
