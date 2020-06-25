@@ -188,12 +188,13 @@
             <th>Reject</th>
         </tr>
     </thead>
-    <form method="POST" action="{{url_for('portal.evalsubmission')}}" enctype="multipart/form-data">
-      <input type="hidden" name="qid" value="{{ j['qid'] }}"> 
+    
+      
     <tbody>
       {% if j['qid'] in qidlist %}
       {% for k in j['solution'] %}
-  
+  <form method="POST" action="{{url_for('portal.evalsubmission')}}" enctype="multipart/form-data">
+    <input type="hidden" name="qid" value="{{ j['qid'] }}"> 
         <input type="hidden" name="email" value="{{ k['email'] }}" id = "{{ k['_id'] }}">
         <tr style="color: black;">
             <td>{{ k['name'] }}</td>
@@ -235,13 +236,13 @@
             {% endif %}
         </tr>
         
-      
+      </form>
         {% endfor %}
         {% endif %}
         
-        <button class="btn btn-success btn-round" type="submit" name="submit_button" value="delete">Delete Assignment</button>
+        
     </tbody>
-     </form>
+     
 
  
 </table>
