@@ -37,6 +37,22 @@ class Users:
 		except Exception as error:
 			print(error)
 
+	def check_old_pass(self,val):
+		try:
+			result = mongo.db.admin.find({"$and":[{"email":session['email']},{"password":val}]})
+			if result.count()>0:
+				return True
+			else:
+				return False
+		except Exception as error:
+			print(error)
+
+	def update_pass(self,val):
+		try:
+			result = mongo.db.admin.update({"email":session['email']},{"$set":{"password":val}})
+		except Exception as error:
+			print(error)
+
 class Supervisors:
 	def __init__(self):
 		self.mongo = mongo.db

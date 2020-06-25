@@ -81,6 +81,33 @@ def dashboard():
         print(error)
         return render_template('admin/admin_login.html')
 
+@admin.route('/adminresetpassword', methods=['GET','POST'])
+def adminresetpassword():
+    try:
+        if session['logged_in']==True and session['user_type'] == "admin":
+            if request.method=="POST":
+                old_pass = request.form.get("old_pass")
+                newpass1 = request.form.get("newpass1")
+                newpass2 = request.form.get("newpass2")
+                print(old_pass,newpass1,newpass2)
+                u = Users()
+                stat = u.check_old_pass(old_pass)
+                if stat:
+                    if newpass1==newpass2:
+                        u.update_pass(newpass1)
+                        flash("Password Changed Successfully")
+                        return redirect(url_for('admin.dashboard'))
+                    else:
+                        flash("New Password and Confirm Password do not match")
+                else:
+                    flash("Old Password is Incorrect")
+            return render_template('admin/admin_reset_password.html')
+        else:
+            return redirect(url_for("admin.login"))
+    except Exception as error:
+        print(error)
+        return render_template(url_for('admin.login'))
+
 @admin.route('/setbatch',methods=['POST','GET'])
 def setbatch():
     batch_object = Batch()

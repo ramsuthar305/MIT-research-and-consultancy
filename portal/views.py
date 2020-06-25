@@ -162,6 +162,36 @@ def delete_collab():
         print(error)
         return redirect(url_for('portal.signin'))
 
+@portal.route('/changepassword', methods=['GET','POST'])
+def changepassword():
+    try:
+        if session['logged_in']==True:
+            exdata = Extract_Data()
+            user = exdata.get_researcher()
+            u = Users()
+            if request.method=="POST":
+                old_pass = request.form.get("old_pass")
+                newpass1 = request.form.get("newpass1")
+                newpass2 = request.form.get("newpass2")
+                print(old_pass,newpass1,newpass2)
+                stat = u.check_old_pass(old_pass)
+                if stat:
+                    if newpass1==newpass2:
+                        u.update_pass(newpass1)
+                        flash("Password Changed Successfully")
+                        return redirect(url_for('portal.profile'))
+                    else:
+                        flash("New Password and Confirm Password do not match")
+                else:
+                    flash("Old Password is Incorrect")
+
+            return render_template('portal/reset_password.html',user=user)
+        else:
+            return redirect(url_for('portal.index'))
+    except Exception as error:
+        print(error)
+        return redirect(url_for('portal.index'))
+
 
 @portal.route('/signup')
 def signup():

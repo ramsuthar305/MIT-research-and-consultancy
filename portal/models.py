@@ -115,6 +115,37 @@ class Users:
 		except Exception as error:
 			print(error)
 
+	def check_old_pass(self,val):
+		try:
+			if session['user_type']=="Research Scholar":
+				result = mongo.db.researcher.find({"$and":[{"email":session['email']},{"password":val}]})
+			if session['user_type']=="Research Supervisor":
+				result = mongo.db.supervisor.find({"$and":[{"email":session['email']},{"password":val}]})
+			if session['user_type']=="Research Co-Supervisor":
+				result = mongo.db.cosupervisor.find({"$and":[{"email":session['email']},{"password":val}]})
+			if session['user_type']=="Special User":
+				result = mongo.db.specialuser.find({"$and":[{"email":session['email']},{"password":val}]})
+			if result.count()>0:
+				return True
+			else:
+				return False
+		except Exception as error:
+			print(error)
+
+	def update_pass(self,val):
+		try:
+			if session['user_type']=="Research Scholar":
+				result = mongo.db.researcher.update({"email":session['email']},{"$set":{"password":val}})
+			if session['user_type']=="Research Supervisor":
+				result = mongo.db.supervisor.update({"email":session['email']},{"$set":{"password":val}})
+			if session['user_type']=="Research Co-Supervisor":
+				result = mongo.db.cosupervisor.update({"email":session['email']},{"$set":{"password":val}})
+			if session['user_type']=="Special User":
+				result = mongo.db.specialuser.update({"email":session['email']},{"$set":{"password":val}})
+			result = mongo.db.authentication.update({"uid":session['email']},{"$set":{"password":val}})
+		except Exception as error:
+			print(error)
+
 	# def upload_file(self, file_data, file, file_type):
 	# 	try:
 	# 		print('called')
