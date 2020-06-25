@@ -49,9 +49,33 @@
                           <i class="material-icons">category</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['batch'] }}">
+                        <input type="text" class="form-control text-center" placeholder="{{ user['batch'] }}" disabled>
                   </div>
                   {% endif %}
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">military_tech</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control text-center" placeholder="{{ user['title'] }}">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">perm_identity</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control text-center" placeholder="{{ user['first_name'] }}">
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">perm_identity</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control text-center" placeholder="{{ user['last_name'] }}">
+                  </div>
                 <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
@@ -96,15 +120,22 @@
                     </div>
                         <input type="text" class="form-control text-center" placeholder="{{ user['nationality'] }}">
                   </div>
-
+                  {% if session['user_type']=="Research Scholar" or session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
                           <i class="material-icons">school</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control text-center" placeholder="{{ user['department'] }}">
+                        <input type="text" class="form-control text-center" placeholder="{{ user['department'] }}" disabled />
+                        <select class="form-control">
+                          <option value="None">Select New Department</option>
+                          {% for i in departments%}
+                          <option value="{{ i }}">{{ i }}</option>
+                          {% endfor %}
+                        </select>
                   </div>
+                  {% endif %}
                   {% if user['user_type']=="Research Scholar" %}
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
@@ -140,6 +171,7 @@
                           <i class="material-icons">face</i>
                         </span>
                     </div>
+                    <input type="text" class="form-control text-center" placeholder="{{ user['profile_pic'] }}" disabled>
                         <input type="file" single="" class="form-control text-center" name="file">
                   </div>
 

@@ -567,32 +567,13 @@ def editusers():
         print(error)
         return render_template('admin/admin_login.html')
 
-@admin.route('/blockusers',methods=['POST','GET'])
-def blockusers():
-    try:
-        if session['logged_in']==True:
-            exdata = Extractdata()
-            user = []
-            if request.method=="POST":
-                email = request.form.get('email')
-                usertype = request.form.get('usertype')
-                user = exdata.get_users_by_id(email,usertype)
-                if user.count()>0:
-                    user = user[0]
-                else:
-                    user = []
-            return render_template('admin/blockusers.html', user = user)
-        else:
-            return redirect(url_for("admin.login"))
-    except Exception as error:
-        print(error)
-        return render_template('admin/admin_login.html')
-
 @admin.route('/editing',methods=['POST','GET'])
 def editing():
     try:
         if session['logged_in']==True:
             exdata = Extractdata()
+            batch_object = Batch()
+            departments = list(batch_object.get_departments())
             if request.method=="POST":
                 if request.form['submitf']=="edit":
                     email = request.form.get('email')
@@ -607,7 +588,34 @@ def editing():
                     if stat:
                         flash("Changes Saved Successfully")
                     '''
-            return render_template('admin/edit_profile.html',user=user)
+            return render_template('admin/edit_profile.html',user=user,departments=departments)
+        else:
+            return redirect(url_for("admin.login"))
+    except Exception as error:
+        print(error)
+        return render_template('admin/admin_login.html')
+
+@admin.route('/blockusers',methods=['POST','GET'])
+def blockusers():
+    try:
+        if session['logged_in']==True:
+            exdata = Extractdata()
+            busers = exdata.get_blocked_users()
+            print(busers)
+            if busers:
+                pass
+            else:
+                busers = []
+            user = []
+            if request.method=="POST":
+                email = request.form.get('email')
+                usertype = request.form.get('usertype')
+                user = exdata.get_users_by_id(email,usertype)
+                if user.count()>0:
+                    user = user[0]
+                else:
+                    user = []
+            return render_template('admin/blockusers.html', user = user, busers = busers)
         else:
             return redirect(url_for("admin.login"))
     except Exception as error:

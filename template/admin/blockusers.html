@@ -40,10 +40,11 @@
                   </div>
                 </div>
               </form>
-
-                <div class="row" style="overflow-x: auto; margin-top: 100px;">
+              {% if user %}
+<h3 class="text-center">Fetched User</h3>
+                <div class="row" style="overflow-x: auto; margin-top: 20px;">
                   <table class="table">
-                    {% if user %}
+                    
                     <thead>
                       <th>Profile Pic</th>
                       <th>Name</th>
@@ -52,7 +53,7 @@
                       <th style="text-align: center;">Block</th>
                     </thead>
                     <tbody>
-                      <form class="form" method="POST" action="{{url_for('admin.removing')}}">
+                      <form class="form" method="POST" action="{{url_for('admin.blocking')}}">
                         <input type="hidden" name="email" value="{{ user['email'] }}">
                         <input type="hidden" name="usertype" value="{{ user['user_type'] }}">
                       <td><img src="{{ url_for('portal.static',  filename= user['profile_pic_link'] ) }}" height="100px" width="100px" style="border-radius: 50%;"></td>
@@ -114,13 +115,57 @@
 </div>
 </form>
                     </tbody>
-                    {% endif %}
+                    
                   </table>
+
+
+
+
+                </div>
+                {% endif %}
+                 {% if busers %}
+<h3 class="text-center">Blocked Users</h3>
+                <div class="row" style="overflow-x: auto; margin-top: 20px;">
+                  <table class="table">
+                   
+                    <thead>
+                      <th>Profile Pic</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Designation</th>
+                      <th style="text-align: center;">Unblock</th>
+                    </thead>
+                    <tbody>
+                      {% for i in busers %}
+                      {% for j in i %}
+          <form class="form" method="POST" action="{{url_for('admin.blocking')}}">
+                        <input type="hidden" name="email" value="{{ j['email'] }}">
+                        <input type="hidden" name="usertype" value="{{ j['user_type'] }}">
+                        <tr>
+                      <td><img src="{{ url_for('portal.static',  filename= j['profile_pic_link'] ) }}" height="100px" width="100px" style="border-radius: 50%;"></td>
+                      <td>{{ j['first_name'] }} {{ j['last_name'] }}</td>
+                      <td>{{ j['email'] }}</td>
+                      <td>{{ j['user_type'] }}</td>
+                      <td style="text-align: center;"><button type="submit" name="submitf" value="unblock" class="btn btn-success btn-round">
+                    <i class="material-icons">check_circle</i>
+                    Unblock
+                </button></td></tr>
+
+</form>
+{% endfor %}
+{% endfor %}
+                    </tbody>
+                   
+                  </table>
+
+                </div>
+                 {% endif %}
+
+              
                 </div>
 
-            
-                </div>
               </div>
+
             </div>
             
           </div>

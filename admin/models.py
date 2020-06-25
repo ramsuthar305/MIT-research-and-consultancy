@@ -261,6 +261,26 @@ class Extractdata:
 		except Exception as error:
 			print(error)
 
+	def get_blocked_users(self):
+		try:
+			L = []
+			result1 = mongo.db.researcher.find({"status":"2"})
+			result2 = mongo.db.supervisor.find({"status":"2"})
+			result3 = mongo.db.cosupervisor.find({"status":"2"})
+			result4 = mongo.db.specialuser.find({"status":"2"})
+			if result1.count()>0:
+				L.append(result1)
+			if result2.count()>0:
+				L.append(result2)
+			if result3.count()>0:
+				L.append(result3)
+			if result4.count()>0:
+				L.append(result4)
+			return L
+
+		except Exception as error:
+			print(error)
+
 class UserEdits:
 	def block_user(self,email,usertype):
 		try:
