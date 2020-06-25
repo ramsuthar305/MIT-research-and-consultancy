@@ -102,7 +102,6 @@ class Users:
 					session["logged_in"] = True
 					session["user_type"] = user_info['user_type']
 					session['id'] = str(user_info["_id"])
-					session['department'] = str(user_info["department"])
 					return True
 			else:
 				return "User does not exist"

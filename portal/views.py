@@ -80,6 +80,8 @@ def profile():
                 else:
                     cdata = ""
                 return render_template('portal/userprofile.html', user = user, fuser=fuser, cdata = cdata)
+            if session['user_type']=="Special User":
+                return render_template('portal/userprofile.html', user = user)
         else:
             return redirect(url_for('portal.signin'))
     except Exception as error:
