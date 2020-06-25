@@ -33,6 +33,14 @@ def publication():
     
     return render_template('portal/publication.html')
 
+@portal.route('/developers')
+def developers():
+    try:
+        return render_template('portal/developers.html')
+    except Exception as error:
+        print(error)
+        return redirect(url_for('portal.index'))
+
     
 
 
@@ -244,7 +252,7 @@ def registration():
                 "email":email,
                 "first_name":request.form.get('first_name'),
                 "last_name":request.form.get('last_name'),
-                "password":"123",
+                "password":"mitdefault",
                 "phone":request.form.get('phone'),
                 "dob":request.form.get('dob'),
                 "department":request.form.get('department'),
@@ -305,6 +313,34 @@ def logout():
     except Exception as error:
         print(error)
         return redirect(url_for('portal.signin'))
+
+@portal.route('/newuser_resetpass', methods=['GET','POST'])
+def newuser_resetpass():
+    try:
+        if request.method=="POST":
+            username = request.form.get('username')
+            newpass1 = request.form.get('newpass1')
+            newpass2 = request.form.get('newpass2')
+            print(username,newpass1,newpass2)
+            u = Users()
+            stat = u.check_email(username)
+            if stat:
+                if newpass1 == newpass2:
+                    u.set_pass(stat,username,newpass1)
+                    flash("Password Reset Successfull")
+                    return render_template('portal/newuser_resetpass.html', success="1")
+                else:
+                    flash("Both Passwords do not match")
+                    return render_template('portal/newuser_resetpass.html', success="0")
+            else:
+                flash("Email Not Found")
+                return render_template('portal/newuser_resetpass.html', success="0")
+
+        return render_template('portal/newuser_resetpass.html', success="0")
+    except Exception as error:
+        print(error)
+        return redirect(url_for('portal.signin'))
+
 
 
 @portal.route('/supervisors_panel', methods=['POST','GET'])

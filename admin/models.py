@@ -10,20 +10,27 @@ class Users:
 	def reset_admin(self):
 		try:
 			result = mongo.db.admin.drop()
+			password = "admin"
+			h = hashlib.md5(password.encode())
+			encpass = h.hexdigest()
+			print(encpass)
 			user = {
 			"_id":"mitrcadmin@gmail.com",
 			"first_name":"MIT",
 			"last_name":"Admin",
 			"email":"mitrcadmin@gmail.com",
-			"password":"admin",
+			"password":encpass,
 			}
 			result = mongo.db.admin.insert_one(user)
+			print(result)
 		except Exception as error:
 			print(error)
 
 	def admin_login(self,email,password):
 		try:
-			result = mongo.db.admin.find({"$and":[{"email":email},{"password":password}]})
+			h = hashlib.md5(password.encode())
+			encpass = h.hexdigest()
+			result = mongo.db.admin.find({"$and":[{"email":email},{"password":encpass}]})
 			if result.count()>0:
 				result = result[0]
 				session['logged_in'] = True
@@ -39,6 +46,8 @@ class Users:
 
 	def check_old_pass(self,val):
 		try:
+			h = hashlib.md5(val.encode())
+			val = h.hexdigest()
 			result = mongo.db.admin.find({"$and":[{"email":session['email']},{"password":val}]})
 			if result.count()>0:
 				return True
@@ -49,6 +58,8 @@ class Users:
 
 	def update_pass(self,val):
 		try:
+			h = hashlib.md5(val.encode())
+			val = h.hexdigest()
 			result = mongo.db.admin.update({"email":session['email']},{"$set":{"password":val}})
 		except Exception as error:
 			print(error)

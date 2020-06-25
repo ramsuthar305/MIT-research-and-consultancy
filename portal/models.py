@@ -62,6 +62,8 @@ class Users:
 
 	def login_user(self, username, password):
 		try:
+			h = hashlib.md5(password.encode())
+			password = h.hexdigest()
 			login_result = self.mongo.authentication.find_one(
 				{"$and": [{"$or": [{"uid": username}, {"email": username}]},
 						  {"password": password},{"status":"1"}]})
@@ -117,6 +119,8 @@ class Users:
 
 	def check_old_pass(self,val):
 		try:
+			h = hashlib.md5(val.encode())
+			val = h.hexdigest()
 			if session['user_type']=="Research Scholar":
 				result = mongo.db.researcher.find({"$and":[{"email":session['email']},{"password":val}]})
 			if session['user_type']=="Research Supervisor":
@@ -134,6 +138,8 @@ class Users:
 
 	def update_pass(self,val):
 		try:
+			h = hashlib.md5(val.encode())
+			val = h.hexdigest()
 			if session['user_type']=="Research Scholar":
 				result = mongo.db.researcher.update({"email":session['email']},{"$set":{"password":val}})
 			if session['user_type']=="Research Supervisor":
@@ -143,6 +149,35 @@ class Users:
 			if session['user_type']=="Special User":
 				result = mongo.db.specialuser.update({"email":session['email']},{"$set":{"password":val}})
 			result = mongo.db.authentication.update({"uid":session['email']},{"$set":{"password":val}})
+		except Exception as error:
+			print(error)
+
+	def check_email(self,email):
+		try:
+			result = mongo.db.authentication.find({"uid":email})
+			print(result)
+			print(result[0])
+			if result.count()>0:
+				result = result[0]
+				return result['user_type']
+			else:
+				return False
+		except Exception as error:
+			print(error)
+
+	def set_pass(self,usertype,email,password):
+		try:
+			h = hashlib.md5(password.encode())
+			password = h.hexdigest()
+			result = mongo.db.authentication.update({"email":email},{"$set":{"password":password}})
+			if usertype == "Research Scholar":
+				result = mongo.db.researcher.update({"email":email},{"$set":{"password":password}})
+			if usertype == "Research Supervisor":
+				result = mongo.db.supervisor.update({"email":email},{"$set":{"password":password}})
+			if usertype == "Research Co-Supervisor":
+				result = mongo.db.cosupervisor.update({"email":email},{"$set":{"password":password}})
+			if usertype == "Special User":
+				result = mongo.db.specialuser.update({"email":email},{"$set":{"password":password}})
 		except Exception as error:
 			print(error)
 
