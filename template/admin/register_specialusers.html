@@ -152,7 +152,7 @@
                     </div>
                     <div class="input-group">
                     <label for="pp" class="form-control">Upload Profile Picture</label>
-                        <input type="file" name="file" class="form-control" id="pp" required>
+                        <input type="file" name="file" class="form-control" id="pp" accept="image/*" onchange="ValidateimageInput(this);" required>
                         </div>
                   </div>
                   <button type="submit" class="btn btn-success">Submit</button>
