@@ -7,52 +7,35 @@ class Users:
 	def __init__(self):
 		self.mongo = mongo.db
 
-	def check_user_exists(self, username):
-		result = self.mongo.users.find_one({"$or": [{"username": username}, {"phone": username}]})
-		if result:
-			return True
-		else:
-			return False
-
-	def save_user(self,x):
-		result = mongo.db.users.insert_one({"username":x['username'],"password":x['password'],"phno":x['phno'],"address":x['address'],"user_type":"normal"})
-		if result:
-			return True
-		else:
-			return False
-
-
-	def is_admin(self,x):
-		result = mongo.db.users.find_one({"$and":[{"username":x},{"user_type":"admin"}]})
-		if result:
-			return True
-		else:
-			return False
-
-	def get_user_by_id(self,id):
+	def reset_admin(self):
 		try:
-			user = mongo.db.users.find_one({"username":id})
-			return user
+			result = mongo.db.admin.drop()
+			user = {
+			"_id":"mitrcadmin@gmail.com",
+			"first_name":"MIT",
+			"last_name":"Admin",
+			"email":"mitrcadmin@gmail.com",
+			"password":"admin",
+			}
+			result = mongo.db.admin.insert_one(user)
 		except Exception as error:
 			print(error)
 
-	def login_user(self, username, password):
-		result = self.check_user_exists(username)
-		if result:
-			login_result = self.mongo.users.find_one(
-				{"$and": [{"$or": [{"username": username}, {"phone": username}]},
-						  {"password": password}]})
-			if login_result is not None:
-				session["username"] = login_result["username"]
-				session["logged_in"] = True
-
-				session["user_type"] = login_result['user_type']
-				session['id'] = str(login_result["user_id"])
-				return login_result
+	def admin_login(self,email,password):
+		try:
+			result = mongo.db.admin.find({"$and":[{"email":email},{"password":password}]})
+			if result.count()>0:
+				result = result[0]
+				session['logged_in'] = True
+				session['id'] = result['email']
+				session['name'] = result['first_name'] + " " + result['last_name']
+				session['email'] = result['email']
+				session['user_type'] = "admin"
+				return True
 			else:
-				return 1
-		else:
-			return 0
+				return False
+		except Exception as error:
+			print(error)
 
 class Supervisors:
 	def __init__(self):

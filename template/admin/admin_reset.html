@@ -13,10 +13,10 @@
       
       <div class="row" style="margin-top: 30%;">
         <div class="col-lg-4 col-md-6 col-sm-8 ml-auto mr-auto">
-          <form class="form" method="POST" action="{{url_for('admin.login')}}" name="login">
+          <form class="form" method="POST" action="{{url_for('admin.resetmitrcadmin')}}" name="login">
             <div class="card card-login card-hidden">
               <div class="card-header card-header-primary text-center">
-                <h4 class="card-title">MIT R&C Admin Login</h4>
+                <h4 class="card-title">Reset MIT R&C Admin</h4>
 
                 
               </div>
@@ -26,8 +26,12 @@
   {% if messages %}
   {% for message in messages %}
 
+  {% if success=="True" %}
+  <div class="alert alert-success alert-dismissible" role="alert">
+  {% endif %}
+  {% if success=="False" %}
   <div class="alert alert-danger alert-dismissible" role="alert">
- 
+  {% endif %}
     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
         aria-hidden="true">×</span></button>
     {{message}}
@@ -36,39 +40,30 @@
   {% endif %}
   {% endwith %}
                 
+                {% if success=="True" %}
 
+                <h3>Admin Reset Successful</h3>
+                <h4>Click <a href="{{ url_for('admin.login') }}"><b>here</b></a> to login</h4>
                 
 
-                
+                {% else %}
                 <span class="bmd-form-group">
-                  <div class="input-group" style="margin-bottom: 30px; margin-top: 20px;">
+                  <div class="input-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text">
                         <i class="material-icons" style="color: green;">lock_outline</i>
                       </span>
                     </div>
-                    <input type="text" class="form-control" placeholder="Enter email" name="username" id="username" required>
+                    <input type="password" class="form-control" placeholder="Enter the secret key" name="password" id="password" required>
                   </div>
           
                 </span>
 
-                <span class="bmd-form-group">
-                  <div class="input-group" style="margin-bottom: 30px;">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">
-                        <i class="material-icons" style="color: green;">lock_outline</i>
-                      </span>
-                    </div>
-                    <input type="password" class="form-control" placeholder="Enter password" name="password" id="password" required>
-                  </div>
-          
-                </span>
-
-                
+                {% endif %}
 
              
               <div class="card-footer justify-content-center">
-                <button type="submit" name="login" class="btn btn-success btn-round"><b>Login</b></button>
+                <button type="submit" name="login" class="btn btn-success btn-round"><b>Submit</b></button>
               </div>
                </div>
 

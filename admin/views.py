@@ -10,9 +10,6 @@ import os
 
 from .models import *
 
-
-user_object = Users()
-
 admin = Blueprint("admin", __name__, template_folder='../templates', static_folder='../static/admin',
                    static_url_path='../static/admin')
 
@@ -20,33 +17,52 @@ admin = Blueprint("admin", __name__, template_folder='../templates', static_fold
 def page_not_found(error):
     return render_template('admin/404.html'), 404
 
-@admin.route('/login', methods = ['GET', 'POST'])
-def login():
+@admin.route('/resetmitrcadmin', methods=['GET','POST'])
+def resetmitrcadmin():
     try:
-        if session['logged_in']==True:
-            return redirect(url_for("admin.dashboard"))
-        if request.method == 'POST':
-            print("check")
-            username = request.form.get('username')
-            password = request.form.get('password')
-            if username == 'admin' and password == 'admin':
-                session['logged_in']=True
-                login_status = True
-            if login_status==True:
-                return redirect(url_for("admin.dashboard"))
+        u = Users()
+        secret_pass = "M#T@R&C#D^^!N"
+        if request.method == "POST":
+            val = request.form.get('password')
+            if val == secret_pass:
+                u.reset_admin()
+                flash("Admin Reset Successful")
+                return render_template('admin/admin_reset.html',success = "True")
             else:
-                flash(login_status)
-                return render_template('admin/admin_login.html', TOPIC_DICT = TOPIC_DICT)
-        else:
-            return render_template('admin/admin_login.html')
+                flash("You don't have permissions")
+                return render_template('admin/admin_reset.html',success = "False")
+        return render_template('admin/admin_reset.html')
     except Exception as error:
         print(error)
         return render_template('admin/admin_login.html')
+
+@admin.route('/login', methods = ['GET', 'POST'])
+def login():
+    try:
+        print("check1")
+        if request.method=="POST":
+            username = request.form.get('username')
+            password = request.form.get('password')
+            print(username)
+            u = Users()
+            stat = u.admin_login(username,password)
+            if stat:
+                flash("Login Successfull")
+                return redirect(url_for('admin.dashboard'))
+            else:
+                flash("Incorrect Username or Password")
+        print("check 2")
+        print("check 4")
+        return render_template('admin/admin_login.html')
+    except Exception as error:
+        return redirect(url_for('admin.login'))
+
 
 @admin.route('/logout', methods=['POST','GET'])
 def logout():
     try:
         session['logged_in']=False
+        session.clear()
         return redirect(url_for('admin.login'))
     except Exception as error:
         print(error)
@@ -56,7 +72,7 @@ def logout():
 @admin.route('/',methods=['POST','GET'])
 def dashboard():
     try:
-        if session['logged_in']==True:
+        if session['logged_in']==True and session['user_type'] == "admin":
             return render_template('admin/dashboard.html')
         else:
             return redirect(url_for("admin.login"))
