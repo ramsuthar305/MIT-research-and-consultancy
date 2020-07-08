@@ -244,6 +244,17 @@ def fetch_search_data():
         print(' In the views exception: ',error)
         return []
 
+@forum.route('/answer',methods=['GET'])
+def answer_detail():
+    try:
+        post_id=request.args.get('id')
+        print("id: ",post_id)
+        post=forum_obj.get_post(post_id)
+        print(post)
+        return render_template('forum/detail.html',post=post)
+    except Exception as error:
+        print(' In the views exception: ',error)
+        return error
 
 @forum.route('/')
 def index():

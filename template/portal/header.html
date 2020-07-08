@@ -1,9 +1,9 @@
-<nav class="navbar navbar-color-on-scroll navbar-transparent    fixed-top  navbar-expand-lg " id="header">
+<nav class="navbar navbar-color-on-scroll navbar-transparent  bg-white   fixed-top  navbar-expand-lg mb-4" id="header">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-translate">
             <a class="text-center" href="{{url_for('portal.index')}}">
-                <h3 class="title" id="headerTitle">MIT Research & Consultancy</h3>
+                <h3 class="title text-primary" id="headerTitle">MIT Research & Consultancy</h3>
             </a>
             <button type="button" class="ml-auto navbar-toggler" data-toggle="collapse"
                 data-target="#navigation-example2">
@@ -16,24 +16,24 @@
         <div class="collapse navbar-collapse" id="navigation-example2">
             <ul class="navbar-nav navbar-center ml-auto">
                 <li class="nav-item">
-                    <a href="{{url_for('portal.index')}}" class="nav-link">
+                    <a href="{{url_for('portal.index')}}" class="nav-link text-dark">
                         Home
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{url_for('forum.index')}}" class="nav-link">
+                    <a href="{{url_for('forum.index')}}" class="nav-link text-dark">
                         Forum
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{url_for('portal.publication')}}" class="nav-link">
+                    <a href="{{url_for('portal.publication')}}" class="nav-link text-dark">
                         E-resources
                     </a>
                 </li>
                 {% if session['logged_in'] %}
                 {% if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
                 <li class="nav-item">
-                    <a href="{{url_for('portal.supervisors_panel')}}" class="nav-link">
+                    <a href="{{url_for('portal.supervisors_panel')}}" class="nav-link text-dark">
                         Supervisors Panel
                     </a>
                 </li>
@@ -120,3 +120,14 @@
         </div>
     </div>
 </div>
+
+
+{% block jquery %}
+<script>
+    var pathname = window.location.pathname;
+    if(pathname!=="/"){
+        document.getElementById("header").classList.remove("navbar-transparent");
+        document.getElementById("header").classList.remove("navbar-color-on-scroll");
+    }
+</script>
+{% endblock %}

@@ -250,3 +250,11 @@ class Forum_model:
         except Exception as error:
             print('In exception :', error)
             return []
+
+    def get_post(self,id):
+        try:
+            post = self.mongo.forum.find_one({"_id":ObjectId(id)})
+            return post
+        except Exception as error:
+            print('In exception :', error)
+            return []

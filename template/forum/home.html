@@ -1,6 +1,8 @@
 {% extends 'forum/base.html' %}
 {% block css %}
+{% if session['logged_in'] %}
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+{% endif %}
 {% endblock %}
 {% block main_page %}
 <div class="">
@@ -166,16 +168,16 @@
                                         </div>
                                     </div>
                                     <div class="col-md-10">
-                                        <a href="" style="font-weight: 400; font-size: 16px;">
+                                        <a href="{{url_for('forum.answer_detail', id=post['_id'])}}" style="font-weight: 400; font-size: 16px;">
                                             {{post['title']}}
                                         </a>
-                                        <div class="= pt-3 "
+                                        <div class="pt-3 "
                                             style="-webkit-line-clamp: 2;display: -webkit-box;overflow: hidden;-webkit-box-orient: vertical; max-height: 10vh;">
                                             {% autoescape false %}
                                             {{post['description']}}
                                             {% endautoescape %}
                                         </div>
-                                        <div style="float: right;">
+                                        <div style="float: right;" class="pt-3">
                                             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Shah_Rukh_Khan_graces_the_launch_of_the_new_Santro.jpg/220px-Shah_Rukh_Khan_graces_the_launch_of_the_new_Santro.jpg"
                                                 class="rounded-circle ml-2" style="height: 25px; width: 25px;" alt="">
                                             <a href=""> @{{ post['uid'] }}</a>
@@ -187,7 +189,7 @@
                                 </div>
                                 {% endfor %}
                             </div>
-                            {% if departments['data']|length==5 %}
+                            {% if departments['data']|length==10 %}
                             <div class="p-3 d-flex justify-content-between">
                                 <button class="btn btn-link text-primary" id="{{departments['_id']}}Prev1"
                                     onclick="readContent(this.id,'prev')">Prev</button>
@@ -212,8 +214,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.7.1/katex.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
     <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.4.3/jquery.timeago.js"
-        type="text/javascript"></script>
+    
     <!-- Initialize Quill editor -->
     <script>
         var quill = new Quill('#editor', {
@@ -501,9 +502,7 @@
 
         });
         jQuery(document).ready(function () {
-
             $("abbr.timeago").timeago();
-
         });
 
 
