@@ -278,8 +278,7 @@
 {% if i['batch']==user['batch'] and i['department']==user['department'] %}
 
                   <div class="col-md-6">
-
-<form method="POST" id="submissionform" enctype="multipart/form-data">
+                    <form method="POST" action="{{url_for('portal.submission_answers')}}" enctype="multipart/form-data">
       <div class="card">
         {% if i['qid'] in qidlist %}
         {% for j in i['solution'] %}
@@ -360,7 +359,7 @@
               {% endif %}
               {% endfor %}
               {% else %}
-              <button type="submit" id="submissionsubmit" class="btn btn-success btn-round">Turn In</button>
+              <button type="submit" class="btn btn-success btn-round">Turn In</button>
               {% endif %}
               
               
@@ -737,30 +736,6 @@
 
 
 {% block javascript %}
-
-<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
-<script type="text/javascript">
-  $('#submissionsubmit').click(function () {
-    alert("Hello in ajax");
-        event.preventDefault();
-        var form_data = new FormData($('#submissionform')[0]);
-            $.ajax({
-                url: '{{url_for("portal.tempsubmission")}}', 
-                type: 'POST', 
-                data: form_data,
-                dataType: 'json'
-                success: function (response) { 
-                    response = JSON.parse(response) // Do something with your response data
-                    alert("We're back"); 
-                },
-                error: function (error) { 
-                        console.log(error); 
-                } 
-            }); 
-        });
-</script>
 
 
 
