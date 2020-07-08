@@ -36,18 +36,27 @@
                     </a>
                 </li>
                 {% if session['logged_in'] %}
+                {% if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
                 <li class="nav-item">
-                    <a href="{{url_for('portal.profile')}}"  style="cursor: pointer;">
+                    <a href="{{url_for('portal.supervisors_panel')}}" class="nav-link">
+                        Supervisors Panel
+                    </a>
+                </li>
+                {% endif %}
+                {% if session['user_type']=="Research Scholar" or session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" or session['user_type']=="Special User" %}
+                <li class="nav-item">
+                    <b><a href="{{url_for('portal.profile')}}"  style="cursor: pointer; color: limegreen">
                         <i class="material-icons">account_circle</i>
                         {{session['name']}}
-                    </a>
+                    </a></b>
                 </li>
                 <li class="nav-item">
-                    <a href="{{url_for('portal.logout')}}"  style="cursor: pointer;">
+                    <b><a href="{{url_for('portal.logout')}}"  style="cursor: pointer; color: tomato;">
                         <i class="material-icons">exit</i>
                         Logout
-                    </a>
+                    </a></b>
                 </li>
+                {% endif %}
                 {% else %}
                 <li class="nav-item">
                     <a data-toggle="modal" data-target="#loginModal" style="cursor: pointer;">
@@ -55,6 +64,7 @@
                         Login
                     </a>
                 </li>
+                
                 {% endif %}
             </ul>
 

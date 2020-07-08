@@ -10,9 +10,32 @@ class Forum_model:
     def __init__(self):
         self.mongo = mongo.db
 
+    def get_category_data(self, From, Limit, category):
+        try:
+            agr = [{"$match": {"category": category}}, {
+                '$sort': {"created_on": -1}}, {"$skip": From}, {"$limit": Limit}]
+            posts = list(self.mongo.forum.aggregate(agr))
+            return {"_id": category, "data": posts}
+        except Exception as error:
+            print('In exception :', error)
+            return []
+
+    def get_search_data(self, text):
+        try:
+
+            posts = list(self.mongo.forum.find({"$text": {"$search": text}}))
+            return posts
+        except Exception as error:
+            print('In exception :', error)
+            return []
+
     def get_all_posts(self):
         try:
-            posts = list(self.mongo.forum.find({"category":session['department']}))
+            departments = self.mongo.departments.find_one()
+            departments = departments['departments']
+            posts = []
+            for department in departments:
+                posts.append(self.get_category_data(0, 10, department))
             print(posts)
             if posts != None:
                 return posts
@@ -29,7 +52,7 @@ class Forum_model:
                 {"_id": ObjectId(post.inserted_id)})
             print(post)
             if post != None:
-                post['created_on']=str(post['created_on'])
+                post['created_on'] = str(post['created_on'])
                 return post
             else:
                 return False
@@ -219,3 +242,11 @@ class Forum_model:
         except Exception as error:
             print('In exception :', error)
             return error
+
+    def get_departments(self):
+        try:
+            departments = self.mongo.departments.find_one()
+            return departments['departments']
+        except Exception as error:
+            print('In exception :', error)
+            return []

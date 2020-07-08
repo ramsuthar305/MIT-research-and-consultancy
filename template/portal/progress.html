@@ -1,0 +1,288 @@
+{% extends 'portal/base.html' %}
+
+{% block css %}
+  <link rel="stylesheet" href="{{ url_for('portal.static',  filename='/css/progress.css') }}">
+  
+{% endblock %}
+
+
+{% block main_page %}
+
+
+    {% include 'portal/header.html' %}
+
+<div class="page-header header-filter header-small" data-parallax="true" style="background-image: url('{{url_for('portal.static', filename='img/mit_background.jpg')}}');" style="height: 50vh;"></div>
+
+
+  <div class="main main-raised" style="margin-top: -55vh;">
+    <div class="container">
+
+
+
+      <div class="section section-pricing pricing-5 iframe-extern">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-8 ml-auto mr-auto text-center">
+          {% with messages = get_flashed_messages() %}
+  {% if messages %}
+  {% for message in messages %}
+  <div class="alert alert-success alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+        aria-hidden="true">×</span></button>
+    {{message}}
+  </div>
+  {% endfor %}
+  {% endif %}
+  {% endwith %}
+          <h2 class="title" style="color: black;">PhD TimeLine</h2>
+          
+        </div>
+        <div class="col-md-12 ml-auto mr-auto text-center">
+          
+            <section class=" bg-light cd-timeline js-cd-timeline">
+    <div class="container max-width-lg cd-timeline__container">
+      <div class="cd-timeline__block ">
+        <div class="cd-timeline__img cd-timeline__img--picture">
+          <img src="{{ url_for('portal.static',  filename='/images/one.png') }}" alt="Picture">
+        </div> <!-- cd-timeline__img -->
+
+
+        {% if sems['sem1']=="1" %}
+        <div class="cd-timeline__content text-component  shadow-lg bg-success">
+          <p class="text-light" style="font-size:25px;">Semester I</p>
+          <ul class="text-light text-left">
+          {% elif current=="sem 1" %}
+          <div class="cd-timeline__content text-component  shadow-lg bg-warning">
+          <p class="text-dark" style="font-size:25px;">Semester I</p>
+          <ul class="text-dark text-left">
+          {% else %}
+          <div class="cd-timeline__content text-component  shadow-lg bg-danger">
+          <p class="text-light" style="font-size:25px;">Semester I</p>
+          
+            <ul class="text-light text-left">
+              {% endif %}
+              <li>PhD Course Work
+                <ul>
+                  <li>Research Methodology</li>
+                  <li>Subject Specific Course Work</li>
+                </ul>
+              </li>
+              <li>Commencement of Instructions</li>
+              <li>End of Instructions</li>
+              <li>End Semester Examination Duration</li>
+            </ul>
+      
+         
+
+          
+          
+        </div> <!-- cd-timeline__content -->
+        
+      </div> <!-- cd-timeline__block -->
+
+      <div class="cd-timeline__block">
+        <div class="cd-timeline__img cd-timeline__img--movie">
+          <img src="{{ url_for('portal.static',  filename='/images/two.png') }}" alt="Movie">
+        </div> <!-- cd-timeline__img -->
+
+        {% if sems['sem2']=="1" %}
+        <div class="cd-timeline__content text-component  shadow-lg bg-success">
+          <p class="text-light" style="font-size:25px;">Semester II</p>
+          <ul class="text-light text-left">
+          {% elif current=="sem 2" %}
+          <div class="cd-timeline__content text-component  shadow-lg bg-warning">
+          <p class="text-dark" style="font-size:25px;">Semester II</p>
+          <ul class="text-dark text-left">
+          {% else %}
+          <div class="cd-timeline__content text-component  shadow-lg bg-danger">
+          <p class="text-light" style="font-size:25px;">Semester II</p>
+          
+            <ul class="text-light text-left">
+              {% endif %}
+
+
+
+              <li>PhD Course Work
+                <ul>
+                  <li>Subject Specific Course Work</li>
+                </ul></li>
+                <li>Proposal presentation to Research Advisory Committee</li>
+                <li>Proposal revision (if required) as per suggestions by RAC and Final Proposal Submission to RAC</li>
+                <li>Annual Progress report seminar presentation to RAC</li>
+                <li>Approval of the Annual Progress report by BOR</li>
+            </ul>
+          
+        
+            
+
+          
+          
+        </div><!-- cd-timeline__content -->
+      </div> <!-- cd-timeline__block -->
+
+      <div class="cd-timeline__block">
+        <div class="cd-timeline__img cd-timeline__img--picture">
+          <img src="{{ url_for('portal.static',  filename='/images/three.png') }}" alt="Picture">
+        </div> <!-- cd-timeline__img -->
+
+        {% if sems['sem3']=="1" %}
+        <div class="cd-timeline__content text-component  shadow-lg bg-success">
+          <p class="text-light" style="font-size:25px;">Semester III</p>
+          <ul class="text-light text-left">
+          {% elif current=="sem 3" %}
+          <div class="cd-timeline__content text-component  shadow-lg bg-warning">
+          <p class="text-dark" style="font-size:25px;">Semester III</p>
+          <ul class="text-dark text-left">
+          {% else %}
+          <div class="cd-timeline__content text-component  shadow-lg bg-danger">
+          <p class="text-light" style="font-size:25px;">Semester III</p>
+          
+            <ul class="text-light text-left">
+              {% endif %}
+
+
+
+              <li>Two Review Meetings of Departmental Research Committee* to check the progress of the candidates</li>
+              <li>Duration for Literature Review by research scholar</li>
+              <li>Presentation on literature review to RAC &amp; Review report submission</li>
+              <li>Conference/ Seminar Paper Presentation on Literature Review</li></ul>
+        
+        
+
+        
+        
+
+          
+          
+        </div><!-- cd-timeline__content -->
+      </div> <!-- cd-timeline__block -->
+
+      <div class="cd-timeline__block">
+        <div class="cd-timeline__img cd-timeline__img--location">
+          <img src="{{ url_for('portal.static',  filename='/images/four.png') }}" alt="Location">
+        </div> <!-- cd-timeline__img -->
+        
+         {% if sems['sem4']=="1" %}
+        <div class="cd-timeline__content text-component  shadow-lg bg-success">
+          <p class="text-light" style="font-size:25px;">Semester IV</p>
+          <ul class="text-light text-left">
+          {% elif current=="sem 4" %}
+          <div class="cd-timeline__content text-component  shadow-lg bg-warning">
+          <p class="text-dark" style="font-size:25px;">Semester IV</p>
+          <ul class="text-dark text-left">
+          {% else %}
+          <div class="cd-timeline__content text-component  shadow-lg bg-danger">
+          <p class="text-light" style="font-size:25px;">Semester IV</p>
+          
+            <ul class="text-light text-left">
+              {% endif %}
+
+
+
+            <li>Two Review Meetings of Departmental Research Committee* to check the progress of the candidates</li>
+            <li>Design of Experimental setup / data collection / Program implementation / design products etc.</li>
+            <li>Annual progress report presentation to RAC</li>
+            <li>Conference/ Seminar Paper Presentation on Literature Review</li></ul>
+       
+        
+
+          
+          
+        </div> <!-- cd-timeline__content -->
+      </div> <!-- cd-timeline__block -->
+
+      <div class="cd-timeline__block">
+        <div class="cd-timeline__img cd-timeline__img--location">
+          <img src="{{ url_for('portal.static',  filename='/images/five.png') }}" alt="Location">
+        </div> <!-- cd-timeline__img -->
+        
+        {% if sems['sem5']=="1" %}
+        <div class="cd-timeline__content text-component  shadow-lg bg-success">
+          <p class="text-light" style="font-size:25px;">Semester V</p>
+          <ul class="text-light text-left">
+          {% elif current=="sem 5" %}
+          <div class="cd-timeline__content text-component  shadow-lg bg-warning">
+          <p class="text-dark" style="font-size:25px;">Semester V</p>
+          <ul class="text-dark text-left">
+          {% else %}
+          <div class="cd-timeline__content text-component  shadow-lg bg-danger">
+          <p class="text-light" style="font-size:25px;">Semester V</p>
+          
+            <ul class="text-light text-left">
+              {% endif %}
+
+
+
+              <li>Two Review Meetings of Departmental Research Committee* to check the progress of the candidates</li>
+              <li>Further continuation of research work as per research plan</li>
+              <li>Writings of Initial Chapters</li>
+              <li>Paper Publication (In the Journals approved by BOR &amp; recommended by RAC)</li></ul>
+      
+        
+       
+
+          
+          
+        </div> <!-- cd-timeline__content -->
+      </div> <!-- cd-timeline__block -->
+
+      <div class="cd-timeline__block">
+        <div class="cd-timeline__img cd-timeline__img--movie">
+          <img src="{{ url_for('portal.static',  filename='/images/six.png') }}" alt="Movie">
+        </div> <!-- cd-timeline__img -->
+       
+        {% if sems['sem6']=="1" %}
+        <div class="cd-timeline__content text-component  shadow-lg bg-success">
+          <p class="text-light" style="font-size:25px;">Semester VI</p>
+          <ul class="text-light text-left">
+          {% elif current=="sem 6" %}
+          <div class="cd-timeline__content text-component  shadow-lg bg-warning">
+          <p class="text-dark" style="font-size:25px;">Semester VI</p>
+          <ul class="text-dark text-left">
+          {% else %}
+          <div class="cd-timeline__content text-component  shadow-lg bg-danger">
+          <p class="text-light" style="font-size:25px;">Semester VI</p>
+          
+            <ul class="text-light text-left">
+              {% endif %}
+
+
+              <li>Data Analyis</li>
+              <li>Compilation of Final Chapters</li>
+              <li>Pre Thesis Submission &amp; Viva</li>
+            </ul>
+       
+        
+
+          
+          
+        </div> <!-- cd-timeline__content -->
+      </div> <!-- cd-timeline__block -->
+    </div>
+  </section> <!-- cd-timeline -->
+
+
+        </div>
+      
+      </div>
+    </div>
+      
+      
+
+      
+      
+    
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+
+{% block javascript %}
+<script src="{{ url_for('portal.static',  filename='/js/progress.js') }}"></script>
+ 
+
+
+{% endblock %}

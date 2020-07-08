@@ -12,8 +12,8 @@
       <div class="about-description text-center">
         <div class="row">
           <div class="col-md-8 ml-auto mr-auto">
-              <img src="{{url_for('portal.static', filename='img/faces/marc.jpg')}}" style="border-radius: 50%; margin-top: 20px;" height="300px" width="300px">
-              <h3 style="color: black;"><b>{{ user['first_name'] }} {{ user['last_name'] }}</b></h3>
+              <img src="{{url_for('portal.static', filename= user['profile_pic_link'] )}}" style="border-radius: 50%; margin-top: 20px;" height="300px" width="300px">
+              <h3 style="color: black;"><b>{{ session['name'] }}</b></h3>
               <h4 style="color: black;">{{ user['user_type'] }}</h4>
               {% with messages = get_flashed_messages() %}
   {% if messages %}
@@ -43,58 +43,83 @@
                 <h3 class="info-title" style="color: black;">Social Media Links</h3>
               </div>
             </div>
-            <div class="info info-horizontal">
-              <div class="icon icon-rose">
-                <i class="material-icons">email</i>
-              </div>
-              <div class="description">
-                <h4 class="info-title" style="color: black;"><a href="#" style="color: blue;">{{ user['email'] }}</a></h4>
-              </div>
-            </div>
-            <div class="info info-horizontal">
-              <div class="icon icon-rose">
-                <i class="fa fa-twitter"></i>
-              </div>
-              <div class="description">
-                <h4 class="info-title" style="color: black;"><a href="#" style="color: blue;">{{ user['twitter'] }}</a></h4>
-              </div>
-            </div>
-            <div class="info info-horizontal">
-              <div class="icon icon-rose">
-                <i class="fa fa-facebook"></i>
-              </div>
-              <div class="description">
-                <h4 class="info-title" style="color: black;"><a href="#" style="color: blue;">{{ user['twitter'] }}</a></h4>
-              </div>
-            </div>
-            <div class="info info-horizontal">
-              <div class="icon icon-rose">
-                <i class="fa fa-skype"></i>
-              </div>
-              <div class="description">
-                <h4 class="info-title" style="color: black;"><a href="#" style="color: blue;">{{ user['skype'] }}</a></h4>
-              </div>
-            </div>
-            <div class="info info-horizontal">
-              <div class="icon icon-rose">
-                <i class="fa fa-github"></i>
-              </div>
-              <div class="description">
-                <h4 class="info-title" style="color: black;"><a href="#" style="color: blue;">{{ user['github'] }}</a></h4>
-              </div>
-            </div>
+
+            <div class="row">
+ 
+
+</div>
+            
+            <div class="row">
+  <div class="col-md-6 ml-auto mr-auto" >
+    <div class="card card-pricing " style="background: #00ACEE;" >
+      <div class="card-body ">
+        <a href="{{ user['twitter'] }}" style="color: white;">
+        <div class="icon">
+            <i class="fa fa-twitter"></i>
+        </div>
+        </a>
+        
+        </div>
+    </div>
+  </div>
+  <div class="col-md-6 ml-auto mr-auto" >
+    <div class="card card-pricing" style="background: #3B5998;" >
+      <div class="card-body ">
+        <a href="{{ user['facebook'] }}" style="color: white;">
+        <div class="icon">
+            <i class="fa fa-facebook"></i>
+        </div>
+        </a>
+        
+        </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col-md-6 ml-auto mr-auto" >
+    <div class="card card-pricing " style="background: #00AFF0;" >
+      <div class="card-body ">
+        <a href="{{ user['skype'] }}" style="color: white;">
+        <div class="icon">
+            <i class="fa fa-skype"></i>
+        </div>
+        </a>
+        
+        </div>
+    </div>
+  </div>
+  <div class="col-md-6 ml-auto mr-auto" >
+    <div class="card card-pricing" style="background: #211F1F" >
+      <div class="card-body ">
+        <a href="{{ user['github'] }}" style="color: white;">
+        <div class="icon">
+            <i class="fa fa-github"></i>
+        </div>
+        </a>
+        
+        </div>
+    </div>
+  </div>
+</div>
+
+            
+            
+            
           </div>
           <div class="col-md-8 text-center">
             <div class="row">
           <div class="col-md-12">
             <div class="profile-tabs">
-              <ul class="nav nav-pills nav-pills-icons justify-content-center" role="tablist">
+              <ul class="nav nav-pills nav-pills-icons justify-content-center" role="tablist" id="profTab">
                 <li class="nav-item">
                   <a class="nav-link active" href="#about" role="tab" data-toggle="tab">
                     <i class="material-icons">account_circle</i>
                     About
                   </a>
                 </li>
+                {% if session['user_type']=="Research Scholar" %}
                 <li class="nav-item">
                   <a class="nav-link" href="#submission" role="tab" data-toggle="tab">
                     <i class="material-icons">rate_review</i>
@@ -107,6 +132,15 @@
                     Resource
                   </a>
                 </li>
+                {% endif %}
+                {% if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" or session['user_type']=="Research Scholar" %}
+                <li class="nav-item">
+                  <a class="nav-link" href="#collab" role="tab" data-toggle="tab">
+                    <i class="material-icons">group_work</i>
+                    Collaboration
+                  </a>
+                </li>
+                {% endif %}
               </ul>
             </div>
           </div>
@@ -116,7 +150,7 @@
           <div class="tab-pane active text-center gallery" id="about">
             <div class="row">
               <div class="col-md-8 ml-auto mr-auto">
-
+                {% if session['user_type']=="Research Scholar" %}
             <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
@@ -125,6 +159,7 @@
                     </div>
                         <input type="text" class="form-control text-center" value="{{ user['batch'] }}" disabled>
                   </div>
+                  {% endif %}
                 <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
@@ -132,6 +167,14 @@
                         </span>
                     </div>
                         <input type="text" class="form-control text-center" value="{{ user['phone'] }}" disabled>
+                  </div>
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">email</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control text-center" value="{{ user['email'] }}" disabled>
                   </div>
 
                   <div class="input-group" style="margin-bottom: 20px;">
@@ -169,7 +212,7 @@
                     </div>
                         <input type="text" class="form-control text-center" value="{{ user['nationality'] }}" disabled>
                   </div>
-
+                  {% if session['user_type']=="Research Scholar" or session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
@@ -178,7 +221,8 @@
                     </div>
                         <input type="text" class="form-control text-center" value="{{ user['department'] }}" disabled>
                   </div>
-
+                  {% endif %}
+                  {% if session['user_type']=="Research Scholar" %}
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
@@ -196,6 +240,27 @@
                     </div>
                         <input type="text" class="form-control text-center" value="{{ user['cosupervisor'] }}" disabled>
                   </div>
+                  {% endif %}
+                  {% if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="fa fa-group"></i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control text-center" value="{{ user['subdepartment'] }}" disabled>
+                  </div>
+                  {% endif %}
+                  {% if session['user_type']=="Special User" %}
+                  <div class="input-group" style="margin-bottom: 20px;">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                          <i class="material-icons">info</i>
+                        </span>
+                    </div>
+                        <input type="text" class="form-control text-center" value="{{ user['info'] }}" disabled>
+                  </div>
+                  {% endif %}
 
                 
               </div>
@@ -240,7 +305,7 @@
                 Description : {{ i['description'] }}
               </div>
               <div class="row">
-                File : <a href="{{ url_for('portal.static',  filename=i['pdf'] ) }}" target="_blank">{{ i['pdfname'] }}</a>
+                File : <a href="{{ url_for('portal.static',  filename=i['pdf'] ) }}" target="_blank"><b>{{ i['pdfname'] }}</b></a>
               </div>
               <div class="row">
                 Author : {{ i['author'] }}
@@ -260,7 +325,7 @@
 
                 
                 <div class="row">
-                Attached File : <a href="{{ url_for('portal.static',  filename=j['pdf_link'] ) }}" target="_blank">{{ j['pdf_name'] }}</a>
+                Attached File : <a href="{{ url_for('portal.static',  filename=j['pdf_link'] ) }}" target="_blank"><b>{{ j['pdf_name'] }}</b></a>
                 
                 </div>
                 
@@ -268,11 +333,11 @@
                 {% endif %}
               {% endfor %}
               {% else %}
-               Uploade pdf
+               Upload pdf
 
                 
                 <div class="row">
-                <input type="file" name="file" class="form-control" required>
+                <input type="file" name="file" class="form-control" accept="application/pdf" onchange="ValidatepdfInput(this);" required>
                 
                 </div>
               {% endif %}
@@ -337,18 +402,12 @@
                     <textarea name="description" class="form-control" id="description" required></textarea> 
                   </div>
                   
-               
-                 <div class="form-group form-file-upload form-file-multiple">
-    <input type="file" name="file" multiple="" class="inputFileHidden">
-    <div class="input-group">
-        <input type="text" class="form-control inputFileVisible" placeholder="Single pdf File/Report" required>
-        <span class="input-group-btn">
-            <button type="button" class="btn btn-fab btn-round btn-primary">
-                <i class="material-icons">attach_file</i>
-            </button>
-        </span>
-    </div>
-  </div>
+                  
+                    <label class="form-control">Upload Single Pdf file</label>
+              
+             
+             <input type="file" name="file" class="form-control" id="file" accept="application/pdf" onchange="ValidatepdfInput(this);" required>
+                 
 
 <div class="form-group">
     <label for="exampleFormControlSelect1">Select Supervisor/Co-Supervisor</label>
@@ -377,7 +436,7 @@
   <div class="card-header card-header-success">
     Verified
   </div>
-  <div class="card-body">
+  <div class="card-body" style="overflow-x: auto;">
     <table class="table">
     <thead>
         <tr>
@@ -391,7 +450,7 @@
     <tbody>
      
       {% for i in resource %}
-      {% if i['status']=='1' %}
+      {% if i['status']=='1' and i['email']==session['id'] %}
         <tr style="color: black;">
             <td>{{ i['author'] }}</td>
             <td>{{ i['title'] }}</td>
@@ -415,7 +474,7 @@
   <div class="card-header card-header-warning">
     Pending
   </div>
-  <div class="card-body">
+  <div class="card-body" style="overflow-x: auto;">
     <table class="table">
     <thead>
         <tr>
@@ -429,7 +488,7 @@
     <tbody>
      
       {% for i in resource1 %}
-      {% if i['status']=='0' %}
+      {% if i['status']=='0' and i['email']==session['id'] %}
         <tr style="color: black;">
             <td>{{ i['author'] }}</td>
             <td>{{ i['title'] }}</td>
@@ -452,7 +511,7 @@
   <div class="card-header card-header-danger">
     Rejected
   </div>
-  <div class="card-body">
+  <div class="card-body" style="overflow-x: auto;">
     <table class="table">
     <thead>
         <tr>
@@ -466,7 +525,7 @@
     <tbody>
      
       {% for i in resource2 %}
-      {% if i['status']=='2' %}
+      {% if i['status']=='2' and i['email']==session['id'] %}
         <tr style="color: black;">
             <td>{{ i['author'] }}</td>
             <td>{{ i['title'] }}</td>
@@ -487,6 +546,160 @@
   </div>
               
             </div>
+
+
+ <div class="tab-pane text-center gallery" id="collab">
+           <div class="row">
+              <div class="col-md-12 ml-auto">
+    {% if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
+                <h3 style="color: black;">Add Researcher for Collaboration</h3>
+               
+                  
+    <form action="{{url_for('portal.profile')}}" method="POST" enctype = "multipart/form-data">
+                  <div class="col-md-12">
+                  <div class="col-md-6 ml-auto mr-auto">
+                  <div class="form-group">
+                    <label for="email2">Email</label>
+                    <input type="email" name="email2" class="form-control" id="email" required>
+                  </div>
+                </div>
+
+                </div>
+
+  <div class="form-group">
+    <label>Get User</label>
+    <button class="btn btn-success btn-round">Fetch</button>
+  </div>
+  
+
+   </form>
+{% if fuser %}
+   <div class="card card-nav-tabs">
+  <div class="card-header card-header-info">
+    Fetched User
+  </div>
+  <div class="card-body" style="overflow-x: auto;">
+     <form action="{{url_for('portal.add_collab')}}" method="POST" enctype = "multipart/form-data">
+    <table class="table">
+    <thead>
+        <tr>
+          <th>Profile Pic</th>
+            <th>Name</th>
+            <th>Batch</th>
+            <th>Department</th>           
+        </tr>
+    </thead>
+    <tbody>
+     
+     
+        <tr style="color: black;">
+            <td><img src="{{ url_for('portal.static',  filename=fuser['profile_pic_link'] ) }}" height="100px" width="100px" style="border-radius:50%;"></td>
+            <td>{{ fuser['first_name'] }} {{ fuser['last_name'] }}</td>
+            <td>{{ fuser['batch'] }}</td>
+            <td>{{ fuser['department'] }}</td>
+            
+        </tr>
+        <input type="hidden" name="email2" value="{{ fuser['email'] }}">
+        <input type="hidden" name="batch2" value="{{ fuser['batch'] }}">
+        <input type="hidden" name="dept2" value="{{ fuser['department'] }}">
+        <input type="hidden" name="fname" value="{{ fuser['first_name'] }}">
+        <input type="hidden" name="lname" value="{{ fuser['last_name'] }}">
+      
+
+     
+      
+        
+    </tbody>
+</table>
+
+                    <div class="col-md-6 ml-auto mr-auto">
+                    <div class="form-group">
+                    <label for="ctitle">Title</label>
+                    <input type="text" name="ctitle" class="form-control" id="ctitle" required>
+                  </div>  
+                  <div class="form-group">
+                    <label for="cdesc">Description</label>
+                    <textarea name="cdesc" class="form-control" id="cdesc" required></textarea>
+                  </div>
+
+                 
+                   
+                    <input name="file" type="file" single="" class="form-control" id="cdesc" required>
+                   
+                      <button class="btn btn-success btn-round">Collab</button>
+            <a class="btn btn-danger btn-round" href="{{url_for('portal.profile')}}">Cancel</a>
+
+                  </div>   
+</form>
+  </div>
+</div>
+{% endif %}
+
+{% endif %}
+
+               
+
+
+                
+
+
+
+                <h3 style="color: black;">My Collaborations</h3>
+
+    <div class="card card-nav-tabs">
+  <div class="card-header card-header-info">
+    Collaborations
+  </div>
+  <div class="card-body" style="overflow-x: auto;">
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Collaborator 1</th>
+            <th>Collaborator 2</th>
+            <th>Title</th>
+            <th>File</th>
+            {% if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
+            <th>Action</th>
+            {% endif %}
+            
+        </tr>
+    </thead>
+    <tbody>
+     {% if cdata %}
+      {% for i in cdata %}
+      <form action="{{url_for('portal.delete_collab')}}" method="POST" enctype = "multipart/form-data">
+        <tr style="color: black;">
+            <td>{{ i['supervisor_name'] }}</td>
+            <td>{{ i['student_name'] }}</td>
+            <td>{{ i['collabs'][0]['ctitle'] }}</td>
+            <td><a href="{{ url_for('portal.static',  filename=i['collabs'][0]['pdf_link'] ) }}" target="_blank">{{ i['collabs'][0]['pdf_name'] }}</a></td>
+            {% if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
+            <td><button type="Submit" class="btn btn-danger btn-round">
+              <i class="material-icons">delete</i>
+              Delete
+            </button></td>
+            {% endif %}
+        </tr>
+        <input type="hidden" name="cid" value="{{ i['cid'] }}">
+      </form>
+        {% endfor %}
+        {% endif %}
+      
+        
+        
+    </tbody>
+</table>
+  </div>
+</div>
+
+  </div>
+
+
+  </div>
+
+
+
+
           </div>
         </div>
 
@@ -500,9 +713,13 @@
 
       <div class="about-description text-center" style="margin-bottom: 50px;">
         <div class="row" >
+          
           <div class="col-md-8 ml-auto mr-auto">
-
-              <a href="#" class="btn btn-info btn-round">Edit</a>
+              <a href="{{url_for('portal.changepassword')}}" class="btn btn-info btn-round">Change Password</a>
+              
+          </div>
+        
+          <div class="col-md-8 ml-auto mr-auto">
               <a href="{{url_for('portal.logout')}}" class="btn btn-danger btn-round">Log Out</a>
               
           </div>
@@ -519,6 +736,23 @@
 
 
 {% block javascript %}
+
+
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('a[data-toggle="tab"]').on('click', function(e) {
+        window.localStorage.setItem('activeTab', $(e.target).attr('href'));
+    });
+    var activeTab = window.localStorage.getItem('activeTab');
+    if (activeTab) {
+        $('#profTab a[href="' + activeTab + '"]').tab('show');
+        window.localStorage.removeItem("activeTab");
+    }
+});
+</script>
+
+
 
 
 

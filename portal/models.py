@@ -17,6 +17,13 @@ class Users:
 		else:
 			return False
 
+	def temp_user(self,user):
+		try:
+			result=mongo.db.tempuser.insert_one(user)
+			return result
+		except Exception as error:
+			print(error)
+
 	def save_user(self,user,user_type):
 		try:
 			if user_type=="Research Scholar":
@@ -55,9 +62,11 @@ class Users:
 
 	def login_user(self, username, password):
 		try:
+			h = hashlib.md5(password.encode())
+			password = h.hexdigest()
 			login_result = self.mongo.authentication.find_one(
 				{"$and": [{"$or": [{"uid": username}, {"email": username}]},
-						  {"password": password},{"status":"0"}]})
+						  {"password": password},{"status":"1"}]})
 			print(login_result)
 			if login_result is not None:
 				if login_result["user_type"]=="Research Scholar":
@@ -95,7 +104,6 @@ class Users:
 					session["logged_in"] = True
 					session["user_type"] = user_info['user_type']
 					session['id'] = str(user_info["_id"])
-					session['department'] = str(user_info["department"])
 					return True
 			else:
 				return "User does not exist"
@@ -106,6 +114,70 @@ class Users:
 		try:
 			user_profile=self.mongo.users.find_one({"username": session["username"]})
 			return (user_profile)
+		except Exception as error:
+			print(error)
+
+	def check_old_pass(self,val):
+		try:
+			h = hashlib.md5(val.encode())
+			val = h.hexdigest()
+			if session['user_type']=="Research Scholar":
+				result = mongo.db.researcher.find({"$and":[{"email":session['email']},{"password":val}]})
+			if session['user_type']=="Research Supervisor":
+				result = mongo.db.supervisor.find({"$and":[{"email":session['email']},{"password":val}]})
+			if session['user_type']=="Research Co-Supervisor":
+				result = mongo.db.cosupervisor.find({"$and":[{"email":session['email']},{"password":val}]})
+			if session['user_type']=="Special User":
+				result = mongo.db.specialuser.find({"$and":[{"email":session['email']},{"password":val}]})
+			if result.count()>0:
+				return True
+			else:
+				return False
+		except Exception as error:
+			print(error)
+
+	def update_pass(self,val):
+		try:
+			h = hashlib.md5(val.encode())
+			val = h.hexdigest()
+			if session['user_type']=="Research Scholar":
+				result = mongo.db.researcher.update({"email":session['email']},{"$set":{"password":val}})
+			if session['user_type']=="Research Supervisor":
+				result = mongo.db.supervisor.update({"email":session['email']},{"$set":{"password":val}})
+			if session['user_type']=="Research Co-Supervisor":
+				result = mongo.db.cosupervisor.update({"email":session['email']},{"$set":{"password":val}})
+			if session['user_type']=="Special User":
+				result = mongo.db.specialuser.update({"email":session['email']},{"$set":{"password":val}})
+			result = mongo.db.authentication.update({"uid":session['email']},{"$set":{"password":val}})
+		except Exception as error:
+			print(error)
+
+	def check_email(self,email):
+		try:
+			result = mongo.db.authentication.find({"uid":email})
+			print(result)
+			print(result[0])
+			if result.count()>0:
+				result = result[0]
+				return result['user_type']
+			else:
+				return False
+		except Exception as error:
+			print(error)
+
+	def set_pass(self,usertype,email,password):
+		try:
+			h = hashlib.md5(password.encode())
+			password = h.hexdigest()
+			result = mongo.db.authentication.update({"email":email},{"$set":{"password":password}})
+			if usertype == "Research Scholar":
+				result = mongo.db.researcher.update({"email":email},{"$set":{"password":password}})
+			if usertype == "Research Supervisor":
+				result = mongo.db.supervisor.update({"email":email},{"$set":{"password":password}})
+			if usertype == "Research Co-Supervisor":
+				result = mongo.db.cosupervisor.update({"email":email},{"$set":{"password":password}})
+			if usertype == "Special User":
+				result = mongo.db.specialuser.update({"email":email},{"$set":{"password":password}})
 		except Exception as error:
 			print(error)
 
@@ -221,6 +293,24 @@ class Extract_Data:
 			print(error)
 			return "something went wrong"
 
+	def get_users_by_id(self,email,usertype):
+		try:
+			if usertype=="Research Scholar":
+				result = mongo.db.researcher.find({"email":email})
+				return result
+			if usertype=="Research Supervisor":
+				result = mongo.db.supervisor.find({"email":email})
+				return result
+			if usertype=="Research Co-Supervisor":
+				result = mongo.db.cosupervisor.find({"email":email})
+				return result
+			if usertype=="Special User":
+				result = mongo.db.specialuser.find({"email":email})
+				return result
+
+		except Exception as error:
+			print(error)
+
 
 	def get_resource(self):
 		try:
@@ -299,7 +389,6 @@ class Submissions:
 	def get_questions_answered_by_user(self):
 		try:
 			result=mongo.db.submissions.find({"solution.email":session['email']})
-			print(result)
 			if result:
 				return result
 			else:
@@ -432,4 +521,55 @@ class Student_Resources:
 			print(error)
 			return "something went wrong"
 
+class Collaborations:
+	def __init__(self):
+		self.mongo =mongo.db
 
+	def add_col(self,data):
+		try:
+			result = mongo.db.collaborations.insert_one(data)
+			return result
+		except Exception as error:
+			return "Something went wrong"
+
+	def fetch_col_supervisor(self):
+		try:
+			result = mongo.db.collaborations.find({"supervisor_email":session['email']})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			return "Something went wrong"
+
+	def fetch_col_researcher(self):
+		try:
+			result = mongo.db.collaborations.find({"student_email":session['email']})
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			return "Something went wrong"
+
+	def delete_col(self,cid):
+		try:
+			result = mongo.db.collaborations.remove({'cid':cid})
+			return result
+		except Exception as error:
+			return "Something went wrong"
+
+class Eresources:
+	def __init__(self):
+		self.mongo =mongo.db
+	
+	def get_data(self):
+		try:
+			result=list(mongo.db.resource.find())
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "something went wrong"

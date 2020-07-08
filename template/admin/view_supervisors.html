@@ -4,14 +4,65 @@
       <div class="content">
         <div class="container-fluid">
           <div class="row">
-            <div class="col-md-6 mx-auto">
+            <div class="col-md-12 mx-auto">
               <div class="card">
                 <div class="card-header card-header-primary">
                   <h4 class="card-title" id="page_name">View Supervisors</h4>
                   <p class="card-category">View All Supervisors</p>
                 </div>
-                <div class="card-body">
-                View Supervisors
+                <div class="card-body" style="overflow-x: auto;">
+                <div class="row">
+                  
+                
+<table class="table">
+    <thead>
+        <tr>
+          <th>Profile Pic</th>
+            <th>Name</th>
+            <th>Mobile No</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>DoB</th>
+            <th>Gender</th>
+            <th>Nationality</th>
+            <th>Department</th>
+            <th>Sub-Department</th>
+            <th>Twitter</th>
+            <th>Facebook</th>
+            <th>Skype</th>
+            <th>Github</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+     
+      {% for i in users %}
+    
+        <tr>
+          <td><img src="{{ url_for('portal.static',  filename= i['profile_pic_link'] ) }}" height="100px" width="100px" style="border-radius:50%;"></td>
+            <td>{{ i['first_name'] }} {{ i['last_name'] }}</td>
+            <td>{{ i['phone'] }}</td>
+            <td>{{ i['email'] }}</td>
+            <td>{{ i['address'] }}</td>
+            <td>{{ i['dob'] }}</td>
+            <td>{{ i['gender'] }}</td>
+            <td>{{ i['nationality'] }}</td>
+            <td>{{ i['department'] }}</td>
+            <td>{{ i['subdepartment'] }}</td>
+            <td>{{ i['twitter'] }}</td>
+            <td>{{ i['facebook'] }}</td>
+            <td>{{ i['skype'] }}</td>
+            <td>{{ i['github'] }}</td>
+        </tr>
+        
+
+
+        {% endfor %}
+        
+   
+    </tbody>
+</table>
+</div>
 
             
                 </div>

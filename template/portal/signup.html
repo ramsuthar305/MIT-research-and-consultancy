@@ -17,7 +17,7 @@
       <div class="card card-signup">
         <h2 class="card-title text-center text-primary">Register</h2>
         <h4 class="card-title text-center text-danger">Batch : {{ active }}</h4>
-        <form class="form" method="POST" action="{{url_for('portal.registration')}}">
+        <form class="form" method="POST" action="{{url_for('portal.registration')}}" enctype="multipart/form-data">
           <div class="card-body">
             <div class="row">
               <div class="col-md-5 ml-auto">
@@ -178,7 +178,8 @@
                           <i class="material-icons">face</i>
                         </span>
                     </div>
-                        <input type="file" name="">
+                        <label for="pp" class="form-control">Upload Profile Pic</label>
+                        <input type="file" name="file" id="pp" class="form-control" accept="image/*" onchange="ValidateimageInput(this);">
                   </div>
 
                 </div>

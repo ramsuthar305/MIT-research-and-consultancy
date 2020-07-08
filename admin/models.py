@@ -7,52 +7,62 @@ class Users:
 	def __init__(self):
 		self.mongo = mongo.db
 
-	def check_user_exists(self, username):
-		result = self.mongo.users.find_one({"$or": [{"username": username}, {"phone": username}]})
-		if result:
-			return True
-		else:
-			return False
-
-	def save_user(self,x):
-		result = mongo.db.users.insert_one({"username":x['username'],"password":x['password'],"phno":x['phno'],"address":x['address'],"user_type":"normal"})
-		if result:
-			return True
-		else:
-			return False
-
-
-	def is_admin(self,x):
-		result = mongo.db.users.find_one({"$and":[{"username":x},{"user_type":"admin"}]})
-		if result:
-			return True
-		else:
-			return False
-
-	def get_user_by_id(self,id):
+	def reset_admin(self):
 		try:
-			user = mongo.db.users.find_one({"username":id})
-			return user
+			result = mongo.db.admin.drop()
+			password = "admin"
+			h = hashlib.md5(password.encode())
+			encpass = h.hexdigest()
+			print(encpass)
+			user = {
+			"_id":"mitrcadmin@gmail.com",
+			"first_name":"MIT",
+			"last_name":"Admin",
+			"email":"mitrcadmin@gmail.com",
+			"password":encpass,
+			}
+			result = mongo.db.admin.insert_one(user)
+			print(result)
 		except Exception as error:
 			print(error)
 
-	def login_user(self, username, password):
-		result = self.check_user_exists(username)
-		if result:
-			login_result = self.mongo.users.find_one(
-				{"$and": [{"$or": [{"username": username}, {"phone": username}]},
-						  {"password": password}]})
-			if login_result is not None:
-				session["username"] = login_result["username"]
-				session["logged_in"] = True
-
-				session["user_type"] = login_result['user_type']
-				session['id'] = str(login_result["user_id"])
-				return login_result
+	def admin_login(self,email,password):
+		try:
+			h = hashlib.md5(password.encode())
+			encpass = h.hexdigest()
+			result = mongo.db.admin.find({"$and":[{"email":email},{"password":encpass}]})
+			if result.count()>0:
+				result = result[0]
+				session['logged_in'] = True
+				session['id'] = result['email']
+				session['name'] = result['first_name'] + " " + result['last_name']
+				session['email'] = result['email']
+				session['user_type'] = "admin"
+				return True
 			else:
-				return 1
-		else:
-			return 0
+				return False
+		except Exception as error:
+			print(error)
+
+	def check_old_pass(self,val):
+		try:
+			h = hashlib.md5(val.encode())
+			val = h.hexdigest()
+			result = mongo.db.admin.find({"$and":[{"email":session['email']},{"password":val}]})
+			if result.count()>0:
+				return True
+			else:
+				return False
+		except Exception as error:
+			print(error)
+
+	def update_pass(self,val):
+		try:
+			h = hashlib.md5(val.encode())
+			val = h.hexdigest()
+			result = mongo.db.admin.update({"email":session['email']},{"$set":{"password":val}})
+		except Exception as error:
+			print(error)
 
 class Supervisors:
 	def __init__(self):
@@ -64,6 +74,8 @@ class Supervisors:
 				result = mongo.db.supervisor.insert_one(user)
 			elif user_type=="Research Co-Supervisor":
 				result = mongo.db.cosupervisor.insert_one(user)
+			elif user_type=="Special User":
+				result = mongo.db.specialuser.insert_one(user)
 			else:
 				result = mongo.db.USERTYPE.insert_one(user)
 			if result:
@@ -175,65 +187,224 @@ class Batch:
 			print(error)
 			return "something went wrong"
 
-class Jobs:
+	def fetch_pending(self):
+		try:
+			result = mongo.db.tempuser.find()
+			return result
+		except Exception as error:
+			print(error)
+
+	def authorization(self,userid,op):
+		try:
+			if op=="1":
+				result = mongo.db.tempuser.find({"_id":userid})
+				user = result[0]
+				main = mongo.db.researcher.insert_one(user)
+				active = mongo.db.researcher.update_one({'_id':userid},{"$set":{"status":"1"}})
+				result=mongo.db.authentication.insert_one({
+					"uid":user["_id"],
+					"email":user["email"],
+					"password":user["password"],
+					"user_type":user["user_type"],
+					"status":user["status"]
+				})
+				active = mongo.db.authentication.update_one({'uid':userid},{"$set":{"status":"1"}})
+				rem = mongo.db.tempuser.remove({"_id":userid})
+			if op=="2":
+				result = mongo.db.tempuser.remove({"_id":userid})
+			return result
+		except Exception as error:
+			print(error)
+
+	def get_departments(self):
+		try:
+			departments = self.mongo.departments.find_one()
+			return departments['departments']
+		except Exception as error:
+			print('In exception :', error)
+			return []
+
+class Extractdata:
 	def __init__(self):
 		self.mongo =mongo.db
-	
-	def put_job(self,job):
+
+	def get_user(self,usertype):
 		try:
-			result=mongo.db.jobs.insert_one(job)
-			
+			if usertype == "Research Scholar":
+				result=mongo.db.researcher.find()
+			if usertype == "Research Supervisor":
+				result=mongo.db.supervisor.find()
+			if usertype == "Research Co-Supervisor":
+				result=mongo.db.cosupervisor.find()
+			if usertype == "Special User":
+				result=mongo.db.specialuser.find()
 			if result:
-				return result.inserted_id
+				return result
 			else:
 				return False
 		except Exception as error:
 			print(error)
 			return "something went wrong"
 
-	def put_aptitude(self,job_id,apti):
+	def get_scholars(self,batch,department):
 		try:
-			result=mongo.db.jobs.update_one({"_id":ObjectId(job_id)},{"$set":{"aptitude":apti}})
+			result=mongo.db.researcher.find({"$and":[{"batch":batch},{"department":department}]})
+			return (list([batch,department,result]))
+		except Exception as error:
+			return False
+
+	def get_users_by_id(self,email,usertype):
+		try:
+			if usertype=="Research Scholar":
+				result = mongo.db.researcher.find({"email":email})
+				return result
+			if usertype=="Research Supervisor":
+				result = mongo.db.supervisor.find({"email":email})
+				return result
+			if usertype=="Research Co-Supervisor":
+				result = mongo.db.cosupervisor.find({"email":email})
+				return result
+			if usertype=="Special User":
+				result = mongo.db.specialuser.find({"email":email})
+				return result
+
+		except Exception as error:
+			print(error)
+
+	def get_blocked_users(self):
+		try:
+			L = []
+			result1 = mongo.db.researcher.find({"status":"2"})
+			result2 = mongo.db.supervisor.find({"status":"2"})
+			result3 = mongo.db.cosupervisor.find({"status":"2"})
+			result4 = mongo.db.specialuser.find({"status":"2"})
+			if result1.count()>0:
+				L.append(result1)
+			if result2.count()>0:
+				L.append(result2)
+			if result3.count()>0:
+				L.append(result3)
+			if result4.count()>0:
+				L.append(result4)
+			return L
+
+		except Exception as error:
+			print(error)
+
+	def get_supervisors(self):
+		try:
+			result=mongo.db.supervisor.find()
 			if result:
-				return True
+				return result
 			else:
 				return False
 		except Exception as error:
 			print(error)
 			return "something went wrong"
 
-	def put_personality(self,job_id,personality):
+	def get_cosupervisors(self):
 		try:
-			result=mongo.db.jobs.update_one({"_id":ObjectId(job_id)},{"$set":{"personality":personality}})
+			result=mongo.db.cosupervisor.find()
 			if result:
-				return True
+				return result
 			else:
 				return False
 		except Exception as error:
 			print(error)
 			return "something went wrong"
 
-	def get_all_jobs(self):
+class UserEdits:
+	def block_user(self,email,usertype):
 		try:
-			result= mongo.db.jobs.find({})
-			print('This is rresult: ',result)
+			if usertype=="Research Scholar":
+				result = mongo.db.researcher.update({"email":email},{"$set":{"status":"2"}})
+				result = mongo.db.authentication.update({"uid":email},{"$set":{"status":"2"}})
+				return result
+			if usertype=="Research Supervisor":
+				result = mongo.db.supervisor.update({"email":email},{"$set":{"status":"2"}})
+				result = mongo.db.authentication.update({"uid":email},{"$set":{"status":"2"}})
+				return result
+			if usertype=="Research Co-Supervisor":
+				result = mongo.db.cosupervisor.update({"email":email},{"$set":{"status":"2"}})
+				result = mongo.db.authentication.update({"uid":email},{"$set":{"status":"2"}})
+				return result
+			if usertype=="Special User":
+				result = mongo.db.specialuser.update({"email":email},{"$set":{"status":"2"}})
+				result = mongo.db.authentication.update({"uid":email},{"$set":{"status":"2"}})
+				return result
+		except Exception as error:
+			print(error)
+
+	def unblock_user(self,email,usertype):
+		try:
+			if usertype=="Research Scholar":
+				result = mongo.db.researcher.update({"email":email},{"$set":{"status":"1"}})
+				result = mongo.db.authentication.update({"uid":email},{"$set":{"status":"1"}})
+				return result
+			if usertype=="Research Supervisor":
+				result = mongo.db.supervisor.update({"email":email},{"$set":{"status":"1"}})
+				result = mongo.db.authentication.update({"uid":email},{"$set":{"status":"1"}})
+				return result
+			if usertype=="Research Co-Supervisor":
+				result = mongo.db.cosupervisor.update({"email":email},{"$set":{"status":"1"}})
+				result = mongo.db.authentication.update({"uid":email},{"$set":{"status":"1"}})
+				return result
+			if usertype=="Special User":
+				result = mongo.db.specialuser.update({"email":email},{"$set":{"status":"1"}})
+				result = mongo.db.authentication.update({"uid":email},{"$set":{"status":"1"}})
+				return result
+		except Exception as error:
+			print(error)
+
+	def remove_user(self,email,usertype):
+		try:
+			if usertype=="Research Scholar":
+				result = mongo.db.researcher.remove({"email":email})
+				result = mongo.db.authentication.remove({"uid":email})
+				return result
+			if usertype=="Research Supervisor":
+				result = mongo.db.supervisor.remove({"email":email})
+				result = mongo.db.authentication.remove({"uid":email})
+				return result
+			if usertype=="Research Co-Supervisor":
+				result = mongo.db.cosupervisor.remove({"email":email})
+				result = mongo.db.authentication.remove({"uid":email})
+				return result
+			if usertype=="Special User":
+				result = mongo.db.specialuser.remove({"email":email})
+				result = mongo.db.authentication.remove({"uid":email})
+				return result
+		except Exception as error:
+			print(error)
+
+	def replace_sem(self,email,sem):
+		try:
+			L = []
+			L.append(sem)
+			result = mongo.db.researcher.update({"email":email},{"$set":{"semesters":L}})
 			return result
 		except Exception as error:
 			print(error)
-			return "something went wrong"
 
-	def get_job(self,job_id):
+	def timepass(self):
 		try:
-			result=mongo.db.jobs.find_one({"_id":ObjectId(job_id)})
-			return result
-		except Exception as error:
-			print(error)
-			return "something went wrong"
+			L = []
+			sem = {
+			"sem1":"0",
+			"sem2":"0",
+			"sem3":"0",
+			"sem4":"0",
+			"sem5":"0",
+			"sem6":"0",
+			}
+			L.append(sem)
+			result = mongo.db.researcher.update({"email":"safirmotiwala@gmail.com"},{"$set":{"semesters":L}})
+			result = mongo.db.researcher.update({"email":"ramsuthar305@gmail.com"},{"$set":{"semesters":L}})
+			result = mongo.db.researcher.update({"email":"vinayak@gmail.com"},{"$set":{"semesters":L}})
+		except Exception as e:
+			raise e
 
-class Shortlist:
-	def __init__(self):
-		self.mongo = mongo.db
-
+<<<<<<< HEAD
 	def get_profiles(self,job_id):
 		profiles=mongo.db.shortlist.find({"job_id":job_id})
 		users=Users()
@@ -264,3 +435,22 @@ class Resource:
 			return "something went wrong"
 
 	
+=======
+	def update_prof(self,usertype,data,email):
+		try:
+			if usertype == "Research Scholar":
+				for i,j in zip(data,data.values()):
+					result = mongo.db.researcher.update({"_id":email},{"$set":{i:j}})
+			if usertype == "Research Supervisor":
+				for i,j in zip(data,data.values()):
+					result = mongo.db.supervisor.update({"_id":email},{"$set":{i:j}})
+			if usertype == "Research Co-Supervisor":
+				for i,j in zip(data,data.values()):
+					result = mongo.db.cosupervisor.update({"_id":email},{"$set":{i:j}})
+			if usertype == "Special User":
+				for i,j in zip(data,data.values()):
+					result = mongo.db.specialuser.update({"_id":email},{"$set":{i:j}})
+			return True
+		except Exception as error:
+			print(error)
+>>>>>>> 9b688b2c7915e1d26963d62d2522f585170fa73d

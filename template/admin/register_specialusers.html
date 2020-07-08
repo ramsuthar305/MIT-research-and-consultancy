@@ -24,14 +24,14 @@
   {% endif %}
   {% endwith %}
                 
-                <form class="text-center" action="{{url_for('admin.specialusers_registration')}}" method="POST">
+                <form class="text-center" action="{{url_for('admin.specialusers_registration')}}" method="POST" enctype="multipart/form-data">
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
                         <span class="input-group-text">
                           <i class="material-icons">military_tech</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control" name="title" placeholder="Title of Honour (Dr/Prof/Mr/Mrs)">
+                        <input type="text" class="form-control" name="title" placeholder="Title of Honour (Dr/Prof/Mr/Mrs)" required>
                   </div>
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
@@ -39,7 +39,7 @@
                           <i class="material-icons">perm_identity</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control" placeholder="First Name" name="first_name">
+                        <input type="text" class="form-control" placeholder="First Name" name="first_name" required>
                   </div>
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
@@ -47,7 +47,7 @@
                           <i class="material-icons">perm_identity</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control" placeholder="Last Name" name="last_name">
+                        <input type="text" class="form-control" placeholder="Last Name" name="last_name" required>
                   </div>
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
@@ -55,7 +55,7 @@
                           <i class="material-icons">phone</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control" placeholder="Mobile No" name="phone">
+                        <input type="text" class="form-control" placeholder="Mobile No" name="phone" required>
                   </div>
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
@@ -63,7 +63,7 @@
                           <i class="material-icons">home</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control" placeholder="Address" name="address">
+                        <input type="text" class="form-control" placeholder="Address" name="address" required>
                   </div>
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
@@ -71,7 +71,7 @@
                           <i class="material-icons">email</i>
                         </span>
                     </div>
-                        <input type="email" class="form-control" placeholder="Email Id" name="email">
+                        <input type="email" class="form-control" placeholder="Email Id" name="email" required>
                   </div>
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
@@ -79,7 +79,7 @@
                           <i class="material-icons">cake</i>
                         </span>
                     </div>
-                        <input type="date" class="form-control" placeholder="Date of Birth" name="dob">
+                        <input type="date" class="form-control" placeholder="Date of Birth" name="dob" required>
                   </div>
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
@@ -87,7 +87,7 @@
                           <i class="material-icons">person_pin</i>
                         </span>
                     </div>
-                        <select class="form-control" name="gender">
+                        <select class="form-control" name="gender" required>
                           <option value="0">Gender</option>
                           <option value="Male">Male</option>
                           <option value="Female">Female</option>
@@ -100,7 +100,7 @@
                           <i class="material-icons">location_on</i>
                         </span>
                     </div>
-                        <input type="text" class="form-control" placeholder="Nationality" name="nationality">
+                        <input type="text" class="form-control" placeholder="Nationality" name="nationality" required>
                   </div>
                   <div class="input-group" style="margin-bottom: 20px;">
                     <div class="input-group-prepend">
@@ -141,7 +141,7 @@
                           <i class="material-icons">info</i>
                         </span>
                     </div>
-                        <textarea class="form-control" placeholder="More Information about the User" name="info"></textarea>
+                        <textarea class="form-control" placeholder="More Information about the User" name="info" required></textarea>
                   </div>
 
                  <div class="input-group" style="margin-bottom: 20px;">
@@ -150,7 +150,10 @@
                           <i class="material-icons">face</i>
                         </span>
                     </div>
-                        <input type="file" name="">
+                    <div class="input-group">
+                    <label for="pp" class="form-control">Upload Profile Picture</label>
+                        <input type="file" name="file" class="form-control" id="pp" accept="image/*" onchange="ValidateimageInput(this);" required>
+                        </div>
                   </div>
                   <button type="submit" class="btn btn-success">Submit</button>
                 </form>

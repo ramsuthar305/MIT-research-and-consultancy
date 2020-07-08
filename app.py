@@ -18,6 +18,7 @@ app.register_blueprint(forum, url_prefix='/forum')
 
 if __name__ == '__main__':
     app.run(debug=True)
+    
 
 
 

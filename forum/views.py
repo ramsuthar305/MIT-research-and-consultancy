@@ -25,9 +25,9 @@ def page_not_found(error):
 def new_post():
     if request.method == "POST":
         print("inside the post")
-        data_received=request.get_data()
-        data_received=data_received.decode("utf-8")
-        data_received=json.loads(data_received)
+        data_received = request.get_data()
+        data_received = data_received.decode("utf-8")
+        data_received = json.loads(data_received)
         print(type(data_received))
         title = data_received["title"].capitalize()
         category = data_received["category"]
@@ -45,13 +45,13 @@ def new_post():
         data['downvotes'] = []
         data['reports'] = []
         result = forum_obj.new_post(data)
-        return_data={}
-        if result!=False:
-            return_data['status']=True
-            return_data['data']=result
+        return_data = {}
+        if result != False:
+            return_data['status'] = True
+            return_data['data'] = result
         else:
-            return_data['status']=False
-            return_data['data']=None
+            return_data['status'] = False
+            return_data['data'] = None
         print("this is result: ", return_data)
         return dumps(return_data)
 
@@ -187,6 +187,7 @@ def new_answer_downvote():
         print("this is result: ", result)
         return dumps(result)
 
+
 @forum.route('/delete_post', methods=["GET", "POST"])
 def delete_post():
     post_id = "5eee2e3ecfd6bc8710d6df93"
@@ -213,7 +214,38 @@ def delete_comment():
     print("this is result: ", result)
     return dumps(result)
 
+
+@forum.route('/read_data', methods=['GET', 'POST'])
+def read_data():
+    data_received = request.get_data()
+    data_received = data_received.decode("utf-8")
+    data_received = json.loads(data_received)
+    print('\n\n', data_received)
+    return_data = {}
+    next_page_index = int(data_received['index'])
+    category = data_received['department']
+    department_data = forum_obj.get_category_data(
+        next_page_index*10, 10, category)
+    return_data['status'] = True
+    return_data['data'] = department_data['data']
+    print(return_data)
+    return dumps(return_data)
+
+
+@forum.route('/fetch_search_data', methods=['GET', 'POST'])
+def fetch_search_data():
+    try:
+        data_received = request.get_data()
+        data_received = data_received.decode("utf-8")
+        data_received = json.loads(data_received)
+        posts=forum_obj.get_search_data(data_received['text'])
+        return dumps(posts)
+    except Exception as error:
+        print(' In the views exception: ',error)
+        return []
+
+
 @forum.route('/')
 def index():
     print('called')
-    return render_template('forum/home.html',posts=forum_obj.get_all_posts())
+    return render_template('forum/home.html', posts=forum_obj.get_all_posts(), departments=forum_obj.get_departments())

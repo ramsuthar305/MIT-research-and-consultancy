@@ -8,8 +8,10 @@ from datetime import datetime, date
 #custom imports
 from app import *
 from .models import *
+import itertools
 
 user_object = Users()
+resource_object = Eresources()
 portal = Blueprint("portal", __name__, template_folder='../template', static_folder='../static',
                    static_url_path='../static')
 
@@ -24,7 +26,7 @@ def page_not_found(error):
 @portal.route('/')
 def index():
     print('called')
-    return render_template('portal/home.html')
+    return render_template('portal/home.html',publications=resource_object.get_data())
 
 
 @portal.route('/research_supervisors')
@@ -63,6 +65,7 @@ def search():
 
 '''
 
+<<<<<<< HEAD
 @portal.route('/search', methods = ['GET', 'POST'])
 def search():
     
@@ -84,11 +87,22 @@ def search():
         
     
     
+=======
+@portal.route('/developers')
+def developers():
+    try:
+        return render_template('portal/developers.html')
+    except Exception as error:
+        print(error)
+        return redirect(url_for('portal.index'))
+
+>>>>>>> 9b688b2c7915e1d26963d62d2522f585170fa73d
     
 
 
-@portal.route('/profile')
+@portal.route('/profile',methods=['POST','GET'])
 def profile():
+<<<<<<< HEAD
     exdata = Extract_Data()
     user = exdata.get_researcher()
     sub = Submissions()
@@ -102,6 +116,162 @@ def profile():
     resource1 = st.fetch_resource()
     resource2 = st.fetch_resource()
     return render_template('portal/userprofile.html',user=user,quests=quests,answers=answers,qidlist=qidlist,resource=resource,resource1=resource1,resource2=resource2)
+=======
+    try:
+        if session['logged_in']==True:
+            exdata = Extract_Data()
+            user = exdata.get_researcher()
+            fuser = ""
+            if session['user_type']=="Research Scholar":
+                sub = Submissions()
+                st = Student_Resources()
+                quests=sub.get_all_questions()
+                quests1 = []
+                for i in quests:
+                    quests1.append(i)
+                answers=sub.get_questions_answered_by_user()
+                qidlist=[]
+                for i in answers:
+                	qidlist.append(i['qid'])
+                resource = st.fetch_resource()
+                resource1 = st.fetch_resource()
+                resource2 = st.fetch_resource()
+                c = Collaborations()
+                cdata = list(c.fetch_col_researcher())
+                if len(cdata)>0:
+                    pass
+                else:
+                    cdata = []
+                return render_template('portal/userprofile.html',user=user,quests=quests1,answers=answers,qidlist=qidlist,resource=resource,resource1=resource1,resource2=resource2,fuser=fuser,cdata=cdata)
+            if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor":
+                if request.method == "POST":
+                    email2 = request.form.get('email2')
+                    print(email2)
+                    fuser=exdata.get_users_by_id(email2,"Research Scholar")
+                    if fuser.count()>0:
+                        fuser = fuser[0]
+                    else:
+                        fuser = ""
+                c = Collaborations()
+                cdata = list(c.fetch_col_supervisor())
+                if len(cdata)>0:
+                    pass
+                else:
+                    cdata = ""
+                return render_template('portal/userprofile.html', user = user, fuser=fuser, cdata = cdata)
+            if session['user_type']=="Special User":
+                return render_template('portal/userprofile.html', user = user)
+        else:
+            return redirect(url_for('portal.signin'))
+    except Exception as error:
+        print(error)
+        return redirect(url_for('portal.signin'))
+
+@portal.route('/add_collab',methods=['POST','GET'])
+def add_collab():
+    try:
+        if session['logged_in']==True:
+            exdata = Extract_Data()
+            if session['user_type'] == "Research Supervisor" or session['user_type'] == "Research Co-Supervisor":
+                if request.method == "POST":
+                    print("add collab")
+                    email2 = request.form.get('email2')
+                    batch2 = request.form.get('batch2')
+                    dept2 = request.form.get('dept2')
+                    fname = request.form.get('fname')
+                    lname = request.form.get('lname')
+                    ctitle = request.form.get('ctitle')
+                    f = request.files['file']
+                    filename = f.filename
+                    if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + "collaborations")):
+                        os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + "collaborations"))
+                    path = os.path.join(app.config['UPLOAD_FOLDER']+"collaborations",filename)
+                    main_path = path.split("static/")[1]
+                    main_path = main_path.split("\\")[0]
+                    main_path = main_path + "/" + filename
+                    print(main_path)
+                    f.save(path)
+                    L = []
+                    cd = {
+                    'ctitle':request.form.get('ctitle'),
+                    'cdescription':request.form.get('cdesc'),
+                    'pdf_name':filename,
+                    'pdf_link':main_path,
+                    }
+                    L.append(cd)
+                    meuser = exdata.get_researcher()
+                    collab ={
+                    "cid":session['email']+email2+main_path+ctitle,
+                    "supervisor_name":meuser['first_name'] + " " + meuser['last_name'],
+                    "supervisor_email":meuser['email'],
+                    "supervisor_dept":meuser['department'],
+                    "student_name":fname + " " + lname,
+                    "student_email":email2,
+                    "student_batch":batch2,
+                    "student_dept":dept2,
+                    "collabs":L
+                    }
+                    c = Collaborations()
+                    stat = c.add_col(collab)
+                    flash("Collab Added Successfully")
+                return redirect(url_for('portal.profile'))
+        else:
+            return redirect(url_for('portal.signin'))
+    except Exception as error:
+        print(error)
+        return redirect(url_for('portal.signin'))
+
+@portal.route('/delete_collab',methods=['POST','GET'])
+def delete_collab():
+    try:
+        if session['logged_in']==True:
+            exdata = Extract_Data()
+            if session['user_type'] == "Research Supervisor" or session['user_type'] == "Research Co-Supervisor":
+                if request.method=="POST":
+                    cid = request.form.get('cid')
+                    print(cid)
+                    c = Collaborations()
+                    stat = c.delete_col(cid)
+                    if stat:
+                        flash("Collaboration deleted successfully")
+                return redirect(url_for('portal.profile'))
+        else:
+            return redirect(url_for('portal.signin'))
+    except Exception as error:
+        print(error)
+        return redirect(url_for('portal.signin'))
+
+@portal.route('/changepassword', methods=['GET','POST'])
+def changepassword():
+    try:
+        if session['logged_in']==True:
+            exdata = Extract_Data()
+            user = exdata.get_researcher()
+            u = Users()
+            if request.method=="POST":
+                old_pass = request.form.get("old_pass")
+                newpass1 = request.form.get("newpass1")
+                newpass2 = request.form.get("newpass2")
+                print(old_pass,newpass1,newpass2)
+                stat = u.check_old_pass(old_pass)
+                if stat:
+                    if newpass1==newpass2:
+                        u.update_pass(newpass1)
+                        flash("Password Changed Successfully")
+                        return redirect(url_for('portal.profile'))
+                    else:
+                        flash("New Password and Confirm Password do not match")
+                else:
+                    flash("Old Password is Incorrect")
+
+            return render_template('portal/reset_password.html',user=user)
+        else:
+            return redirect(url_for('portal.index'))
+    except Exception as error:
+        print(error)
+        return redirect(url_for('portal.index'))
+
+>>>>>>> 9b688b2c7915e1d26963d62d2522f585170fa73d
 
 @portal.route('/signup')
 def signup():
@@ -118,10 +288,35 @@ def signup():
 def registration():
     exdata = Extract_Data()
     active=exdata.get_active_batch()
+    bpath = "temp"
+    tl = []
     try:
         if request.method == 'POST':
-            #x = request.get_json(force=True)
             email= request.form.get('email')
+            f = request.files['file']
+            filename = f.filename
+            bpath = str(email)
+            if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + active+ "/" + bpath)):
+                os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + active+ "/" + bpath))
+            path = os.path.join(app.config['UPLOAD_FOLDER']+active+ "/" + bpath,filename)
+            main_path = path.split("static/")[1]
+            main_path = main_path.split("\\")[0]
+            main_path = main_path + "/" + filename
+            print(main_path)
+            f.save(path)
+            #x = request.get_json(force=True)
+            semis = {
+            "sem1":"0",
+            "sem2":"0",
+            "sem3":"0",
+            "sem4":"0",
+            "sem5":"0",
+            "sem6":"0",
+            "next":"1",
+            "prev":"none",
+            }
+            tl.append(semis)
+            
             user_type="Research Scholar"
             user={
                 "_id":email,
@@ -129,37 +324,34 @@ def registration():
                 "email":email,
                 "first_name":request.form.get('first_name'),
                 "last_name":request.form.get('last_name'),
-                "password":"123",
+                "password":"mitdefault",
                 "phone":request.form.get('phone'),
                 "dob":request.form.get('dob'),
                 "department":request.form.get('department'),
                 "address":request.form.get('address'),
                 "gender":request.form.get('gender'),
                 "nationality":request.form.get('nationality'),
-                "profile_picture":None,
                 "twitter":request.form.get('twitter'),
                 "skype":request.form.get('skype'),
                 "facebook":request.form.get('facebook'),
                 "github":request.form.get('repos'),
                 "supervisor":request.form.get('supervisor'),
                 "cosupervisor":request.form.get('cosupervisor'),
+                "profile_pic":filename,
+                "profile_pic_link":main_path,
+                "created_on":str(datetime.now()).split('.')[0],
                 "status":"0",
                 "user_type":user_type,
-                "semesters":[]
+                "semesters":tl
             }
-            print("this is user: ",user)
-            registration_status = user_object.save_user(user,user_type)
-            if registration_status == True:
-                flash("Registration Successful. You will receive an email after your account is activated")
-                return redirect(url_for("portal.signup"))
-            else:
-                flash(registration_status)
-                return redirect('portal.signup')
+            registration_status = user_object.temp_user(user)
+            flash("Registration Successful. You will receive an email after your account is activated")
+            return redirect(url_for("portal.signup"))
         else:
-            return redirect('portal.signup')
+            return redirect(url_for('portal.signup'))
     except Exception as error:
         print(error)
-        return render_template('portal.signup')
+        return render_template(url_for('portal.signup'))
 
 
 @portal.route('/signin', methods = ['GET', 'POST'])
@@ -194,37 +386,64 @@ def logout():
         print(error)
         return redirect(url_for('portal.signin'))
 
+@portal.route('/newuser_resetpass', methods=['GET','POST'])
+def newuser_resetpass():
+    try:
+        if request.method=="POST":
+            username = request.form.get('username')
+            newpass1 = request.form.get('newpass1')
+            newpass2 = request.form.get('newpass2')
+            print(username,newpass1,newpass2)
+            u = Users()
+            stat = u.check_email(username)
+            if stat:
+                if newpass1 == newpass2:
+                    u.set_pass(stat,username,newpass1)
+                    flash("Password Reset Successfull")
+                    return render_template('portal/newuser_resetpass.html', success="1")
+                else:
+                    flash("Both Passwords do not match")
+                    return render_template('portal/newuser_resetpass.html', success="0")
+            else:
+                flash("Email Not Found")
+                return render_template('portal/newuser_resetpass.html', success="0")
+
+        return render_template('portal/newuser_resetpass.html', success="0")
+    except Exception as error:
+        print(error)
+        return redirect(url_for('portal.signin'))
+
+
 
 @portal.route('/supervisors_panel', methods=['POST','GET'])
 def supervisors_panel():
-    exdata = Extract_Data()
-    batches=exdata.get_batches()
-    sub = Submissions()
-    st = Student_Resources()
-    quests = sub.get_questions_by_author(session['id'])
-    restbatches = []
-    for i in range(0,batches.count()):
-        restbatches.append(batches[i])
-    restsub = []
-    for i in range(0,quests.count()):
-        restsub.append(quests[i])
-    qanswered = sub.get_questions_answered()
-    qidlist=[]
-    for i in qanswered:
-    	qidlist.append(i['qid'])
-    print(qidlist)
-
-    verify_resource = st.fetch_resources_by_guide()
-    verified_resource = st.fetch_resources_by_guide()
-
     try:
-        if session['logged_in']==True:
+        if session['logged_in']==True and session['user_type']=='Research Supervisor' or session['user_type']=='Research Co-Supervisor':
+            exdata = Extract_Data()
+            batches=exdata.get_batches()
+            sub = Submissions()
+            st = Student_Resources()
+            quests = sub.get_questions_by_author(session['id'])
+            restbatches = []
+            for i in range(0,batches.count()):
+                restbatches.append(batches[i])
+            restsub = []
+            for i in range(0,quests.count()):
+                restsub.append(quests[i])
+            qanswered = sub.get_questions_answered()
+            qidlist=[]
+            for i in qanswered:
+                qidlist.append(i['qid'])
+
+            verify_resource = st.fetch_resources_by_guide()
+            verified_resource = st.fetch_resources_by_guide()
+
             return render_template('portal/supervisors_panel.html',restbatches=restbatches,quests=quests,batches=batches, restsub=restsub,qidlist=qidlist,verify_resource=verify_resource,verified_resource=verified_resource)
         else:
             return redirect(url_for("portal.index"))
     except Exception as error:
         print(error)
-        return render_template('portal/index.html')
+        return redirect(url_for('portal.signin'))
 
 
 
@@ -237,12 +456,15 @@ def submission_request():
     exdata = Extract_Data()
     batches=exdata.get_batches()
     sub = Submissions()
+    spath = "submissions" +"/"+ session['id']
     try:
         if request.method == 'POST':
             
             f = request.files['file']
             filename = f.filename
-            path = os.path.join(app.config['UPLOAD_FOLDER']+"submissions",filename)
+            if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + spath)):
+                os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + spath))
+            path = os.path.join(app.config['UPLOAD_FOLDER']+spath,filename)
             main_path = path.split("static/")[1]
             main_path = main_path.split("\\")[0]
             main_path = main_path + "/" + filename
@@ -280,41 +502,42 @@ def submission_request():
 
 @portal.route('/submission_answers', methods=['POST','GET'])
 def submission_answers():
-	sub = Submissions()
-	if request.method == 'POST':
-		f = request.files['file']
-		filename = f.filename
-		if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + "submissions")):
-			os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + "submissions"))
-		path = os.path.join(app.config['UPLOAD_FOLDER']+"submissions",filename)
-		main_path = path.split("static/")[1]
-		main_path = main_path.split("\\")[0]
-		main_path = main_path + "/" + filename
-		print(main_path)
-		f.save(path)
-		check = request.form.get('linker')
-		print(check)
-		q = sub.get_question_by_id(check)
-		sol = q['solution']
-		answer = {
-		"name":session["name"],
-		"email":session["email"],
-		"batch":session["batch"],
-		"department":session["department"],
-		"question_id":check,
-		"pdf_link":main_path,
-		"pdf_name":filename,
-		"grades":"None",
-		"status":"0"
-		}
-		up = q['answers']
-		up = str(int(up)+1)
-		sol.append(answer)
-		print(sol)
-		status = sub.update_subs(check,sol,up)
-		flash("Assignment Submitted Successfully")
-		return redirect(url_for('portal.profile'))
-	return redirect(url_for('portal.profile'))
+    sub = Submissions()
+    spath = str(session['batch'] + "/" + session['id'])
+    if request.method == 'POST':
+        f = request.files['file']
+        filename = f.filename
+        if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + spath)):
+        	os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + spath))
+        path = os.path.join(app.config['UPLOAD_FOLDER']+spath,filename)
+        main_path = path.split("static/")[1]
+        main_path = main_path.split("\\")[0]
+        main_path = main_path + "/" + filename
+        print(main_path)
+        f.save(path)
+        check = request.form.get('linker')
+        print(check)
+        q = sub.get_question_by_id(check)
+        sol = q['solution']
+        answer = {
+        "name":session["name"],
+        "email":session["email"],
+        "batch":session["batch"],
+        "department":session["department"],
+        "question_id":check,
+        "pdf_link":main_path,
+        "pdf_name":filename,
+        "grades":"None",
+        "status":"0"
+        }
+        up = q['answers']
+        up = str(int(up)+1)
+        sol.append(answer)
+        print(sol)
+        status = sub.update_subs(check,sol,up)
+        flash("Assignment Submitted Successfully")
+        return redirect(url_for('portal.profile'))
+    return redirect(url_for('portal.profile'))
 
 @portal.route('/evalsubmission', methods=['POST','GET'])
 def evalsubmission():
@@ -327,7 +550,6 @@ def evalsubmission():
 		email = request.form.get('email')
 		qid = request.form.get('qid')
 		grades = request.form.get('grades')
-		print(grades)
 		if grades:
 			pass
 		else:
@@ -399,10 +621,27 @@ def evalresource():
 		rid = request.form.get('rid')
 		if request.form['submitbtn']=="verify":
 			print("accept")
-			print(rid)
 			data = st.update_resource_by_id(rid,"1")
 		if request.form['submitbtn']=="reject":
 			print("reject")
 			data = st.update_resource_by_id(rid,"2")
 
 	return redirect(url_for('portal.supervisors_panel'))
+
+@portal.route('/progress', methods=['POST','GET'])
+def progress():
+    try:
+        if session['logged_in']==True:
+            print('in here')
+            ex = Extract_Data()
+            result = ex.get_researcher()
+            sems = result['semesters'][0]
+            print(sems)
+            current = sems['next']
+            print(current)
+            return render_template('portal/progress.html',current=current,sems=sems)
+        else:
+            return redirect(url_for("portal.signin"))
+    except Exception as error:
+        print(error)
+        return redirect(url_for('portal.signin'))

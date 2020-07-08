@@ -18,17 +18,173 @@
             {% endwith %}
             <div class="row">
                 <div class="col-md-8 ml-auto mr-auto text-center">
-                    <h1 class="title"> MIT Research and consultancy portal skeleton!</h1>
-                    <h4>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer varius nisi in felis dignissim
-                        egestas. Phasellus a sapien porttitor, fringilla ante nec, sollicitudin massa. Nulla rutrum
-                        libero sed lorem iaculis, vel bibendum metus iaculis. Donec quam orci, aliquam vitae velit ut,
-                        pulvinar commodo urna. Aenean pharetra massa mi, a faucibus ante dictum sed. Class aptent taciti
-                        sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut sed mauris consequat,
-                        aliquam dui a, mattis lacus.</h4>
+                    <h1 class="title">MIT Art Design and Technology University</h1>
+                    <h4>MIT Art Design and Technology University (MIT ADT University) is a place where creativity and
+                        innovation coexist. MIT ADT has been established under the flagship of the prestigious MIT Group
+                        of Institutions. It is a UGC recognized multidisciplinary University and has been bestowed with
+                        the ‘Best Campus Award’ by ASSOCHAM. MIT ADT spans across a vast green stretch of 125 acres of
+                        land at Vishwaraj Baugh Loni, Kalbhor, Pune.</h4>
                 </div>
 
             </div>
         </div>
     </div>
+    <div class="main main-raised" style="padding-left: 5%;padding-right: 5%;">
+        <h2 class="title text-dark text-center " style="padding-top: 4%; padding-bottom: 2%;">Latest research and
+            publications</h2>
+        <div class="row container-fluid m-auto">
+
+            {% for i in publications %}
+            <div class="col-md-3 m-auto">
+                <div class="card bg-white ">
+                    <div class="card-body">
+                        <h5 class="card-category card-category-social text-primary">
+                            <i class="fa fa-graduation-cap"></i> Engineering
+                        </h5>
+                        <h4 class="card-title text-dark publicationTitle"
+                            style="max-height: 12vh;min-height: 5vh;text-overflow:clip;">
+                            &quot;{{i['title']}}&quot;
+                        </h4>
+                    </div>
+                    <div class="card-footer">
+                        <div class="author text-dark">
+                            <a href="#pablo">
+                                <img src="data:image/jpeg;base64,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"
+                                    alt="..." class="avatar img-raised">
+                                <span class="text-rose">{{i['author']}}</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="row px-4">
+            <div class="col-md-12">
+                <h2 class="title text-dark text-center " style="padding-top: 2%; padding-bottom: 2%;">Overview</h2>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-raised card-carousel">
+                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel"
+                        data-interval="3000">
+                        <ol class="carousel-indicators">
+                            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                            <li data-target="#carouselExampleIndicators" data-slide-to="1" class=""></li>
+                            <li data-target="#carouselExampleIndicators" data-slide-to="2" class=""></li>
+                        </ol>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img class="d-block w-100"
+                                    src="http://www.mituniversity.edu.in/wp-content/uploads/2018/12/mit_home_banner1.jpg"
+                                    alt="First slide">
+
+                            </div>
+                            <div class="carousel-item">
+                                <img class="d-block w-100"
+                                    src="http://www.mituniversity.edu.in/wp-content/uploads/2018/12/mit_home_banner2.jpg"
+                                    alt="Second slide">
+
+                            </div>
+                            <div class="carousel-item">
+                                <img class="d-block w-100"
+                                    src="http://www.mituniversity.edu.in/wp-content/uploads/2018/12/mit_home_banner3.jpg"
+                                    alt="Third slide">
+
+                            </div>
+                        </div>
+                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button"
+                            data-slide="prev">
+                            <i class="material-icons">keyboard_arrow_left</i>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button"
+                            data-slide="next">
+                            <i class="material-icons">keyboard_arrow_right</i>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3 class="title text-primary text-center">Why to choose MIT ADT University</h3>
+                <div class="so-widget-sow-editor so-widget-sow-editor-base">
+                    <div class="siteorigin-widget-tinymce textwidget">
+                        <ul class="icon-list">
+                            <li><img src="http://www.mituniversity.edu.in/wp-content/uploads/2018/09/Academic-Excellence-icon.png"
+                                    alt="" class="alignnone size-full wp-image-189" width="25" height="25"> Best Campus
+                            </li>
+                            <li><img src="http://www.mituniversity.edu.in/wp-content/uploads/2018/09/Links-with-Industry-icon.png"
+                                    alt="" class="alignnone size-full wp-image-194" width="25" height="25"> Recognitions
+                                &amp; Accreditations</li>
+                            <li><img src="http://www.mituniversity.edu.in/wp-content/uploads/2018/09/Association-with-MIT-icon.png"
+                                    alt="" class="alignnone size-full wp-image-190" width="25" height="25"> Academic
+                                Excellence</li>
+                            <li><img src="http://www.mituniversity.edu.in/wp-content/uploads/2018/09/Participation-in-Global-Events-icon.png"
+                                    alt="" class="alignnone size-full wp-image-195" width="25" height="25"> Harbinger of
+                                Peace</li>
+                            <li><img src="http://www.mituniversity.edu.in/wp-content/uploads/2018/09/International-Impact-icon.png"
+                                    alt="" class="alignnone size-full wp-image-193" width="25" height="25"> Links with
+                                the Industry</li>
+                            <li><img src="http://www.mituniversity.edu.in/wp-content/uploads/2018/09/Global-Employability.png"
+                                    alt="" class="alignnone size-full wp-image-191" width="25" height="25"> Student
+                                Exchange Opportunity</li>
+                            <li><img src="http://www.mituniversity.edu.in/wp-content/uploads/2018/09/Global-Employability.png"
+                                    alt="" class="alignnone size-full wp-image-196" width="25" height="25"> Global
+                                Employability</li>
+                            <li><img src="http://www.mituniversity.edu.in/wp-content/uploads/2018/09/world-class-icon.png"
+                                    alt="" class="alignnone size-full wp-image-196" width="25" height="25">
+                                International
+                                impact</li>
+                            <li><img src="http://www.mituniversity.edu.in/wp-content/uploads/2018/09/world-class-icon.png"
+                                    alt="" class="alignnone size-full wp-image-196" width="25" height="25"> Campus
+                                Transformation</li>
+                            <li><img src="http://www.mituniversity.edu.in/wp-content/uploads/2018/09/world-class-icon.png"
+                                    alt="" class="alignnone size-full wp-image-196" width="25" height="25"> Startup
+                                &amp;
+                                Entrepreneurship</li>
+                            <li><img src="http://www.mituniversity.edu.in/wp-content/uploads/2018/09/world-class-icon.png"
+                                    alt="" class="alignnone size-full wp-image-196" width="25" height="25">
+                                Participation
+                                in Global Events</li>
+                            <li><img src="http://www.mituniversity.edu.in/wp-content/uploads/2018/09/Graduate-Success-icon.png"
+                                    alt="" class="alignnone size-full wp-image-192" width="25" height="25"> Compulsory
+                                University Core Credits</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
 {% endblock %}
+
+{% block javascript %}
+<script>
+    $(document).ready(function () {
+        var a = document.getElementsByClassName('publicationTitle')
+        for (var i = 0; i < a.length; i++) {
+            if (a[i].innerHTML.length > 40) {
+                var newHtml = a[i].innerHTML.slice(0, 130)
+                $(a[i]).html(newHtml + '..."')
+            }
+        }
+        document.addEventListener('scroll', function (event) {
+            top = window.innerHeight;
+            console.log(top.scrollY)
+            if (top.scrollY > 400) {
+                console.log('here')
+                $("#headerTitle").removeClass('text-white')
+                $("#headerTitle").addClass('text-primary')
+            } else {
+                $("#headerTitle").removeClass('text-primary')
+                $("#headerTitle").addClass('text-white')
+
+            }
+
+        }, true /*Capture event*/);
+
+    })
+</script>
+{% endblock %}
+
