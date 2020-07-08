@@ -3,12 +3,14 @@ from functools import wraps
 from flask import session
 import hashlib
 import json
+from bson.json_util import dumps
 from datetime import datetime, date
 #custom imports
 from app import *
 from .models import *
 import itertools
 
+resource_obj = Resource_model()
 user_object = Users()
 resource_object = Eresources()
 portal = Blueprint("portal", __name__, template_folder='../template', static_folder='../static',
@@ -28,11 +30,63 @@ def index():
     return render_template('portal/home.html',publications=resource_object.get_data())
 
 
+@portal.route('/research_supervisors')
+def research_supervisors():
+    print('called')
+    return render_template('portal/research_supervisors.html')
+
+
 @portal.route('/publication')
 def publication():
+    exdata = Extract_Data()
+    resource = exdata.get_resource()
     
-    return render_template('portal/publication.html')
+    
+    return render_template('portal/publication.html',resource=resource)
 
+'''
+@portal.route('/search')
+def search():
+    exdata = Extract_Data()
+    try:
+        if request.method == 'GET':
+            search_text = request.form.get('search_text') 
+            print("**********************************************************")
+            print(search_text)
+            resource = exdata.search(search_text)
+            return render_template('portal/publication.html',resource=resource)
+
+        else:
+            return redirect(url_for('portal.publication.html'))
+    except Exception as error:
+        print(error)
+        return render_template('portal.publication')
+
+            
+
+'''
+
+@portal.route('/search', methods = ['GET', 'POST'])
+def search():
+    
+    if request.method == 'POST':
+        print("************************************************************")
+        #x = request.get_json(force=True)
+        data_received=request.get_data()
+        data_received=data_received.decode("utf-8")
+        data_received=json.loads(data_received)
+        search_text= data_received['search']
+        print(search_text)
+        resource = mongo.db.resource.find({"$text": {"$search": search_text}})
+        data={}
+        data['resource']=resource
+        return dumps(resource) 
+        
+            
+            
+        
+    
+    
 @portal.route('/developers')
 def developers():
     try:
@@ -46,6 +100,19 @@ def developers():
 
 @portal.route('/profile',methods=['POST','GET'])
 def profile():
+    exdata = Extract_Data()
+    user = exdata.get_researcher()
+    sub = Submissions()
+    st = Student_Resources()
+    quests=sub.get_all_questions()
+    answers=sub.get_questions_answered_by_user()
+    qidlist=[]
+    for i in answers:
+        qidlist.append(i['qid'])
+    resource = st.fetch_resource()
+    resource1 = st.fetch_resource()
+    resource2 = st.fetch_resource()
+    return render_template('portal/userprofile.html',user=user,quests=quests,answers=answers,qidlist=qidlist,resource=resource,resource1=resource1,resource2=resource2)
     try:
         if session['logged_in']==True:
             exdata = Extract_Data()
@@ -374,6 +441,11 @@ def supervisors_panel():
         return redirect(url_for('portal.signin'))
 
 
+
+
+
+
+
 @portal.route('/submission_request', methods=['POST','GET'])
 def submission_request():
     exdata = Extract_Data()
@@ -568,3 +640,18 @@ def progress():
     except Exception as error:
         print(error)
         return redirect(url_for('portal.signin'))
+
+
+@portal.route('/fetch_search_data', methods=['GET', 'POST'])
+def fetch_search_data():
+    try:
+        print("*******************************IN HERE ******************************************************")
+        data_received = request.get_data()
+        data_received = data_received.decode("utf-8")
+        data_received = json.loads(data_received)
+        posts=resource_obj.get_search_data(data_received['text'])
+        print(posts)
+        return dumps(posts)
+    except Exception as error:
+        print(' In the views exception: ',error)
+        return []

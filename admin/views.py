@@ -893,3 +893,41 @@ def view_authorities():
     except Exception as error:
         print(error)
         return render_template('admin/admin_login.html')
+
+
+
+
+
+@admin.route('/add_resource',methods=['POST','GET'])
+def add_resource():
+    try:
+        resource_object = Resource()
+
+        if request.method=="POST":
+            title = request.form.get("title")
+            author = request.form.get("author")
+            resouce_type = request.form.get("resource_type")
+
+            f = request.files['file']
+            filename = f.filename
+            path = os.path.join(app.config['UPLOAD_FOLDER']+"resources",filename)
+            main_path = path.split("static/")[1]
+            print(main_path)
+            f.save(path)
+            
+            data = {
+            "title":title,
+            "author":author,
+            "resource_type":resouce_type,
+            "pdf":main_path,
+            "pdfname":filename
+
+            }
+            registration_status = resource_object.add_resource(data)
+            flash('Resource Added Successfully')
+            return redirect(url_for("admin.add_resource"))
+        else:
+            return render_template('admin/resources.html')
+    except Exception as e:
+        print(e)
+        return render_template('admin/resources.html')

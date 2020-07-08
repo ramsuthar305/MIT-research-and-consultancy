@@ -312,6 +312,31 @@ class Extract_Data:
 			print(error)
 
 
+	def get_resource(self):
+		try:
+			result=mongo.db.resource.find()
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "Something went wrong"
+
+
+	def search(self,search_text):
+		try:
+			result=mongo.db.resource.find({"$text": {"$search": search_text}})
+
+			if result:
+				return result
+			else:
+				return False
+		except Exception as error:
+			print(error)
+			return "Something went wrong"
+
+
 class Submissions:
 	def __init__(self):
 		self.mongo =mongo.db
@@ -548,3 +573,33 @@ class Eresources:
 		except Exception as error:
 			print(error)
 			return "something went wrong"
+
+class Resource_model:
+	def __init__(self):
+		self.mongo = mongo.db
+
+
+	def get_search_data(self, text):
+		try:
+			posts = list(self.mongo.resource.find({"$text": {"$search": text}}))
+			return posts
+		except Exception as error:
+			print('In exception:', error)
+			return []
+
+
+'''
+class Resource_model:
+
+
+
+	    def get_search_data(self, text):
+			try:
+				posts = list(self.mongo.resource.find({"$text": {"$search": text}}))
+				return posts
+			except Exception as error:
+				print('In exception:', error)
+				return []
+'''
+		
+		
