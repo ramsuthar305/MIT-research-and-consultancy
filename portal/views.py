@@ -10,6 +10,7 @@ from app import *
 from .models import *
 import itertools
 
+resource_obj = Resource_model()
 user_object = Users()
 resource_object = Eresources()
 portal = Blueprint("portal", __name__, template_folder='../template', static_folder='../static',
@@ -65,7 +66,6 @@ def search():
 
 '''
 
-<<<<<<< HEAD
 @portal.route('/search', methods = ['GET', 'POST'])
 def search():
     
@@ -87,7 +87,6 @@ def search():
         
     
     
-=======
 @portal.route('/developers')
 def developers():
     try:
@@ -96,13 +95,11 @@ def developers():
         print(error)
         return redirect(url_for('portal.index'))
 
->>>>>>> 9b688b2c7915e1d26963d62d2522f585170fa73d
     
 
 
 @portal.route('/profile',methods=['POST','GET'])
 def profile():
-<<<<<<< HEAD
     exdata = Extract_Data()
     user = exdata.get_researcher()
     sub = Submissions()
@@ -116,7 +113,6 @@ def profile():
     resource1 = st.fetch_resource()
     resource2 = st.fetch_resource()
     return render_template('portal/userprofile.html',user=user,quests=quests,answers=answers,qidlist=qidlist,resource=resource,resource1=resource1,resource2=resource2)
-=======
     try:
         if session['logged_in']==True:
             exdata = Extract_Data()
@@ -271,7 +267,6 @@ def changepassword():
         print(error)
         return redirect(url_for('portal.index'))
 
->>>>>>> 9b688b2c7915e1d26963d62d2522f585170fa73d
 
 @portal.route('/signup')
 def signup():
@@ -645,3 +640,18 @@ def progress():
     except Exception as error:
         print(error)
         return redirect(url_for('portal.signin'))
+
+
+@portal.route('/fetch_search_data', methods=['GET', 'POST'])
+def fetch_search_data():
+    try:
+        print("*******************************IN HERE ******************************************************")
+        data_received = request.get_data()
+        data_received = data_received.decode("utf-8")
+        data_received = json.loads(data_received)
+        posts=resource_obj.get_search_data(data_received['text'])
+        print(posts)
+        return dumps(posts)
+    except Exception as error:
+        print(' In the views exception: ',error)
+        return []

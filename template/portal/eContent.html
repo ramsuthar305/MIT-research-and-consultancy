@@ -14,7 +14,7 @@
           </tr>
         </thead>
         <tbody>
-          {% for i in resource %}
+          {% for post in resource %}
           <tr>
             <td>
               <div class="img-container">
@@ -22,9 +22,9 @@
               </div>
             </td>
             <td class="td-name">
-              <a href="#jacket">{{i.title }}</a>
+              <a href="#jacket">{{post.title }}</a>
               <br />
-              <small>by {{ i.author }}</small>
+              <small>by {{ post.author }}</small>
             </td>
 
             <td class="td-actions">

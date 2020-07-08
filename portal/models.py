@@ -573,3 +573,33 @@ class Eresources:
 		except Exception as error:
 			print(error)
 			return "something went wrong"
+
+class Resource_model:
+	def __init__(self):
+		self.mongo = mongo.db
+
+
+	def get_search_data(self, text):
+		try:
+			posts = list(self.mongo.resource.find({"$text": {"$search": text}}))
+			return posts
+		except Exception as error:
+			print('In exception:', error)
+			return []
+
+
+'''
+class Resource_model:
+
+
+
+	    def get_search_data(self, text):
+			try:
+				posts = list(self.mongo.resource.find({"$text": {"$search": text}}))
+				return posts
+			except Exception as error:
+				print('In exception:', error)
+				return []
+'''
+		
+		

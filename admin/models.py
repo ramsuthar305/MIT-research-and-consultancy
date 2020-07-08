@@ -404,7 +404,6 @@ class UserEdits:
 		except Exception as e:
 			raise e
 
-<<<<<<< HEAD
 	def get_profiles(self,job_id):
 		profiles=mongo.db.shortlist.find({"job_id":job_id})
 		users=Users()
@@ -435,7 +434,6 @@ class Resource:
 			return "something went wrong"
 
 	
-=======
 	def update_prof(self,usertype,data,email):
 		try:
 			if usertype == "Research Scholar":
@@ -453,4 +451,3 @@ class Resource:
 			return True
 		except Exception as error:
 			print(error)
->>>>>>> 9b688b2c7915e1d26963d62d2522f585170fa73d
