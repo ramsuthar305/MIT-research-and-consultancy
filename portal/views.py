@@ -462,6 +462,18 @@ def submission_answers():
         return redirect(url_for('portal.profile'))
     return redirect(url_for('portal.profile'))
 
+@portal.route('/tempsubmission', methods=['POST','GET'])
+def tempsubmission():
+	if request.method=="POST":
+		print("inside the post")
+		files = request.files['file']
+		print(files.filename)
+		data_received = request.get_data()
+		data_received = data_received.decode("utf-8")
+		data_received = json.loads(data_received)
+		print(type(data_received))
+		return dumps(return_data)
+
 @portal.route('/evalsubmission', methods=['POST','GET'])
 def evalsubmission():
 	sub = Submissions()
