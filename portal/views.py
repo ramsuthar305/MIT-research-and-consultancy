@@ -3,6 +3,7 @@ from functools import wraps
 from flask import session
 import hashlib
 import json
+from bson.json_util import dumps
 from datetime import datetime, date
 #custom imports
 from app import *
@@ -64,21 +65,23 @@ def search():
 
 @portal.route('/search', methods = ['GET', 'POST'])
 def search():
-    try:
-        if request.method == 'POST':
-            print("************************************************************")
-            #x = request.get_json(force=True)
-            search_text= request.form.get('search')
-            print(search_text)
-            resource = mongo.db.resource.find({"$text": {"$search": search_text}})
-            return render_template('portal/publication.html',resource=resource) 
+    
+    if request.method == 'POST':
+        print("************************************************************")
+        #x = request.get_json(force=True)
+        data_received=request.get_data()
+        data_received=data_received.decode("utf-8")
+        data_received=json.loads(data_received)
+        search_text= data_received['search']
+        print(search_text)
+        resource = mongo.db.resource.find({"$text": {"$search": search_text}})
+        data={}
+        data['resource']=resource
+        return dumps(resource) 
+        
             
             
-        else:
-            return redirect(url_for('portal.publication'))
-    except Exception as error:
-        print(error)
-        return redirect(url_for('portal.publication'))
+        
     
     
     
@@ -94,7 +97,7 @@ def profile():
     answers=sub.get_questions_answered_by_user()
     qidlist=[]
     for i in answers:
-    	qidlist.append(i['qid'])
+        qidlist.append(i['qid'])
     resource = st.fetch_resource()
     resource1 = st.fetch_resource()
     resource2 = st.fetch_resource()
