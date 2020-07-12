@@ -16,34 +16,35 @@
         <div class="collapse navbar-collapse" id="navigation-example2">
             <ul class="navbar-nav navbar-center ml-auto">
                 <li class="nav-item">
-                    <a href="{{url_for('portal.index')}}" class="nav-link text-dark">
+                    <a href="{{url_for('portal.index')}}" class="nav-link">
                         Home
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{url_for('forum.index')}}" class="nav-link text-dark">
+                    <a href="{{url_for('forum.index')}}" class="nav-link">
                         Forum
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{url_for('portal.publication')}}" class="nav-link text-dark">
+                    <a href="{{url_for('portal.publication')}}" class="nav-link">
                         E-resources
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a href="{{url_for('portal.research_supervisors')}}" class="nav-link">
-                        Research Supervisors
-                    </a>
-                </li>
+                
                 {% if session['logged_in'] %}
                 {% if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
                 <li class="nav-item">
-                    <a href="{{url_for('portal.supervisors_panel')}}" class="nav-link text-dark">
+                    <a href="{{url_for('portal.supervisors_panel')}}" class="nav-link">
                         Supervisors Panel
                     </a>
                 </li>
                 {% endif %}
                 {% if session['user_type']=="Research Scholar" or session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" or session['user_type']=="Special User" %}
+                <li class="nav-item">
+                    <a href="{{url_for('portal.research_supervisors')}}" class="nav-link">
+                        Research Supervisors
+                    </a>
+                </li>
                 <li class="nav-item">
                     <b><a href="{{url_for('portal.profile')}}"  style="cursor: pointer; color: limegreen">
                         <i class="material-icons">account_circle</i>

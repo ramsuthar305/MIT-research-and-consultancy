@@ -578,25 +578,26 @@ def evalsubmission():
 	return redirect(url_for('portal.supervisors_panel'))
 
 
-@portal.route('/student_resource', methods=['POST','GET'])
-def student_resource():
+@portal.route('/pro_resource', methods=['POST','GET'])
+def pro_resource():
 	st = Student_Resources()
-	if request.method=="POST":
+	if request.method == "POST":
 		f = request.files['file']
 		filename = f.filename
-		if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + "studentresources")):
-	 		os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + "studentresources"))
-		path = os.path.join(app.config['UPLOAD_FOLDER']+"studentresources",filename)
+		if not os.path.exists(os.path.join(app.config['UPLOAD_FOLDER'] + "mainresources")):
+	 		os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'] + "mainresources"))
+		path = os.path.join(app.config['UPLOAD_FOLDER']+"mainresources",filename)
 		main_path = path.split("static/")[1]
 		main_path = main_path.split("\\")[0]
 		main_path = main_path + "/" + filename
 		print(main_path)
 		f.save(path)
-		rid = request.form.get('title')+session['name']+filename
+		rid = request.form.get('title')+session['email']+filename
 		data ={
 		"title":request.form.get('title'),
 		"rid":rid,
 		"description":request.form.get('description'),
+		"type":request.form.get('type'),
 		"author":session['name'],
 		"email":session['id'],
 		"supervisor":request.form.get('supervisor'),
@@ -606,8 +607,8 @@ def student_resource():
 		"status":"0",
 		}
 		result=st.add_student_resource(data)
-		flash("Data Successfully Sent for Verification")
-	return redirect(url_for('portal.profile'))
+		print(dumps(data))
+		return dumps(data)
 
 @portal.route('/evalresource', methods=['POST','GET'])
 def evalresource():

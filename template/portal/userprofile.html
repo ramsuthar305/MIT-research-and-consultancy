@@ -392,7 +392,7 @@
                 <h3 style="color: black;">Add Resource</h3>
                 <div class="row">
                   <div class="col-md-6 ml-auto mr-auto">
-                <form action="{{url_for('portal.student_resource')}}" method="POST" enctype = "multipart/form-data">
+                <form id='resource_upload' method="POST" enctype = "multipart/form-data">
                   <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" name="title" class="form-control" id="title" required>
@@ -400,6 +400,15 @@
                   <div class="form-group">
                     <label for="description">Description</label>
                     <textarea name="description" class="form-control" id="description" required></textarea> 
+                  </div>
+                  <div class="form-group">
+                      <select class="form-control" name="type">
+                        <option value="Book">Book</option>
+                        <option value="Paper">Paper</option>
+                        <option value="Journal">Journal</option>
+                        <option value="Seminar Report">Seminar Report</option>
+                        <option value="Event Report">Event Report</option>
+                      </select>
                   </div>
                   
                   
@@ -418,8 +427,8 @@
   </div>
 
   <div class="form-group">
-    <label>Send for Verification</label>
-    <button class="btn btn-success btn-round">Submit</button>
+  
+    <button class="btn btn-success btn-round" type="submit" id="resource_submit">Submit</button>
   </div>
   
 
@@ -432,6 +441,7 @@
 
                 <h3 style="color: black;">My Resources</h3>
 
+
     <div class="card card-nav-tabs">
   <div class="card-header card-header-success">
     Verified
@@ -440,7 +450,7 @@
     <table class="table">
     <thead>
         <tr>
-            <th>Name</th>
+            <th>Type</th>
             <th>Title</th>
             <th>Description</th>
             <th>pdf</th>
@@ -452,7 +462,7 @@
       {% for i in resource %}
       {% if i['status']=='1' and i['email']==session['id'] %}
         <tr style="color: black;">
-            <td>{{ i['author'] }}</td>
+            <td>{{ i['type'] }}</td>
             <td>{{ i['title'] }}</td>
             <td>{{ i['description'] }}</td>
             <td><a href="{{ url_for('portal.static',  filename=i['pdf_link'] ) }}" target="_blank">{{ i['pdf_name'] }}</a></td>
@@ -478,19 +488,19 @@
     <table class="table">
     <thead>
         <tr>
-            <th>Name</th>
+            <th>Type</th>
             <th>Title</th>
             <th>Description</th>
             <th>pdf</th>
             
         </tr>
     </thead>
-    <tbody>
+    <tbody id="newaddedresource">
      
       {% for i in resource1 %}
       {% if i['status']=='0' and i['email']==session['id'] %}
         <tr style="color: black;">
-            <td>{{ i['author'] }}</td>
+            <td>{{ i['type'] }}</td>
             <td>{{ i['title'] }}</td>
             <td>{{ i['description'] }}</td>
             <td><a href="{{ url_for('portal.static',  filename=i['pdf_link'] ) }}" target="_blank">{{ i['pdf_name'] }}</a></td>
@@ -515,7 +525,7 @@
     <table class="table">
     <thead>
         <tr>
-            <th>Name</th>
+            <th>Type</th>
             <th>Title</th>
             <th>Description</th>
             <th>pdf</th>
@@ -527,7 +537,7 @@
       {% for i in resource2 %}
       {% if i['status']=='2' and i['email']==session['id'] %}
         <tr style="color: black;">
-            <td>{{ i['author'] }}</td>
+            <td>{{ i['type'] }}</td>
             <td>{{ i['title'] }}</td>
             <td>{{ i['description'] }}</td>
             <td><a href="{{ url_for('portal.static',  filename=i['pdf_link'] ) }}" target="_blank">{{ i['pdf_name'] }}</a></td>
@@ -621,6 +631,8 @@
                     <label for="cdesc">Description</label>
                     <textarea name="cdesc" class="form-control" id="cdesc" required></textarea>
                   </div>
+
+
 
                  
                    
@@ -737,7 +749,45 @@
 
 {% block javascript %}
 
+<script type="text/javascript">
+  $(function() {
+    $('#resource_submit').click(function() {
+        event.preventDefault();
 
+        var form_data = new FormData($('#resource_upload')[0]);
+        $.ajax({
+            type: 'POST',
+            url: '{{url_for("portal.pro_resource")}}',
+            data: form_data,
+            contentType: false,
+            processData: false,
+            dataType: 'json'
+        }).done(function(response){
+            document.getElementById('resource_upload').reset();
+            
+            //response = JSON.parse(response)
+            //console.log(JSON.stringify(response))
+            
+            
+            var $post = $(`
+                <tr style="color:black;">
+            <td>${ response.type }</td>
+            <td>${ response.title }</td>
+            <td>${ response.description }</td>
+            <td><a href="{ url_for('portal.static',  filename=${ response.pdf_link } ) }" target="_blank">${ response.pdf_name }</a></td>
+               </tr>
+              `);
+            
+            $('#newaddedresource').append($post);
+
+            alert('Resource Added Successfully');
+          
+        }).fail(function(error){
+            alert('Please fill all the form fields');
+        });
+    });
+}); 
+</script>
 
 <script type="text/javascript">
   $(document).ready(function() {

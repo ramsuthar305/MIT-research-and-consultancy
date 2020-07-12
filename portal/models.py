@@ -479,7 +479,7 @@ class Student_Resources:
 
 	def add_student_resource(self,data):
 		try:
-			result=mongo.db.studentresource.insert_one(data)
+			result=mongo.db.mainresource.insert_one(data)
 			if result:
 				return result
 			else:
@@ -490,7 +490,7 @@ class Student_Resources:
 
 	def fetch_resources_by_guide(self):
 		try:
-			result=mongo.db.studentresource.find({"supervisor":session['name']})
+			result=mongo.db.mainresource.find({"supervisor":session['name']})
 			if result:
 				return result
 			else:
@@ -501,7 +501,7 @@ class Student_Resources:
 
 	def fetch_resource(self):
 		try:
-			result=mongo.db.studentresource.find()
+			result=mongo.db.mainresource.find()
 			if result:
 				return result
 			else:
@@ -512,7 +512,7 @@ class Student_Resources:
 
 	def update_resource_by_id(self,rid,temp):
 		try:
-			result=mongo.db.studentresource.update_one({"rid":rid},{"$set":{"status":temp}})
+			result=mongo.db.mainresource.update_one({"rid":rid},{"$set":{"status":temp}})
 			if result:
 				return result
 			else:
