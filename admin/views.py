@@ -211,17 +211,6 @@ def expire_batch():
         print(error)
         return render_template('admin/admin_login.html')
 
-@admin.route('/setpages',methods=['POST','GET'])
-def setpages():
-    try:
-        if session['logged_in']==True:
-            return render_template('admin/setpages.html')
-        else:
-            return redirect(url_for("admin.login"))
-    except Exception as error:
-        print(error)
-        return render_template('admin/admin_login.html')
-
 @admin.route('/approve',methods=['POST','GET'])
 def approve():
     b = Batch()

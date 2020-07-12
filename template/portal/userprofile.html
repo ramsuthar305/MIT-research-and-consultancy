@@ -281,7 +281,7 @@
 
                   <div class="col-md-6">
                     <form method="POST" action="{{url_for('portal.submission_answers')}}" enctype="multipart/form-data">
-      <div class="card">
+      <div class="card" style="min-height: 300px;">
         {% if i['qid'] in qidlist %}
         {% for j in i['solution'] %}
                {% if j['email']==session['email'] and j['status']=="1"  %}

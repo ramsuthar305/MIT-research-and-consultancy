@@ -633,7 +633,7 @@ def evalresource():
 @portal.route('/progress', methods=['POST','GET'])
 def progress():
     try:
-        if session['logged_in']==True:
+        if session['logged_in']==True and session['user_type']=="Research Scholar":
             print('in here')
             ex = Extract_Data()
             result = ex.get_researcher()
@@ -641,9 +641,9 @@ def progress():
             print(sems)
             current = sems['next']
             print(current)
-            return render_template('portal/progress.html',current=current,sems=sems)
+            return render_template('portal/phd_progress.html',current=current,sems=sems)
         else:
-            return redirect(url_for("portal.signin"))
+            return render_template('portal/phd_progress.html', current = [], sems=[])
     except Exception as error:
         print(error)
         return redirect(url_for('portal.signin'))

@@ -30,6 +30,11 @@
                         E-resources
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{url_for('portal.progress')}}" class="nav-link">
+                        PhD Progress
+                    </a>
+                </li>
                 
                 {% if session['logged_in'] %}
                 {% if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
