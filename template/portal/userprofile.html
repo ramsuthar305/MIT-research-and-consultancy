@@ -126,6 +126,8 @@
                     Submissions
                   </a>
                 </li>
+                {% endif %}
+                {% if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" or session['user_type']=="Research Scholar" %}
                 <li class="nav-item">
                   <a class="nav-link" href="#resource" role="tab" data-toggle="tab">
                     <i class="material-icons">bookmarks</i>
@@ -417,7 +419,7 @@
              
              <input type="file" name="file" class="form-control" id="file" accept="application/pdf" onchange="ValidatepdfInput(this);" required>
                  
-
+{% if session['user_type']=="Research Scholar" %}
 <div class="form-group">
     <label for="exampleFormControlSelect1">Select Supervisor/Co-Supervisor</label>
     <select class="form-control"  id="exampleFormControlSelect1" name="supervisor">
@@ -425,6 +427,7 @@
       <option value="{{ user['cosupervisor'] }}">{{ user['cosupervisor'] }}</option>
     </select>
   </div>
+  {% endif %}
 
   <div class="form-group">
   
@@ -441,7 +444,8 @@
 
                 <h3 style="color: black;">My Resources</h3>
 
-
+{% if session['user_type']=="Research Scholar" %}
+                <div class="row">
     <div class="card card-nav-tabs">
   <div class="card-header card-header-success">
     Verified
@@ -477,9 +481,10 @@
 </table>
   </div>
 </div>
+</div>
 
-  </div>
-
+  
+<div class="row">
   <div class="card card-nav-tabs">
   <div class="card-header card-header-warning">
     Pending
@@ -516,7 +521,9 @@
 </div>
 
   </div>
+</div>
 
+<div class="row">
   <div class="card card-nav-tabs">
   <div class="card-header card-header-danger">
     Rejected
@@ -529,7 +536,6 @@
             <th>Title</th>
             <th>Description</th>
             <th>pdf</th>
-            
         </tr>
     </thead>
     <tbody>
@@ -552,9 +558,56 @@
 </table>
   </div>
 </div>
+</div>
 
+{% endif %}
+
+{% if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor" %}
+
+<div class="row">
+  <div class="card card-nav-tabs">
+  <div class="card-header card-header-success">
+    My Resources
+  </div>
+  <div class="card-body" style="overflow-x: auto;">
+    <table class="table">
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>pdf</th>
+        </tr>
+    </thead>
+    <tbody id="newaddedresource1">
+     
+      {% for i in resource %}
+      {% if i['status']=='1' and i['email']==session['id'] %}
+        <tr style="color: black;">
+            <td>{{ i['type'] }}</td>
+            <td>{{ i['title'] }}</td>
+            <td>{{ i['description'] }}</td>
+            <td><a href="{{ url_for('portal.static',  filename=i['pdf_link'] ) }}" target="_blank">{{ i['pdf_name'] }}</a></td>
+            
+        </tr>
+        {% endif %}
+        {% endfor %}
+      
+        
+        
+    </tbody>
+</table>
+  </div>
+</div>
+</div>
+
+{% endif %}
+
+
+</div>
   </div>
               
+
             </div>
 
 
@@ -751,8 +804,8 @@
 
 <script type="text/javascript">
   $(function() {
-    $('#resource_submit').click(function() {
-        event.preventDefault();
+    $('#resource_submit').click(function(e) {
+        e.preventDefault();
 
         var form_data = new FormData($('#resource_upload')[0]);
         $.ajax({
@@ -778,7 +831,14 @@
                </tr>
               `);
             
-            $('#newaddedresource').append($post);
+            if ('{{ session['user_type'] }}' == "Research Scholar"){
+              $('#newaddedresource').append($post);
+            }
+            else{
+              $('#newaddedresource1').append($post);
+            }
+
+            
 
             alert('Resource Added Successfully');
           

@@ -593,6 +593,12 @@ def pro_resource():
 		print(main_path)
 		f.save(path)
 		rid = request.form.get('title')+session['email']+filename
+		if session['user_type'] == "Research Scholar":
+			supervisor = request.form.get('supervisor')
+			status = "0"
+		else:
+			supervisor = "none"
+			status = "1"
 		data ={
 		"title":request.form.get('title'),
 		"rid":rid,
@@ -600,14 +606,13 @@ def pro_resource():
 		"type":request.form.get('type'),
 		"author":session['name'],
 		"email":session['id'],
-		"supervisor":request.form.get('supervisor'),
+		"supervisor":supervisor,
 		"pdf_name":filename,
 		"pdf_link":main_path,
 		"uploaded_on":str(datetime.now()).split('.')[0],
-		"status":"0",
+		"status":status,
 		}
 		result=st.add_student_resource(data)
-		print(dumps(data))
 		return dumps(data)
 
 @portal.route('/evalresource', methods=['POST','GET'])
