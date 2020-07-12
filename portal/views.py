@@ -100,68 +100,69 @@ def developers():
 
 @portal.route('/profile',methods=['POST','GET'])
 def profile():
-    exdata = Extract_Data()
-    user = exdata.get_researcher()
-    sub = Submissions()
-    st = Student_Resources()
-    quests=sub.get_all_questions()
-    answers=sub.get_questions_answered_by_user()
-    qidlist=[]
-    for i in answers:
-        qidlist.append(i['qid'])
-    resource = st.fetch_resource()
-    resource1 = st.fetch_resource()
-    resource2 = st.fetch_resource()
-    return render_template('portal/userprofile.html',user=user,quests=quests,answers=answers,qidlist=qidlist,resource=resource,resource1=resource1,resource2=resource2)
-    try:
-        if session['logged_in']==True:
-            exdata = Extract_Data()
-            user = exdata.get_researcher()
-            fuser = ""
-            if session['user_type']=="Research Scholar":
-                sub = Submissions()
-                st = Student_Resources()
-                quests=sub.get_all_questions()
-                quests1 = []
-                for i in quests:
-                    quests1.append(i)
-                answers=sub.get_questions_answered_by_user()
-                qidlist=[]
-                for i in answers:
-                	qidlist.append(i['qid'])
-                resource = st.fetch_resource()
-                resource1 = st.fetch_resource()
-                resource2 = st.fetch_resource()
-                c = Collaborations()
-                cdata = list(c.fetch_col_researcher())
-                if len(cdata)>0:
-                    pass
-                else:
-                    cdata = []
-                return render_template('portal/userprofile.html',user=user,quests=quests1,answers=answers,qidlist=qidlist,resource=resource,resource1=resource1,resource2=resource2,fuser=fuser,cdata=cdata)
-            if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor":
-                if request.method == "POST":
-                    email2 = request.form.get('email2')
-                    print(email2)
-                    fuser=exdata.get_users_by_id(email2,"Research Scholar")
-                    if fuser.count()>0:
-                        fuser = fuser[0]
-                    else:
-                        fuser = ""
-                c = Collaborations()
-                cdata = list(c.fetch_col_supervisor())
-                if len(cdata)>0:
-                    pass
-                else:
-                    cdata = ""
-                return render_template('portal/userprofile.html', user = user, fuser=fuser, cdata = cdata)
-            if session['user_type']=="Special User":
-                return render_template('portal/userprofile.html', user = user)
-        else:
-            return redirect(url_for('portal.signin'))
-    except Exception as error:
-        print(error)
-        return redirect(url_for('portal.signin'))
+	exdata = Extract_Data()
+	user = exdata.get_researcher()
+	sub = Submissions()
+	st = Student_Resources()
+	quests=sub.get_all_questions()
+	answers=sub.get_questions_answered_by_user()
+	qidlist=[]
+	for i in answers:
+	    qidlist.append(i['qid'])
+	resource = st.fetch_resource()
+	resource1 = st.fetch_resource()
+	resource2 = st.fetch_resource()
+	try:
+		if session['logged_in']==True:
+			exdata = Extract_Data()
+			user = exdata.get_researcher()
+			fuser = ""
+			if session['user_type']=="Research Scholar":
+			    sub = Submissions()
+			    st = Student_Resources()
+			    quests=sub.get_all_questions()
+			    quests1 = []
+			    for i in quests:
+			        quests1.append(i)
+			    answers=sub.get_questions_answered_by_user()
+			    qidlist=[]
+			    for i in answers:
+			    	qidlist.append(i['qid'])
+			    resource = st.fetch_resource()
+			    resource1 = st.fetch_resource()
+			    resource2 = st.fetch_resource()
+			    c = Collaborations()
+			    cdata = list(c.fetch_col_researcher())
+			    if len(cdata)>0:
+			        pass
+			    else:
+			        cdata = []
+			    return render_template('portal/userprofile.html',user=user,quests=quests1,answers=answers,qidlist=qidlist,resource=resource,resource1=resource1,resource2=resource2,fuser=fuser,cdata=cdata)
+			if session['user_type']=="Research Supervisor" or session['user_type']=="Research Co-Supervisor":
+				if request.method == "POST":
+					print("In collab")
+					email2 = request.form.get('email2')
+					print(email2)
+					fuser=exdata.get_users_by_id(email2,"Research Scholar")
+					if fuser.count()>0:
+					    fuser = fuser[0]
+					else:
+					    fuser = ""
+					return dumps(fuser)
+				c = Collaborations()
+				cdata = list(c.fetch_col_supervisor())
+				if len(cdata)>0:
+				    pass
+				else:
+				    cdata = ""
+				return render_template('portal/userprofile.html', user = user, fuser=fuser, cdata = cdata)
+			if session['user_type']=="Special User":
+			    return render_template('portal/userprofile.html', user = user)
+		else:
+		    return redirect(url_for('portal.signin'))
+	except Exception as error:
+	    print(error)
+	    return redirect(url_for('portal.signin'))
 
 @portal.route('/add_collab',methods=['POST','GET'])
 def add_collab():
