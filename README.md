@@ -48,6 +48,7 @@ Supervisors, and Articles/Publishing’s.
 * JavaScript
 * JQuery
 * Ajax
+* Material UI
 ### Back End
 * Python 3
 * Flask
@@ -115,10 +116,13 @@ flask run
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
 
+## Acknowledgements
+Creative Tim Material UI Documentation - https://demos.creative-tim.com/material-kit/docs/2.1/getting-started/introduction.html
+
 ## Contributors
-### 1. Safir Motiwala
-### 2. Ram Suthar
-### 3. Vinayak Sutar
+### 1. [Safir Motiwala](https://github.com/safir72347)
+### 2. [Ram Suthar](https://github.com/ramsuthar305)
+### 3. [Vinayak Sutar](https://github.com/vinayaksutar2063)
 
 ## FootNotes
 
