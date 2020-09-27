@@ -7,5 +7,5 @@
 
 ## `To check database`
 ### 1. Paste this into your terminal `mongo "mongodb+srv://cluster0.4ol8l.mongodb.net/mitsor" --username ramsuthar305`
-### 2. Database password `mitsor`
+### 2. Database password 
 
