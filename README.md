@@ -2,7 +2,7 @@
 
 
 ## `Instruction to run the app`
-### 1. `pip3 install requirements.txt` to install all the dependencies.
+### 1. `pip3 install -r requirements.txt` to install all the dependencies.
 ### 2. `flask run`
 
 ## `To check database`
