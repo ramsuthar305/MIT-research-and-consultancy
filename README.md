@@ -53,7 +53,7 @@ Supervisors, and Articles/Publishing’s.
 * Python 3
 * Flask
 ### Database
-* Django
+* Mongodb cloud Atlas
 
 ## Pages Included
 
