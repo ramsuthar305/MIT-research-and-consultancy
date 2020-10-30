@@ -5,6 +5,7 @@ import hashlib
 import json
 from bson.json_util import dumps
 from datetime import datetime, date
+from validate_email import validate_email
 #custom imports
 from app import *
 from .models import *
@@ -340,13 +341,31 @@ def registration():
                 "user_type":user_type,
                 "semesters":tl
             }
-            registration_status = user_object.temp_user(user)
-            flash("Registration Successful. You will receive an email after your account is activated")
-            return redirect(url_for("portal.signup"))
+            # checking smtp_server
+            email_verify =  validate_email(user['email'],verify=True)
+            if email_verify != False:
+                print(email_verify)
+                check_email = user['email']
+                exist_researcher = mongo.db.researcher.find({'_id': check_email}).count()
+                exist_tempuser = mongo.db.tempuser.find({'id': check_email}).count()
+                # print(exist_researcher)
+                # print(exist_tempuser)
+                exist_count = exist_researcher + exist_tempuser
+                if exist_count>=1:
+                    print("Field value is present portal>views.py #registration")
+                    flash("User already exist. Try again with different email id.")
+                else:
+                    registration_status = user_object.temp_user(user)
+                    flash("Registration Successful. You will receive an email after your account is activated")
+                return redirect(url_for("portal.signup"))
+            else : 
+                flash("Email Error")
+                return redirect(url_for("portal.signup"))
         else:
             return redirect(url_for('portal.signup'))
     except Exception as error:
         print(error)
+        # flash("Please fill all fields")
         return render_template(url_for('portal.signup'))
 
 

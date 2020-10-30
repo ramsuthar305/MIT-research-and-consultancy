@@ -1,6 +1,11 @@
 import hashlib
+import os
+import smtplib
+from email.message import EmailMessage
+from decouple import config
 from app import *
-from flask import session
+from flask import session, flash
+# from flask_mail import Mail, Message
 from bson import ObjectId
 
 class Users:
@@ -194,24 +199,72 @@ class Batch:
 		except Exception as error:
 			print(error)
 
+	global send_mail
+	def send_mail(temp_email,subject,message):
+		# temp_email = list(mongo.db.tempuser.find({},{'_id':0,'email':1}))
+		# print(temp_email)
+		temp_email = temp_email[0]
+		temp_email = temp_email['email']
+		EMAIL_ADDRESS = config('EMAIL')
+		EMAIL_PASSWORD = config('EMAIL_PW')
+		msg = EmailMessage()
+		msg['Subject'] = subject
+		msg['From'] = EMAIL_ADDRESS
+		msg['To'] = temp_email
+		msg.set_content(message)
+		with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+			smtp.login(EMAIL_ADDRESS,EMAIL_PASSWORD)
+			smtp.send_message(msg)
+
 	def authorization(self,userid,op):
 		try:
 			if op=="1":
-				result = mongo.db.tempuser.find({"_id":userid})
-				user = result[0]
-				main = mongo.db.researcher.insert_one(user)
-				active = mongo.db.researcher.update_one({'_id':userid},{"$set":{"status":"1"}})
-				result=mongo.db.authentication.insert_one({
-					"uid":user["_id"],
-					"email":user["email"],
-					"password":user["password"],
-					"user_type":user["user_type"],
-					"status":user["status"]
-				})
-				active = mongo.db.authentication.update_one({'uid':userid},{"$set":{"status":"1"}})
-				rem = mongo.db.tempuser.remove({"_id":userid})
+				try:
+					temp_email = list(mongo.db.tempuser.find({},{'_id':0,'email':1}))
+					# print(temp_email)
+					# temp_email = temp_email[0]
+					# temp_email = temp_email['email']
+					# EMAIL_ADDRESS = config('EMAIL')
+					# EMAIL_PASSWORD = config('EMAIL_PW')
+					# msg = EmailMessage()
+					# msg['Subject'] = 'Invite Accepted'
+					# msg['From'] = EMAIL_ADDRESS
+					# msg['To'] = temp_email
+					# msg.set_content(f'The admin has accepted your signup request, visit http://localhost:5000/newuser_resetpass. Please delete this message if you don\'t know the sender. (this is testing phase of an application)')
+					# with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+					# 	smtp.login(EMAIL_ADDRESS,EMAIL_PASSWORD)
+					# 	smtp.send_message(msg)
+					subject = 'Signup Accepted'
+					message = f'The admin has accepted your signup request, visit http://localhost:5000/newuser_resetpass. Please delete this message if you don\'t know the sender. (this is testing phase of an application)'
+					send_mail(temp_email,subject,message)
+					result = mongo.db.tempuser.find({"_id":userid})
+					user = result[0]
+					
+					# Check if user exists
+					exist_count = mongo.db.researcher.find({'_id': temp_email}).count()
+					if exist_count>=1:
+						print("Field value is present admin>models.py #authorization")
+						flash("User exist")
+					
+					main = mongo.db.researcher.insert_one(user)
+					active = mongo.db.researcher.update_one({'_id':userid},{"$set":{"status":"1"}})
+					result=mongo.db.authentication.insert_one({
+						"uid":user["_id"],
+						"email":user["email"],
+						"password":user["password"],
+						"user_type":user["user_type"],
+						"status":user["status"]
+					})
+					active = mongo.db.authentication.update_one({'uid':userid},{"$set":{"status":"1"}})
+					rem = mongo.db.tempuser.remove({"_id":userid})
+				except Exception as error:
+					print(error)
 			if op=="2":
+				temp_email = list(mongo.db.tempuser.find({},{'_id':0,'email':1}))
 				result = mongo.db.tempuser.remove({"_id":userid})
+				subject = 'Signup Rejected'
+				message = f'The admin has rejected your signup request. Please delete this message if you don\'t know the sender. (this is testing phase of an application)'
+				send_mail(temp_email,subject,message)
 			return result
 		except Exception as error:
 			print(error)
