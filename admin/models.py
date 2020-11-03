@@ -221,21 +221,8 @@ class Batch:
 			if op=="1":
 				try:
 					temp_email = list(mongo.db.tempuser.find({},{'_id':0,'email':1}))
-					# print(temp_email)
-					# temp_email = temp_email[0]
-					# temp_email = temp_email['email']
-					# EMAIL_ADDRESS = config('EMAIL')
-					# EMAIL_PASSWORD = config('EMAIL_PW')
-					# msg = EmailMessage()
-					# msg['Subject'] = 'Invite Accepted'
-					# msg['From'] = EMAIL_ADDRESS
-					# msg['To'] = temp_email
-					# msg.set_content(f'The admin has accepted your signup request, visit http://localhost:5000/newuser_resetpass. Please delete this message if you don\'t know the sender. (this is testing phase of an application)')
-					# with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
-					# 	smtp.login(EMAIL_ADDRESS,EMAIL_PASSWORD)
-					# 	smtp.send_message(msg)
 					subject = 'Signup Accepted'
-					message = f'The admin has accepted your signup request, visit http://localhost:5000/newuser_resetpass. Please delete this message if you don\'t know the sender. (this is testing phase of an application)'
+					message = f'The admin has accepted your signup request, visit http://localhost:5000/get_otp. Please delete this message if you don\'t know the sender. (this is testing phase of an application)'
 					send_mail(temp_email,subject,message)
 					result = mongo.db.tempuser.find({"_id":userid})
 					user = result[0]

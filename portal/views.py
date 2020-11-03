@@ -6,6 +6,11 @@ import json
 from bson.json_util import dumps
 from datetime import datetime, date
 from validate_email import validate_email
+import os
+import smtplib
+from email.message import EmailMessage
+from decouple import config
+import random
 #custom imports
 from app import *
 from .models import *
@@ -44,6 +49,11 @@ def publication():
     
     
     return render_template('portal/publication.html',resource=resource)
+
+@portal.route('/faculty_info')
+def faculty_info():
+    print('Faculty Info')
+    return render_template('portal/faculty_info.html')
 
 '''
 @portal.route('/search')
@@ -401,33 +411,84 @@ def logout():
         print(error)
         return redirect(url_for('portal.signin'))
 
-@portal.route('/newuser_resetpass', methods=['GET','POST'])
-def newuser_resetpass():
+def generateOTP():
+    return random.randrange(100000,999999)
+
+def sendEmail(otp_number,username):
+    try:
+        print("Send email checkpoint")
+        EMAIL_ADDRESS = config('EMAIL')
+        EMAIL_PASSWORD = config('EMAIL_PW')
+        msg = EmailMessage()
+        msg['Subject'] = 'Mini Project OTP Module Testing'
+        msg['From'] = EMAIL_ADDRESS
+        msg['To'] = username
+        msg.set_content(f'Your OTP is {otp_number}')
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login(EMAIL_ADDRESS,EMAIL_PASSWORD)
+            smtp.send_message(msg)
+    except Exception as error:
+        print(error)
+        return "<h1> We have following error </h1> <p>{}</p>".format(error)
+
+otp_number = generateOTP()
+
+@portal.route('/get_otp', methods=['POST','GET'])
+def get_otp():
     try:
         if request.method=="POST":
+            global username
             username = request.form.get('username')
-            newpass1 = request.form.get('newpass1')
-            newpass2 = request.form.get('newpass2')
-            print(username,newpass1,newpass2)
+            print(username)
             u = Users()
             stat = u.check_email(username)
+            print("User exist? ",stat)
             if stat:
-                if newpass1 == newpass2:
-                    u.set_pass(stat,username,newpass1)
-                    flash("Password Reset Successfull")
-                    return render_template('portal/newuser_resetpass.html', success="1")
-                else:
-                    flash("Both Passwords do not match")
-                    return render_template('portal/newuser_resetpass.html', success="0")
-            else:
-                flash("Email Not Found")
-                return render_template('portal/newuser_resetpass.html', success="0")
+                sendEmail(otp_number,username)
+                return redirect(url_for('portal.newuser_resetpass'))
+        else:
+            # flash("Email Not Found")
+            print('Mail not sent')
+            return render_template('portal/get_otp.html',success="0")
 
-        return render_template('portal/newuser_resetpass.html', success="0")
+    except Exception as error:
+        print(error)
+        print('Mail not sent 2.0')
+        return render_template('portal/get_otp.html',success="0")
+
+@portal.route('/newuser_resetpass', methods=['POST'])
+def newuser_resetpass():
+    try:
+        # username = request.form.get('username')
+        otp = request.form.get('otp')
+        newpass1 = request.form.get('newpass1')
+        newpass2 = request.form.get('newpass2')
+        print(username,newpass1,newpass2)
+        u = Users()
+        stat = u.check_email(username)
+        if otp == str(otp_number):
+            if newpass1 == newpass2:
+                u.set_pass(stat,username,newpass1)
+                flash("Password Reset Successfull")
+                return render_template('portal/newuser_resetpass.html', success="1")
+            else:
+                flash("Both Passwords do not match")
+                return render_template('portal/newuser_resetpass.html', success="0")
+        else:
+            flash("Incorrect OTP")
+            return render_template('portal/newuser_resetpass.html', success="0")
+
     except Exception as error:
         print(error)
         return redirect(url_for('portal.signin'))
 
+@portal.route('/newuser_resetpass', methods=['GET'])
+def newuser_pass():
+    try: 
+        return render_template('portal/newuser_resetpass.html', success="0")
+    except Exception as error:
+        print(error)
+        return redirect(url_for('portal.signin'))
 
 
 @portal.route('/supervisors_panel', methods=['POST','GET'])
